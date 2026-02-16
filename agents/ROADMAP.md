@@ -47,7 +47,7 @@ Integrate Google Tasks API and build the Tasks UI.
 - [x] Build `TaskService` API client (list, create, update, delete, move)
 - [x] Implement `TaskParser` for Phoenix metadata extraction/injection
 - [x] Persist `localId` in `TaskMeta` for cross-platform sync
-- Create task list view, task detail/edit view, subtask support
+- [x] Create task list view, task detail/edit view, subtask support
 - Implement drag-and-drop reordering (uses `moveTask` API)
 - Request `tasks` scope incrementally on first access
 
@@ -57,13 +57,13 @@ Integrate Google Tasks API and build the Tasks UI.
 - [x] PHX-008: Build `TaskService` for Google Tasks API
 - [x] PHX-010: Implement Phoenix metadata parser for Tasks
 - [x] PHX-014: Persist `localId` in `TaskMeta`
-- [ ] PHX-009: Create Task List and Detail UI components
+- [x] PHX-009: Create Task List and Detail UI components
 
 ### Acceptance Criteria
 
-- [ ] Tasks are fetched from Google Tasks API and displayed
-- [ ] User can create, edit, complete, and delete tasks
-- [ ] Subtasks are supported (nesting via `parent` field)
+- [x] Tasks are fetched from Google Tasks API and displayed
+- [x] User can create, edit, complete, and delete tasks
+- [x] Subtasks are supported (nesting via `parent` field)
 - [ ] Drag-and-drop reorders tasks (calls `moveTask` with `parent` + `previous`)
 - [x] Phoenix metadata survives round-trips (write → read → write)
 - [x] Pagination handled correctly for large task lists

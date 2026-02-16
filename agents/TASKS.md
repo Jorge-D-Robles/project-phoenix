@@ -13,12 +13,12 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
+| PHX-009 | Create Task List and Detail UI components | DONE | Claude | 2026-02-16 |
 
 ## 📋 Backlog (Phase 2: Tasks)
 
 | ID | Task | Status | Priority |
 |:---|:---|:---:|:---:|
-| PHX-009 | Create Task List and Detail UI components | TODO | Medium |
 | PHX-012 | Configure Experimental Zoneless Change Detection | DONE | Gemini | 2026-02-16 |
 | PHX-013 | Refactor `AuthService` to use `SignalStore` | DONE | Gemini | 2026-02-16 |
 | PHX-014 | Persist `localId` in `TaskMeta` | DONE | Gemini | 2026-02-16 |
@@ -35,6 +35,10 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-019 | Build `TaskDetailDialogComponent` (create/edit) | 2026-02-16 | Claude |
+| PHX-018 | Build `TaskListComponent` (smart container) | 2026-02-16 | Claude |
+| PHX-017 | Build `TaskCardComponent` (presentational) | 2026-02-16 | Claude |
+| PHX-009 | Create Task List and Detail UI components | 2026-02-16 | Claude |
 | PHX-013 | Refactor `AuthService` to use `SignalStore` | 2026-02-16 | Gemini |
 | PHX-015 | Fix hollow unit tests in `task.service.spec.ts` | 2026-02-16 | Gemini |
 | PHX-014 | Persist `localId` in `TaskMeta` | 2026-02-16 | Gemini |
