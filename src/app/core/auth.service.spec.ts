@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { patchState } from '@ngrx/signals';
 import { AuthService } from './auth.service';
 import { AUTH_CONFIG, AuthConfig } from './auth.config';
 import { OAuthService } from 'angular-oauth2-oidc';
@@ -150,7 +151,7 @@ describe('AuthService', () => {
       mockOAuth.getAccessToken.and.returnValue('real-token-123');
 
       // Force authenticated state for this test
-      service['_isAuthenticated'].set(true);
+      patchState(service as any, { isAuthenticated: true });
       expect(service.getAccessToken()).toBe('real-token-123');
     });
 
@@ -159,7 +160,7 @@ describe('AuthService', () => {
     });
 
     it('should refresh token via silent refresh', async () => {
-      service['_isAuthenticated'].set(true);
+      patchState(service as any, { isAuthenticated: true });
       mockOAuth.silentRefresh.and.resolveTo({} as never);
 
       const result = await service.refreshToken();
@@ -168,7 +169,7 @@ describe('AuthService', () => {
     });
 
     it('should logout on refresh failure', async () => {
-      service['_isAuthenticated'].set(true);
+      patchState(service as any, { isAuthenticated: true });
       mockOAuth.silentRefresh.and.rejectWith(new Error('refresh failed'));
 
       const result = await service.refreshToken();

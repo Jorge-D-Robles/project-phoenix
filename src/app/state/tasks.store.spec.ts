@@ -7,17 +7,17 @@ import { Task, TaskList } from '../data/models/task.model';
 
 const MOCK_TASKS: Task[] = [
   {
-    id: 't1', localId: '', title: 'Buy groceries', status: 'needsAction',
-    dueDateTime: '2026-02-20T00:00:00Z', notes: 'Milk and eggs', meta: null,
+    id: 't1', localId: 'uuid-1', title: 'Buy groceries', status: 'needsAction',
+    dueDateTime: '2026-02-20T00:00:00Z', notes: 'Milk and eggs', meta: { localId: 'uuid-1' },
     parent: null, position: '00000', updatedDateTime: '2026-02-16T10:00:00Z',
   },
   {
-    id: 't2', localId: '', title: 'Write tests', status: 'completed',
-    dueDateTime: null, notes: null, meta: { tags: ['dev'] },
+    id: 't2', localId: 'uuid-2', title: 'Write tests', status: 'completed',
+    dueDateTime: null, notes: null, meta: { localId: 'uuid-2', tags: ['dev'] },
     parent: null, position: '00001', updatedDateTime: '2026-02-16T11:00:00Z',
   },
   {
-    id: 't3', localId: '', title: 'Review PR', status: 'needsAction',
+    id: 't3', localId: 't3', title: 'Review PR', status: 'needsAction',
     dueDateTime: null, notes: null, meta: null,
     parent: null, position: '00002', updatedDateTime: '2026-02-16T12:00:00Z',
   },
@@ -226,6 +226,26 @@ describe('TasksStore', () => {
     it('should not change other tasks', async () => {
       await store.updateTask('t1', { title: 'Updated groceries' });
       expect(store.tasks().find(t => t.id === 't2')?.title).toBe('Write tests');
+    });
+
+    it('should preserve meta when updating only notes', async () => {
+      // t2 has meta: { localId: 'uuid-2', tags: ['dev'] }
+      await store.updateTask('t2', { notes: 'Updated notes' });
+      
+      expect(mockTaskService.updateTask).toHaveBeenCalledWith('list1', 't2', jasmine.objectContaining({
+        notes: 'Updated notes',
+        meta: { localId: 'uuid-2', tags: ['dev'] }
+      }));
+    });
+
+    it('should preserve notes when updating only meta', async () => {
+      // t1 has notes: 'Milk and eggs'
+      await store.updateTask('t1', { meta: { localId: 'uuid-1', tags: ['shopping'] } });
+      
+      expect(mockTaskService.updateTask).toHaveBeenCalledWith('list1', 't1', jasmine.objectContaining({
+        notes: 'Milk and eggs',
+        meta: { localId: 'uuid-1', tags: ['shopping'] }
+      }));
     });
   });
 

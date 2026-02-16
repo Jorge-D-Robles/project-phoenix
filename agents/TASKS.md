@@ -19,10 +19,11 @@ This board uses a ticket-based system to track granular units of work.
 | ID | Task | Status | Priority |
 |:---|:---|:---:|:---:|
 | PHX-009 | Create Task List and Detail UI components | TODO | Medium |
-| PHX-012 | Configure Experimental Zoneless Change Detection | TODO | Critical |
-| PHX-013 | Refactor `AuthService` to use `SignalStore` | TODO | Medium |
-| PHX-014 | Persist `localId` in `TaskMeta` | TODO | High |
-| PHX-015 | Fix hollow unit tests in `task.service.spec.ts` | TODO | Medium |
+| PHX-012 | Configure Experimental Zoneless Change Detection | DONE | Gemini | 2026-02-16 |
+| PHX-013 | Refactor `AuthService` to use `SignalStore` | DONE | Gemini | 2026-02-16 |
+| PHX-014 | Persist `localId` in `TaskMeta` | DONE | Gemini | 2026-02-16 |
+| PHX-015 | Fix hollow unit tests in `task.service.spec.ts` | DONE | Gemini | 2026-02-16 |
+| PHX-016 | Implement incremental OAuth scope request for Tasks API | TODO | Low |
 |:---|:---|:---:|:---:|
 
 ## 🏗️ In Progress
@@ -34,6 +35,10 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-013 | Refactor `AuthService` to use `SignalStore` | 2026-02-16 | Gemini |
+| PHX-015 | Fix hollow unit tests in `task.service.spec.ts` | 2026-02-16 | Gemini |
+| PHX-014 | Persist `localId` in `TaskMeta` | 2026-02-16 | Gemini |
+| PHX-012 | Configure Experimental Zoneless Change Detection | 2026-02-16 | Gemini |
 | PHX-011 | Run initial codebase audit via `/auditor` | 2026-02-16 | Gemini |
 | PHX-010 | Implement Phoenix metadata parser for Tasks | 2026-02-16 | Claude |
 | PHX-008 | Build `TaskService` for Google Tasks API | 2026-02-16 | Claude |

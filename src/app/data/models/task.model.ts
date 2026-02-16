@@ -1,5 +1,6 @@
 /** Phoenix metadata embedded in Google Tasks notes field */
 export interface TaskMeta {
+  localId?: string;
   habitId?: string;
   docLinks?: string[];
   tags?: string[];
@@ -39,6 +40,7 @@ export interface TaskList {
 /** Shape of a task creation request (fields the user provides) */
 export interface CreateTaskRequest {
   title: string;
+  localId?: string;
   notes?: string;
   dueDateTime?: string;
   parent?: string;
@@ -50,6 +52,7 @@ export interface UpdateTaskRequest {
   notes?: string;
   status?: TaskStatus;
   dueDateTime?: string | null;
+  meta?: TaskMeta | null;
 }
 
 /** Parameters for the move operation */

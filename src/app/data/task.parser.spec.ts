@@ -14,6 +14,16 @@ describe('TaskParser', () => {
       });
     });
 
+    it('should extract localId from meta', () => {
+      const notes = 'User notes\n---PHOENIX_META---\n{"localId":"uuid-123","tags":["work"]}';
+      const result = TaskParser.parse(notes);
+      expect(result.userNotes).toBe('User notes');
+      expect(result.meta).toEqual({
+        localId: 'uuid-123',
+        tags: ['work'],
+      });
+    });
+
     it('should return null meta when no delimiter present', () => {
       const result = TaskParser.parse('Plain notes');
       expect(result.userNotes).toBe('Plain notes');

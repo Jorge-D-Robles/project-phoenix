@@ -32,6 +32,8 @@ Establish the Angular 21 project and implement OAuth 2.0 PKCE authentication.
 - [x] PHX-004: Scaffold Angular 21 project (Zoneless + Karma)
 - [x] PHX-005: Configure Material 3 Theme & Dark Mode
 - [x] PHX-006: Implement OAuth 2.0 PKCE AuthService
+- [x] PHX-012: Configure Experimental Zoneless Change Detection
+- [x] PHX-013: Refactor `AuthService` to use `SignalStore`
 
 ---
 
@@ -44,6 +46,7 @@ Integrate Google Tasks API and build the Tasks UI.
 - [x] Implement `TasksStore` (SignalStore) with loading/error/success states
 - [x] Build `TaskService` API client (list, create, update, delete, move)
 - [x] Implement `TaskParser` for Phoenix metadata extraction/injection
+- [x] Persist `localId` in `TaskMeta` for cross-platform sync
 - Create task list view, task detail/edit view, subtask support
 - Implement drag-and-drop reordering (uses `moveTask` API)
 - Request `tasks` scope incrementally on first access
@@ -53,6 +56,7 @@ Integrate Google Tasks API and build the Tasks UI.
 - [x] PHX-007: Implement `TasksStore` using NgRx Signals
 - [x] PHX-008: Build `TaskService` for Google Tasks API
 - [x] PHX-010: Implement Phoenix metadata parser for Tasks
+- [x] PHX-014: Persist `localId` in `TaskMeta`
 - [ ] PHX-009: Create Task List and Detail UI components
 
 ### Acceptance Criteria
@@ -189,4 +193,4 @@ Each phase builds on the previous. Do not skip phases.
 - **Active Platform**: Web (Angular 21)
 - **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
 - **Last Audit**: 2026-02-16 (Gemini)
-- **Status**: 🟡 QUALITY WARNING. Phase 2 Data Layer complete. Critical issues identified in localId persistence (PHX-014) and brittle tests (PHX-015). Zoneless config still pending (PHX-012).
+- **Status**: 🟢 GREEN. Phase 2 Data Layer complete and stabilized. Zoneless detection, localId persistence, and test coverage improved.

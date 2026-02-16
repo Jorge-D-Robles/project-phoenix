@@ -58,9 +58,13 @@ export class TaskService {
       params = params.set('parent', request.parent);
     }
 
+    const localId = request.localId || crypto.randomUUID();
+    const meta: TaskMeta = { localId };
+    const notes = TaskParser.serialize(request.notes || '', meta);
+
     const body: Record<string, string | undefined> = {
       title: request.title,
-      notes: request.notes,
+      notes: notes,
       due: request.dueDateTime,
     };
 
@@ -73,8 +77,14 @@ export class TaskService {
     const body: Record<string, string | null | undefined> = {};
     if (update.title !== undefined) body['title'] = update.title;
     if (update.status !== undefined) body['status'] = update.status;
-    if (update.notes !== undefined) body['notes'] = update.notes;
     if (update.dueDateTime !== undefined) body['due'] = update.dueDateTime;
+
+    if (update.notes !== undefined || update.meta !== undefined) {
+      // If we are updating notes or meta, we need to ensure they are serialized together.
+      // Note: This assumes the caller provides both if they want to preserve the other,
+      // or we are intentionally overwriting.
+      body['notes'] = TaskParser.serialize(update.notes ?? '', update.meta);
+    }
 
     return this.http
       .patch<GoogleTask>(`${BASE_URL}/lists/${listId}/tasks/${taskId}`, body)
@@ -124,7 +134,7 @@ export class TaskService {
     const parsed = TaskParser.parse(raw.notes ?? null);
     return {
       id: raw.id,
-      localId: '',
+      localId: parsed.meta?.localId || raw.id,
       title: raw.title,
       status: raw.status as 'needsAction' | 'completed',
       dueDateTime: raw.due ?? null,

@@ -80,10 +80,22 @@ export const TasksStore = signalStore(
     async updateTask(taskId: string, update: UpdateTaskRequest): Promise<void> {
       const listId = store.selectedListId();
       if (!listId) return;
+
+      const task = store.tasks().find((t) => t.id === taskId);
+      if (!task) return;
+
+      // If updating notes or meta, ensure the other is preserved since they share the notes field
+      const finalUpdate: UpdateTaskRequest = { ...update };
+      if (update.notes !== undefined && update.meta === undefined) {
+        finalUpdate.meta = task.meta;
+      } else if (update.meta !== undefined && update.notes === undefined) {
+        finalUpdate.notes = task.notes || '';
+      }
+
       try {
-        const updated = await firstValueFrom(taskService.updateTask(listId, taskId, update));
+        const updated = await firstValueFrom(taskService.updateTask(listId, taskId, finalUpdate));
         patchState(store, {
-          tasks: store.tasks().map(t => t.id === taskId ? updated : t),
+          tasks: store.tasks().map((t) => (t.id === taskId ? updated : t)),
           error: null,
         });
       } catch {

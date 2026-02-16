@@ -66,6 +66,7 @@ describe('TaskService', () => {
       service.getTasks('list1').subscribe(tasks => {
         expect(tasks.length).toBe(1);
         expect(tasks[0].title).toBe('Task 1');
+        expect(tasks[0].localId).toBe('t1'); // Fallback to id
       });
 
       const req = httpTesting.expectOne(
@@ -82,6 +83,23 @@ describe('TaskService', () => {
 
       const req = httpTesting.expectOne(r => r.url === `${BASE_URL}/lists/list1/tasks`);
       req.flush({});
+    });
+
+    it('should extract localId from metadata if present', () => {
+      const mockTasks = [
+        {
+          id: 't1', title: 'Task 1', status: 'needsAction', position: '00000', updated: '2026-01-01T00:00:00Z',
+          notes: 'User notes\n---PHOENIX_META---\n{"localId":"persistent-uuid"}',
+        },
+      ];
+
+      service.getTasks('list1').subscribe(tasks => {
+        expect(tasks[0].localId).toBe('persistent-uuid');
+        expect(tasks[0].notes).toBe('User notes');
+      });
+
+      const req = httpTesting.expectOne(r => r.url === `${BASE_URL}/lists/list1/tasks`);
+      req.flush({ items: mockTasks });
     });
 
     it('should handle pagination and fetch all pages', () => {
@@ -107,21 +125,25 @@ describe('TaskService', () => {
   });
 
   describe('createTask', () => {
-    it('should POST a new task to the list', () => {
+    it('should POST a new task to the list with a generated localId', () => {
       const request: CreateTaskRequest = { title: 'New Task' };
       const response = {
         id: 't-new', title: 'New Task', status: 'needsAction',
         position: '00000', updated: '2026-01-01T00:00:00Z',
+        notes: '\n---PHOENIX_META---\n{"localId":"uuid-123"}',
       };
 
       service.createTask('list1', request).subscribe(task => {
         expect(task.id).toBe('t-new');
+        expect(task.localId).toBe('uuid-123');
         expect(task.title).toBe('New Task');
       });
 
       const req = httpTesting.expectOne(`${BASE_URL}/lists/list1/tasks`);
       expect(req.request.method).toBe('POST');
       expect(req.request.body.title).toBe('New Task');
+      expect(req.request.body.notes).toContain('---PHOENIX_META---');
+      expect(req.request.body.notes).toContain('localId');
       req.flush(response);
     });
 
@@ -177,7 +199,9 @@ describe('TaskService', () => {
 
   describe('moveTask', () => {
     it('should POST move with parent and previous params', () => {
-      service.moveTask('list1', 't1', { parent: 'p1', previous: 'prev1' }).subscribe();
+      service.moveTask('list1', 't1', { parent: 'p1', previous: 'prev1' }).subscribe(task => {
+        expect(task.id).toBe('t1');
+      });
 
       const req = httpTesting.expectOne(
         r => r.url === `${BASE_URL}/lists/list1/tasks/t1/move`
@@ -189,24 +213,30 @@ describe('TaskService', () => {
     });
 
     it('should move to top-level without parent', () => {
-      service.moveTask('list1', 't1', { previous: 'prev1' }).subscribe();
+      service.moveTask('list1', 't1', { previous: 'prev1' }).subscribe(task => {
+        expect(task.id).toBe('t1');
+      });
 
       const req = httpTesting.expectOne(
         r => r.url === `${BASE_URL}/lists/list1/tasks/t1/move`
           && !r.params.has('parent')
           && r.params.get('previous') === 'prev1'
       );
+      expect(req.request.method).toBe('POST');
       req.flush({ id: 't1', title: 'Task', status: 'needsAction', position: '00000', updated: '2026-01-01T00:00:00Z' });
     });
 
     it('should move to first position without previous', () => {
-      service.moveTask('list1', 't1', {}).subscribe();
+      service.moveTask('list1', 't1', {}).subscribe(task => {
+        expect(task.id).toBe('t1');
+      });
 
       const req = httpTesting.expectOne(
         r => r.url === `${BASE_URL}/lists/list1/tasks/t1/move`
           && !r.params.has('parent')
           && !r.params.has('previous')
       );
+      expect(req.request.method).toBe('POST');
       req.flush({ id: 't1', title: 'Task', status: 'needsAction', position: '00000', updated: '2026-01-01T00:00:00Z' });
     });
   });
