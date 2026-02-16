@@ -13,13 +13,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| PHX-034 | Create DashboardStore (SignalStore) | TODO | — | 2026-02-16 |
-| PHX-035 | Build Dashboard UI widgets (greeting, tasks, schedule, habits, notes) | TODO | — | 2026-02-16 |
-| PHX-036 | Build DashboardComponent (smart container with responsive grid) | TODO | — | 2026-02-16 |
-| PHX-037 | Create Focus domain models (FocusSession, FocusSettings) | TODO | — | 2026-02-16 |
-| PHX-038 | Build FocusService for Drive appdata CRUD | TODO | — | 2026-02-16 |
-| PHX-039 | Implement FocusStore (SignalStore) with timer logic | TODO | — | 2026-02-16 |
-| PHX-040 | Build Focus Timer UI (toolbar component, settings dialog, task linking) | TODO | — | 2026-02-16 |
+| — | Phases 6-8 complete. Next: Phase 9 (Android) | — | — | — |
 
 ## 📋 Backlog
 
@@ -37,8 +31,16 @@ This board uses a ticket-based system to track granular units of work.
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
 | PHX-043 | Build InsightsComponent and wire /insights route | 2026-02-16 | Claude |
+| PHX-043 | Build InsightsComponent and wire /insights route | 2026-02-16 | Claude |
 | PHX-042 | Build Insights UI components (score card, trend chart, streaks, summary) | 2026-02-16 | Claude |
 | PHX-041 | Implement `InsightsStore` (SignalStore) with analytics computations | 2026-02-16 | Claude |
+| PHX-040 | Build Focus Timer UI (toolbar component, settings dialog, task linking) | 2026-02-16 | Claude |
+| PHX-039 | Implement `FocusStore` (SignalStore) with timer logic | 2026-02-16 | Claude |
+| PHX-038 | Build `FocusService` for Drive appdata CRUD | 2026-02-16 | Claude |
+| PHX-037 | Create Focus domain models (FocusSession, FocusSettings) | 2026-02-16 | Claude |
+| PHX-036 | Build DashboardComponent (smart container with responsive grid) | 2026-02-16 | Claude |
+| PHX-035 | Build Dashboard UI widgets (greeting, tasks, schedule, habits, notes) | 2026-02-16 | Claude |
+| PHX-034 | Create `DashboardStore` (SignalStore) | 2026-02-16 | Claude |
 | PHX-033 | Build Notes UI (grid, editor, labels) | 2026-02-16 | Claude |
 | PHX-032 | Implement `NotesStore` (SignalStore) | 2026-02-16 | Claude |
 | PHX-031 | Build `NoteService` for Drive CRUD | 2026-02-16 | Claude |
