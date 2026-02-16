@@ -35,7 +35,9 @@ This board uses a ticket-based system to track granular units of work.
 ## Workflow Rules for Agents
 
 1. **Claiming**: Change status from `TODO` to `IN_PROGRESS` and set yourself as `Assignee`.
-2. **Atomic Work**: Every PR/Commit should ideally correspond to one or more PHX tickets.
-3. **Closing**: Move to `DONE` and record the completion date.
-4. **Cleanup**: Periodically archive `DONE` tasks if the list grows too long.
-5. **New Tasks**: Use the next sequential ID when creating new tickets.
+2. **Decomposition**: When a ticket involves multiple distinct steps, break it into sub-task tickets (e.g. `PHX-010a`, `PHX-010b` or simply the next sequential IDs) with a `Blocked by: PHX-parent` note. Complete and commit each sub-task individually before moving to the next.
+3. **Atomic Work**: Every PR should correspond to one PHX ticket (or sub-task). Keep PRs under 200 lines of diff — if a change is larger, decompose further. Exception: scaffolding/code-gen PRs.
+4. **Tests Pass**: All tests must pass before submitting a PR. Add tests for any new or changed behavior.
+5. **Closing**: Move to `DONE` and record the completion date.
+6. **Cleanup**: Periodically archive `DONE` tasks if the list grows too long.
+7. **New Tasks**: Use the next sequential ID when creating new tickets.

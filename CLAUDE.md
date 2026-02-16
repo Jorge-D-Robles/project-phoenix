@@ -23,10 +23,11 @@
 1. **Pull first**: Run `git pull origin main` before starting any work.
 2. **Check Tasks**: Read `agents/TASKS.md` to identify the next priority ticket (`PHX-XXX`).
 3. **Claim Ticket**: Mark the ticket as `IN_PROGRESS` and set yourself as `Assignee`.
-4. **Read Spec**: Read the relevant `docs/` spec before implementing any feature.
-5. **Implement & Verify**: Follow conventions and refer to `design.md` for full context.
-6. **Update Ticket**: Upon completion, move the ticket to `DONE` in `agents/TASKS.md`.
-7. **Sync & Push**: Follow the Git Workflow below after every fully validated change.
+4. **Decompose Large Tasks**: If a ticket involves multiple distinct steps (e.g. scaffolding, wiring, testing), break it into sub-tasks and log each as a new `PHX-XXX` ticket in `agents/TASKS.md` with a `Blocked by: PHX-parent` note. Work through sub-tasks sequentially, completing and committing each before moving to the next.
+5. **Read Spec**: Read the relevant `docs/` spec before implementing any feature.
+6. **Implement & Verify**: Follow conventions and refer to `design.md` for full context. Focus on one sub-task at a time — finish it, verify it, commit it.
+7. **Update Ticket**: Upon completion of each sub-task (or the full ticket if it was not decomposed), move it to `DONE` in `agents/TASKS.md`.
+8. **Sync & Push**: Follow the Git Workflow below after every fully validated change.
 
 ## Git Workflow
 
@@ -55,6 +56,13 @@ git pull origin main
 ```
 
 Do not skip steps. Do not use `git checkout main` from a worktree — it will fail.
+
+## Pull Request Standards
+
+- **Small & self-contained**: Aim for PRs under 200 lines of diff. If a change grows larger, split it into sequential PRs that each stand on their own. Exception: code generation or project scaffolding (e.g. `ng new`, initial boilerplate) may exceed this limit.
+- **Tests required**: Every PR must include tests for new or changed behavior. Use the TDD workflow (`/unit-test-writer`) to generate specs before implementation.
+- **Green before submit**: All existing and new tests must pass before a PR is opened. Run the full test suite and fix any failures first — never submit a PR with known test breakage.
+- **One concern per PR**: A PR should address a single ticket, bug fix, or feature slice. Avoid bundling unrelated changes.
 
 ## Self-Improvement Rule
 
