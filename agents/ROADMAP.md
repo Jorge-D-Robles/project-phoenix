@@ -164,7 +164,109 @@ Build Phoenix Notes backed by Google Drive.
 
 ---
 
-## Phase 6: Android Transposition
+## Phase 6: Dashboard / Unified Today View
+
+Build the Dashboard as the app's landing page, aggregating all feature data into a single actionable view.
+
+### Deliverables
+
+- [ ] Implement `DashboardStore` (SignalStore) aggregating data from Tasks, Calendar, Habits, Notes stores
+- [ ] Build `GreetingHeader` component (time-of-day greeting, date, completion summary)
+- [ ] Build `TaskSummaryWidget` (today's tasks + overdue, inline toggle)
+- [ ] Build `ScheduleTimelineWidget` (today's events in vertical timeline)
+- [ ] Build `HabitStatusWidget` (today's habit completion status)
+- [ ] Build `RecentNotesWidget` (last 4 recently modified notes)
+- [ ] Build `DashboardComponent` (smart container, responsive grid layout)
+
+### Tickets
+
+- [ ] PHX-034: Create DashboardStore (SignalStore)
+- [ ] PHX-035: Build Dashboard UI widgets (greeting, tasks, schedule, habits, notes)
+- [ ] PHX-036: Build DashboardComponent (smart container with responsive grid)
+
+### Acceptance Criteria
+
+- [ ] Dashboard loads data from all four feature stores
+- [ ] Today's tasks shown (due today + overdue), with inline status toggle
+- [ ] Today's calendar events shown in chronological order
+- [ ] Today's habit completion status shown (done vs pending per habit)
+- [ ] Last 4 recently modified notes shown
+- [ ] Time-of-day greeting with user name
+- [ ] Responsive layout (2-column on desktop, single column on mobile)
+- [ ] All tests pass
+
+---
+
+## Phase 7: Focus Timer (Pomodoro)
+
+Build a Pomodoro focus timer that persists across navigation, with optional task linking and session history.
+
+### Deliverables
+
+- [ ] Create `FocusSession` and `FocusSettings` domain models
+- [ ] Implement `FocusService` (Drive appdata CRUD for focus-sessions.json + focus-settings.json)
+- [ ] Implement `FocusStore` (SignalStore) with timer state, session history, settings
+- [ ] Build `FocusTimerComponent` (global toolbar timer: MM:SS, play/pause/stop)
+- [ ] Build `FocusSettingsDialogComponent` (configure work/break durations)
+- [ ] Build `TaskLinkSelectorComponent` (autocomplete to link task to session)
+- [ ] Wire timer into app toolbar so it persists across page navigation
+
+### Tickets
+
+- [ ] PHX-037: Create Focus domain models (FocusSession, FocusSettings)
+- [ ] PHX-038: Build FocusService for Drive appdata CRUD
+- [ ] PHX-039: Implement FocusStore (SignalStore) with timer logic
+- [ ] PHX-040: Build Focus Timer UI (toolbar component, settings dialog, task linking)
+
+### Acceptance Criteria
+
+- [ ] Timer counts down from configured work duration (default 25 min)
+- [ ] Timer persists across page navigation (lives in toolbar)
+- [ ] Work → Break → Work cycle works correctly
+- [ ] Long break triggers after configured number of work sessions (default 4)
+- [ ] Sessions saved to Drive appdata on completion
+- [ ] User can optionally link a task to the current session
+- [ ] Settings dialog allows configuring all durations
+- [ ] Pause/Resume/Stop work correctly
+- [ ] All tests pass
+
+---
+
+## Phase 8: Weekly Review / Productivity Insights
+
+Build an analytics page showing productivity trends, habit streaks, and a composite productivity score.
+
+### Deliverables
+
+- [ ] Implement `InsightsStore` (SignalStore) computing analytics from all stores
+- [ ] Build `ScoreCardComponent` (productivity score with visual indicator)
+- [ ] Build `TrendChartComponent` (CSS-only bar chart, no external library)
+- [ ] Build `HabitStreaksWidget` (streak + consistency per habit)
+- [ ] Build `WeeklySummaryCard` (compact week summary)
+- [ ] Build `InsightsComponent` (smart container with responsive layout)
+- [ ] Add `/insights` route to app routing
+
+### Tickets
+
+- [ ] PHX-041: Implement InsightsStore (SignalStore) with analytics computations
+- [ ] PHX-042: Build Insights UI components (score card, trend chart, streaks, summary)
+- [ ] PHX-043: Build InsightsComponent and wire /insights route
+
+### Acceptance Criteria
+
+- [ ] Task completion trend shows last 28 days as bar chart
+- [ ] Habit streaks calculated correctly (current + longest)
+- [ ] Calendar density overview shows events per day
+- [ ] Focus time totals computed from FocusStore
+- [ ] Productivity score computed using weighted formula (tasks 40%, habits 35%, focus 25%)
+- [ ] Weekly summary card shows aggregated stats
+- [ ] Charts rendered with pure CSS (no charting library)
+- [ ] Responsive layout
+- [ ] All tests pass
+
+---
+
+## Phase 9: Android Transposition
 
 Transpose the complete web feature set to native Android.
 
@@ -174,7 +276,7 @@ Transpose the complete web feature set to native Android.
 - Implement Room entities + TypeConverters for all domain models
 - Implement Repository layer (Room local + Retrofit remote)
 - Build ViewModels with StateFlow for each feature
-- Implement Compose UI for all features (Tasks, Calendar, Habits, Notes)
+- Implement Compose UI for all features (Tasks, Calendar, Habits, Notes, Dashboard, Focus, Insights)
 - Implement WorkManager sync engine (Pull → Merge → Push)
 - Implement Canvas-based heatmap
 - OAuth 2.0 PKCE via Google Identity Services
@@ -195,12 +297,15 @@ Transpose the complete web feature set to native Android.
 ## Phase Sequencing
 
 ```
-Phase 1 (Scaffold + Auth)
-    └─→ Phase 2 (Tasks)
-        └─→ Phase 3 (Calendar)
-            └─→ Phase 4 (Habits)
-                └─→ Phase 5 (Notes)
-                    └─→ Phase 6 (Android)
+Phase 1 (Scaffold + Auth) ✅
+    └─→ Phase 2 (Tasks) ✅
+        └─→ Phase 3 (Calendar) ✅
+            └─→ Phase 4 (Habits) ✅
+                └─→ Phase 5 (Notes) ✅
+                    └─→ Phase 6 (Dashboard)
+                        └─→ Phase 7 (Focus Timer)
+                            └─→ Phase 8 (Weekly Review)
+                                └─→ Phase 9 (Android)
 ```
 
 Each phase builds on the previous. Do not skip phases.
@@ -209,9 +314,9 @@ Each phase builds on the previous. Do not skip phases.
 
 ## Project Health
 
-- **Completion**: 83%
-- **Active Phase**: Phases 4 & 5 complete. Next: Phase 6 (Android Transposition)
-- **Active Platform**: Web (Angular 21) — all web features complete
-- **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
-- **Last Audit**: 2026-02-16 (Gemini)
-- **Status**: 🟢 GREEN. Phases 4 (Habits) and 5 (Notes) completed in parallel — HabitService (Drive appdata CRUD), HabitsStore, heatmap visualization (CSS Grid, getLevel algorithm, 365 cells), NoteService (Drive folder CRUD), NotesStore, note grid/editor UI all implemented with 170 new tests (386 total). Web platform feature-complete. Ready for Phase 6 (Android).
+- **Completion**: 63%
+- **Active Phase**: Phase 6 (Dashboard / Today View)
+- **Active Platform**: Web (Angular 21) — expanding feature set
+- **Primary Risks**: Bundle size with new features, store interconnection complexity
+- **Last Audit**: 2026-02-16
+- **Status**: 🟢 GREEN. Phases 1-5 complete (394 tests passing). Three new web features planned: Dashboard Today View, Focus Timer, Weekly Review. Android transposition deferred to Phase 9.

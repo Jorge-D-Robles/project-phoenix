@@ -13,7 +13,16 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| — | Phases 4 & 5 complete. Next: Phase 6 (Android) | — | — | — |
+| PHX-034 | Create DashboardStore (SignalStore) | TODO | — | 2026-02-16 |
+| PHX-035 | Build Dashboard UI widgets (greeting, tasks, schedule, habits, notes) | TODO | — | 2026-02-16 |
+| PHX-036 | Build DashboardComponent (smart container with responsive grid) | TODO | — | 2026-02-16 |
+| PHX-037 | Create Focus domain models (FocusSession, FocusSettings) | TODO | — | 2026-02-16 |
+| PHX-038 | Build FocusService for Drive appdata CRUD | TODO | — | 2026-02-16 |
+| PHX-039 | Implement FocusStore (SignalStore) with timer logic | TODO | — | 2026-02-16 |
+| PHX-040 | Build Focus Timer UI (toolbar component, settings dialog, task linking) | TODO | — | 2026-02-16 |
+| PHX-041 | Implement InsightsStore (SignalStore) with analytics computations | TODO | — | 2026-02-16 |
+| PHX-042 | Build Insights UI components (score card, trend chart, streaks, summary) | TODO | — | 2026-02-16 |
+| PHX-043 | Build InsightsComponent and wire /insights route | TODO | — | 2026-02-16 |
 
 ## 📋 Backlog
 
