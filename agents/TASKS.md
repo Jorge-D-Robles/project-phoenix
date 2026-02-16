@@ -15,8 +15,8 @@ This board uses a ticket-based system to track granular units of work.
 |:---|:---|:---:|:---|:---:|
 | PHX-022 | Create Calendar domain model and color map | DONE | Claude | 2026-02-16 |
 | PHX-023 | Build `CalendarService` API client | DONE | Claude | 2026-02-16 |
-| PHX-024 | Implement `CalendarStore` (SignalStore) | IN_PROGRESS | Claude | 2026-02-16 |
-| PHX-025 | Build Calendar day view UI components | TODO | — | 2026-02-16 |
+| PHX-024 | Implement `CalendarStore` (SignalStore) | DONE | Claude | 2026-02-16 |
+| PHX-025 | Build Calendar day view UI components | IN_PROGRESS | Claude | 2026-02-16 |
 
 ## 📋 Backlog
 
@@ -28,7 +28,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee |
 |:---|:---|:---:|:---|
-| PHX-024 | Implement `CalendarStore` (SignalStore) | IN_PROGRESS | Claude |
+| PHX-025 | Build Calendar day view UI components | IN_PROGRESS | Claude |
 
 ## ✅ Completed
 
