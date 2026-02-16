@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { ThemeService } from './core/theme.service';
 import { AuthService } from './core/auth.service';
+import { FocusTimerComponent } from './features/focus/focus-timer.component';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +22,7 @@ import { AuthService } from './core/auth.service';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    FocusTimerComponent,
   ],
   template: `
     @if (authService.isAuthenticated()) {
@@ -47,6 +49,8 @@ import { AuthService } from './core/auth.service';
             </button>
             <span class="text-lg font-medium">Project Phoenix</span>
             <span class="flex-1"></span>
+
+            <app-focus-timer data-testid="focus-timer" />
 
             @if (authService.user(); as user) {
               <span class="text-sm mr-2" data-testid="user-name">{{ user.name }}</span>
