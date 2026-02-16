@@ -53,6 +53,30 @@ git pull origin main
 
 Do not skip steps. Do not use `git checkout main` from a worktree — it will fail.
 
+## Self-Improvement Rule
+
+After completing any task, evaluate whether something was learned that should be preserved:
+
+- **Successful pattern**: If a technique, workaround, or approach worked well and would be useful in future sessions, add it to the appropriate file (`CLAUDE.md`, relevant `docs/` spec, or a new `docs/` file if needed).
+- **Pitfall or common issue**: If an error, gotcha, or unexpected behavior was encountered and resolved, document it as a warning or known issue so future sessions don't repeat the mistake.
+- **Updated best practice**: If a convention, workflow step, or tool usage was refined during the session, update the existing documentation to reflect the better approach.
+
+### Where to document
+
+| What was learned | Where to add it |
+|-----------------|----------------|
+| Repo-wide workflow or tooling lesson | `CLAUDE.md` (this file) |
+| Domain-specific insight (e.g. API quirk) | The relevant `docs/` spec file |
+| New domain not yet covered | New `docs/<topic>.md` file |
+| Docs-level process change | `docs/CLAUDE.md` |
+
+### Rules
+
+- Keep additions concise — a sentence or a bullet point, not an essay
+- Use the same imperative, checklist-driven style as existing docs
+- Include the change in the same commit as the work that triggered it when possible
+- Do not wait to be asked — proactively update docs as part of finishing a task
+
 ## Conventions
 
 - **Dates**: ISO 8601 UTC
