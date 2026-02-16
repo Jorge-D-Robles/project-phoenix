@@ -13,6 +13,7 @@ import { routes } from './app.routes';
 import { AUTH_CONFIG, GOOGLE_SCOPES } from './core/auth.config';
 import { AuthService } from './core/auth.service';
 import { authInterceptor } from './core/auth.interceptor';
+import { retryInterceptor } from './core/retry.interceptor';
 import { environment } from '../environments/environment.development';
 
 function initAuth(authService: AuthService): () => Promise<void> {
@@ -25,7 +26,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideRouter(routes),
     provideAnimationsAsync(),
-    provideHttpClient(withInterceptors([authInterceptor])),
+    provideHttpClient(withInterceptors([retryInterceptor, authInterceptor])),
     provideOAuthClient(),
     { provide: AUTH_CONFIG, useValue: environment },
     {

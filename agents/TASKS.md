@@ -13,7 +13,8 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| PHX-009 | Create Task List and Detail UI components | DONE | Claude | 2026-02-16 |
+| PHX-020 | Implement 429 exponential backoff retry interceptor | IN_PROGRESS | Claude | 2026-02-16 |
+| PHX-021 | Implement drag-and-drop task reordering | TODO | — | 2026-02-16 |
 
 ## 📋 Backlog (Phase 2: Tasks)
 
