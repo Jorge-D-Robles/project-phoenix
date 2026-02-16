@@ -20,10 +20,11 @@
 
 ## Agent Workflow
 
-1. Read the relevant `docs/` spec before implementing any feature
-2. Follow the conventions below
-3. Reference `design.md` for full context when `docs/` is insufficient
-4. After every complete and fully validated change: follow the Git Workflow below
+1. **Pull first**: Run `git pull origin main` before starting any work — other agents may be working on this codebase concurrently
+2. Read the relevant `docs/` spec before implementing any feature
+3. Follow the conventions below
+4. Reference `design.md` for full context when `docs/` is insufficient
+5. After every complete and fully validated change: follow the Git Workflow below
 
 ## Git Workflow
 
