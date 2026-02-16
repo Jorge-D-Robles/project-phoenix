@@ -247,6 +247,19 @@ describe('TasksStore', () => {
         meta: { localId: 'uuid-1', tags: ['shopping'] }
       }));
     });
+
+    it('should optimistically update task before API responds', async () => {
+      const updatePromise = store.updateTask('t1', { title: 'Optimistic Title' });
+      expect(store.tasks().find(t => t.id === 't1')?.title).toBe('Optimistic Title');
+      await updatePromise;
+    });
+
+    it('should rollback on update failure', async () => {
+      mockTaskService.updateTask.and.returnValue(throwError(() => new Error('fail')));
+      await store.updateTask('t1', { title: 'Fail Title' });
+      expect(store.error()).toBe('Failed to update task');
+      expect(store.tasks().find(t => t.id === 't1')?.title).toBe('Buy groceries');
+    });
   });
 
   describe('method: removeTask', () => {
@@ -264,6 +277,21 @@ describe('TasksStore', () => {
     it('should call deleteTask with correct params', async () => {
       await store.removeTask('t1');
       expect(mockTaskService.deleteTask).toHaveBeenCalledWith('list1', 't1');
+    });
+
+    it('should optimistically remove task before API responds', async () => {
+      const removePromise = store.removeTask('t1');
+      expect(store.tasks().find(t => t.id === 't1')).toBeUndefined();
+      expect(store.tasks().length).toBe(2);
+      await removePromise;
+    });
+
+    it('should rollback on delete failure', async () => {
+      mockTaskService.deleteTask.and.returnValue(throwError(() => new Error('fail')));
+      await store.removeTask('t1');
+      expect(store.error()).toBe('Failed to delete task');
+      expect(store.tasks().find(t => t.id === 't1')).toBeTruthy();
+      expect(store.tasks().length).toBe(3);
     });
   });
 
@@ -286,6 +314,23 @@ describe('TasksStore', () => {
 
       await store.toggleTaskStatus('t2');
       expect(store.tasks().find(t => t.id === 't2')?.status).toBe('needsAction');
+    });
+
+    it('should optimistically toggle before API responds', async () => {
+      const completed: Task = { ...MOCK_TASKS[0], status: 'completed' };
+      mockTaskService.updateTask.and.returnValue(of(completed));
+
+      const togglePromise = store.toggleTaskStatus('t1');
+      expect(store.tasks().find(t => t.id === 't1')?.status).toBe('completed');
+      await togglePromise;
+    });
+
+    it('should rollback on toggle failure', async () => {
+      mockTaskService.updateTask.and.returnValue(throwError(() => new Error('fail')));
+
+      await store.toggleTaskStatus('t1');
+      expect(store.error()).toBe('Failed to update task status');
+      expect(store.tasks().find(t => t.id === 't1')?.status).toBe('needsAction');
     });
   });
 

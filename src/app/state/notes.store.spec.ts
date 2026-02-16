@@ -217,10 +217,19 @@ describe('NotesStore', () => {
       );
     });
 
-    it('should set error on failure', async () => {
+    it('should optimistically update the note before API call completes', async () => {
+      // Note is updated immediately even before the API resolves
+      const updatePromise = store.updateNote('n1', { title: 'Optimistic Title' });
+      expect(store.notes().find(n => n.id === 'n1')?.title).toBe('Optimistic Title');
+      await updatePromise;
+    });
+
+    it('should set error and rollback on failure', async () => {
       mockNoteService.updateNote.and.returnValue(throwError(() => new Error('fail')));
       await store.updateNote('n1', { title: 'Fail' });
       expect(store.error()).toBe('Failed to update note');
+      // Should rollback to original note
+      expect(store.notes().find(n => n.id === 'n1')?.title).toBe('Work Note');
     });
   });
 
@@ -241,10 +250,20 @@ describe('NotesStore', () => {
       expect(mockNoteService.deleteNote).toHaveBeenCalledWith('n1');
     });
 
-    it('should set error on failure', async () => {
+    it('should optimistically remove the note before API call completes', async () => {
+      const removePromise = store.removeNote('n1');
+      expect(store.notes().find(n => n.id === 'n1')).toBeUndefined();
+      expect(store.notes().length).toBe(2);
+      await removePromise;
+    });
+
+    it('should set error and rollback on failure', async () => {
       mockNoteService.deleteNote.and.returnValue(throwError(() => new Error('fail')));
       await store.removeNote('n1');
       expect(store.error()).toBe('Failed to delete note');
+      // Should rollback — note is restored
+      expect(store.notes().find(n => n.id === 'n1')).toBeTruthy();
+      expect(store.notes().length).toBe(3);
     });
   });
 

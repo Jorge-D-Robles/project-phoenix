@@ -92,47 +92,80 @@ export const TasksStore = signalStore(
         finalUpdate.notes = task.notes ?? '';
       }
 
+      // Optimistic update
+      const optimistic: Task = {
+        ...task,
+        ...(update.title !== undefined && { title: update.title }),
+        ...(update.status !== undefined && { status: update.status as Task['status'] }),
+        ...(update.dueDateTime !== undefined && { dueDateTime: update.dueDateTime }),
+        ...(update.notes !== undefined && { notes: update.notes }),
+      };
+      patchState(store, {
+        tasks: store.tasks().map((t) => (t.id === taskId ? optimistic : t)),
+        error: null,
+      });
+
       try {
         const updated = await firstValueFrom(taskService.updateTask(listId, taskId, finalUpdate));
         patchState(store, {
           tasks: store.tasks().map((t) => (t.id === taskId ? updated : t)),
-          error: null,
         });
       } catch {
-        patchState(store, { error: 'Failed to update task' });
+        // Rollback
+        patchState(store, {
+          tasks: store.tasks().map((t) => (t.id === taskId ? task : t)),
+          error: 'Failed to update task',
+        });
       }
     },
 
     async removeTask(taskId: string): Promise<void> {
       const listId = store.selectedListId();
       if (!listId) return;
+
+      const previous = store.tasks();
+
+      // Optimistic removal
+      patchState(store, {
+        tasks: previous.filter(t => t.id !== taskId),
+        error: null,
+      });
+
       try {
         await firstValueFrom(taskService.deleteTask(listId, taskId));
-        patchState(store, {
-          tasks: store.tasks().filter(t => t.id !== taskId),
-          error: null,
-        });
       } catch {
-        patchState(store, { error: 'Failed to delete task' });
+        // Rollback
+        patchState(store, { tasks: previous, error: 'Failed to delete task' });
       }
     },
 
     async toggleTaskStatus(taskId: string): Promise<void> {
       const task = store.tasks().find(t => t.id === taskId);
       if (!task) return;
-      const newStatus = task.status === 'needsAction' ? 'completed' : 'needsAction';
       const listId = store.selectedListId();
       if (!listId) return;
+
+      const newStatus = task.status === 'needsAction' ? 'completed' : 'needsAction';
+
+      // Optimistic toggle
+      patchState(store, {
+        tasks: store.tasks().map(t => t.id === taskId ? { ...t, status: newStatus } as Task : t),
+        error: null,
+      });
+
       try {
         const updated = await firstValueFrom(
           taskService.updateTask(listId, taskId, { status: newStatus }),
         );
         patchState(store, {
           tasks: store.tasks().map(t => t.id === taskId ? updated : t),
-          error: null,
         });
       } catch {
-        patchState(store, { error: 'Failed to update task status' });
+        // Rollback
+        patchState(store, {
+          tasks: store.tasks().map(t => t.id === taskId ? task : t),
+          error: 'Failed to update task status',
+        });
       }
     },
 

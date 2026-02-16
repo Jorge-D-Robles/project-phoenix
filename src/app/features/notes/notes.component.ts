@@ -133,7 +133,7 @@ export class NotesComponent implements OnInit {
     this.store.selectNote(null);
   }
 
-  protected onSave(formData: NoteFormData): void {
+  protected async onSave(formData: NoteFormData): Promise<void> {
     const note = this.editingNote();
     if (note) {
       this.store.updateNote(note.id, {
@@ -144,7 +144,7 @@ export class NotesComponent implements OnInit {
       });
     } else {
       const now = new Date().toISOString();
-      this.store.addNote({
+      await this.store.addNote({
         title: formData.title,
         content: formData.content,
         color: formData.color,

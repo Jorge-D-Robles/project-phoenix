@@ -69,29 +69,40 @@ export const NotesStore = signalStore(
       const existing = store.notes().find(n => n.id === id);
       if (!existing) return;
 
-      const { id: _id, ...existingData } = existing;
-      const merged: Omit<Note, 'id'> = { ...existingData, ...updates };
+      const merged: Note = { ...existing, ...updates };
+      const { id: _id, ...mergedData } = merged;
+
+      // Optimistic update
+      patchState(store, {
+        notes: store.notes().map(n => n.id === id ? merged : n),
+        error: null,
+      });
 
       try {
-        const updated = await firstValueFrom(noteService.updateNote(id, merged));
-        patchState(store, {
-          notes: store.notes().map(n => n.id === id ? updated : n),
-          error: null,
-        });
+        await firstValueFrom(noteService.updateNote(id, mergedData));
       } catch {
-        patchState(store, { error: 'Failed to update note' });
+        // Rollback
+        patchState(store, {
+          notes: store.notes().map(n => n.id === id ? existing : n),
+          error: 'Failed to update note',
+        });
       }
     },
 
     async removeNote(id: string): Promise<void> {
+      const previous = store.notes();
+
+      // Optimistic removal
+      patchState(store, {
+        notes: previous.filter(n => n.id !== id),
+        error: null,
+      });
+
       try {
         await firstValueFrom(noteService.deleteNote(id));
-        patchState(store, {
-          notes: store.notes().filter(n => n.id !== id),
-          error: null,
-        });
       } catch {
-        patchState(store, { error: 'Failed to delete note' });
+        // Rollback
+        patchState(store, { notes: previous, error: 'Failed to delete note' });
       }
     },
 

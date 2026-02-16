@@ -119,16 +119,19 @@ export class NoteService {
     });
   }
 
-  /** Upload (or overwrite) note content to a Drive file */
+  /** Upload (or overwrite) note content to a Drive file.
+   *  Drive's upload endpoint returns file metadata, not the uploaded content,
+   *  so we map the response back to the Note we sent. */
   private uploadNoteContent(fileId: string, note: Omit<Note, 'id'>): Observable<Note> {
     const params = new HttpParams().set('uploadType', 'media');
-    return this.http.patch<Note>(
+    const noteWithId: Note = { ...note, id: fileId };
+    return this.http.patch(
       `${UPLOAD_BASE}/files/${fileId}`,
-      { ...note, id: fileId },
+      noteWithId,
       {
         params,
         headers: { 'Content-Type': JSON_MIME },
       },
-    );
+    ).pipe(map(() => noteWithId));
   }
 }

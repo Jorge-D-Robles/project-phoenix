@@ -179,16 +179,19 @@ describe('NoteService', () => {
       expect(createReq.request.body.mimeType).toBe('application/json');
       createReq.flush({ id: 'new-file-1', name: 'note-abc.json', mimeType: 'application/json' });
 
-      // Step 3: Upload content
+      // Step 3: Upload content — Drive returns file metadata, but the service
+      // maps it to the Note we sent (with the file ID from metadata creation)
       const uploadReq = httpTesting.expectOne(r =>
         r.url === `${UPLOAD_BASE}/files/new-file-1` &&
         r.method === 'PATCH' &&
         r.params.get('uploadType') === 'media',
       );
-      uploadReq.flush(makeNote({ id: 'new-file-1' }));
+      uploadReq.flush({ id: 'new-file-1', name: 'note-abc.json', mimeType: 'application/json' });
 
       expect(result).toBeDefined();
       expect(result!.id).toBe('new-file-1');
+      expect(result!.title).toBe('Test Note');
+      expect(result!.content).toBe('<p>Hello world</p>');
     });
 
     it('should create folder if it does not exist, then create note', () => {
@@ -221,21 +224,22 @@ describe('NoteService', () => {
       );
       createReq.flush({ id: 'new-file-1', name: 'note-abc.json', mimeType: 'application/json' });
 
-      // Step 4: Upload content
+      // Step 4: Upload content — returns file metadata, mapped to Note by service
       const uploadReq = httpTesting.expectOne(r =>
         r.url === `${UPLOAD_BASE}/files/new-file-1` &&
         r.method === 'PATCH' &&
         r.params.get('uploadType') === 'media',
       );
-      uploadReq.flush(makeNote({ id: 'new-file-1' }));
+      uploadReq.flush({ id: 'new-file-1', name: 'note-abc.json', mimeType: 'application/json' });
 
       expect(result).toBeDefined();
       expect(result!.id).toBe('new-file-1');
+      expect(result!.title).toBe('Test Note');
     });
   });
 
   describe('updateNote', () => {
-    it('should PATCH the file with updated content', () => {
+    it('should PATCH the file with updated content and return the Note from input', () => {
       const noteData = makeNotePayload(makeNote({ title: 'Updated Title' }));
       let result: Note | undefined;
 
@@ -247,10 +251,13 @@ describe('NoteService', () => {
         r.params.get('uploadType') === 'media',
       );
       expect(req.request.body.title).toBe('Updated Title');
-      req.flush(makeNote({ title: 'Updated Title' }));
+      // Drive returns file metadata, not the Note — service maps it
+      req.flush({ id: 'file-1', name: 'note.json', mimeType: 'application/json' });
 
       expect(result).toBeDefined();
+      expect(result!.id).toBe('file-1');
       expect(result!.title).toBe('Updated Title');
+      expect(result!.content).toBe('<p>Hello world</p>');
     });
   });
 
