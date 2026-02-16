@@ -20,9 +20,6 @@ This board uses a ticket-based system to track granular units of work.
 | PHX-038 | Build FocusService for Drive appdata CRUD | TODO | — | 2026-02-16 |
 | PHX-039 | Implement FocusStore (SignalStore) with timer logic | TODO | — | 2026-02-16 |
 | PHX-040 | Build Focus Timer UI (toolbar component, settings dialog, task linking) | TODO | — | 2026-02-16 |
-| PHX-041 | Implement InsightsStore (SignalStore) with analytics computations | TODO | — | 2026-02-16 |
-| PHX-042 | Build Insights UI components (score card, trend chart, streaks, summary) | TODO | — | 2026-02-16 |
-| PHX-043 | Build InsightsComponent and wire /insights route | TODO | — | 2026-02-16 |
 
 ## 📋 Backlog
 
@@ -39,6 +36,9 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-043 | Build InsightsComponent and wire /insights route | 2026-02-16 | Claude |
+| PHX-042 | Build Insights UI components (score card, trend chart, streaks, summary) | 2026-02-16 | Claude |
+| PHX-041 | Implement `InsightsStore` (SignalStore) with analytics computations | 2026-02-16 | Claude |
 | PHX-033 | Build Notes UI (grid, editor, labels) | 2026-02-16 | Claude |
 | PHX-032 | Implement `NotesStore` (SignalStore) | 2026-02-16 | Claude |
 | PHX-031 | Build `NoteService` for Drive CRUD | 2026-02-16 | Claude |

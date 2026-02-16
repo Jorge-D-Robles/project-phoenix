@@ -46,5 +46,13 @@ export const routes: Routes = [
         (m) => m.NotesComponent,
       ),
   },
+  {
+    path: 'insights',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/insights/insights.component').then(
+        (m) => m.InsightsComponent,
+      ),
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];

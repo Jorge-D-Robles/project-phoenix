@@ -88,6 +88,7 @@ export class App {
     { path: '/calendar', label: 'Calendar', icon: 'calendar_month' },
     { path: '/habits', label: 'Habits', icon: 'local_fire_department' },
     { path: '/notes', label: 'Notes', icon: 'note' },
+    { path: '/insights', label: 'Insights', icon: 'insights' },
   ];
 
   constructor() {
