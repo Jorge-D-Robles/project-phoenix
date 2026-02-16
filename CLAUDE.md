@@ -20,11 +20,13 @@
 
 ## Agent Workflow
 
-1. **Pull first**: Run `git pull origin main` before starting any work — other agents may be working on this codebase concurrently
-2. Read the relevant `docs/` spec before implementing any feature
-3. Follow the conventions below
-4. Reference `design.md` for full context when `docs/` is insufficient
-5. After every complete and fully validated change: follow the Git Workflow below
+1. **Pull first**: Run `git pull origin main` before starting any work.
+2. **Check Tasks**: Read `agents/TASKS.md` to identify the next priority ticket (`PHX-XXX`).
+3. **Claim Ticket**: Mark the ticket as `IN_PROGRESS` and set yourself as `Assignee`.
+4. **Read Spec**: Read the relevant `docs/` spec before implementing any feature.
+5. **Implement & Verify**: Follow conventions and refer to `design.md` for full context.
+6. **Update Ticket**: Upon completion, move the ticket to `DONE` in `agents/TASKS.md`.
+7. **Sync & Push**: Follow the Git Workflow below after every fully validated change.
 
 ## Git Workflow
 
@@ -92,6 +94,9 @@ After completing any task, evaluate whether something was learned that should be
 
 ```
 design.md                  — Canonical technical specification
+agents/                    — Agent-led task tracking and roadmap
+  TASKS.md                 — Active ticket board (PHX-XXX)
+  ROADMAP.md               — High-level project milestones
 docs/                      — Distilled agent-ready reference docs
   architecture.md          — System philosophy, aggregator model, tech stack
   domain-models.md         — Task, Habit, Note schemas + validation rules
