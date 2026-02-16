@@ -1,1 +1,41 @@
-{}
+{
+  "permissions": {
+    "allow": [
+      "Bash(git *)",
+      "Bash(npm *)",
+      "Bash(npx *)",
+      "Bash(ng *)",
+      "Bash(node *)",
+      "Bash(ls *)",
+      "Bash(mkdir *)",
+      "Bash(pwd)",
+      "Bash(which *)",
+      "Bash(cat *)",
+      "Bash(head *)",
+      "Bash(tail *)",
+      "Bash(wc *)",
+      "Bash(diff *)",
+      "Bash(echo *)",
+      "Bash(cp *)",
+      "Bash(mv *)",
+      "Bash(rm *)",
+      "Bash(touch *)",
+      "Bash(chmod *)",
+      "Bash(open *)",
+      "Bash(true)",
+      "Bash(false)",
+      "Bash(test *)",
+      "Bash(cd *)",
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+      "WebFetch",
+      "WebSearch",
+      "Task",
+      "Skill",
+      "NotebookEdit"
+    ]
+  }
+}

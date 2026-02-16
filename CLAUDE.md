@@ -82,6 +82,13 @@ After completing any task, evaluate whether something was learned that should be
 - Include the change in the same commit as the work that triggered it when possible
 - Do not wait to be asked — proactively update docs as part of finishing a task
 
+## Testing Strategy (TDD)
+
+- **Test-Driven Development**: Write `.spec.ts` before implementation (Red → Green → Refactor)
+- **Runner**: Karma + Jasmine (not the Angular 21 default of Vitest)
+- **Spec**: See `docs/testing-spec.md` for full conventions and patterns
+- **Command**: Use `/unit-test-writer` to generate specs for a feature
+
 ## Conventions
 
 - **Dates**: ISO 8601 UTC
@@ -96,7 +103,7 @@ After completing any task, evaluate whether something was learned that should be
 design.md                  — Canonical technical specification
 agents/                    — Agent-led task tracking and roadmap
   TASKS.md                 — Active ticket board (PHX-XXX)
-  ROADMAP.md               — High-level project milestones
+  ROADMAP.md               — Full roadmap with deliverables + acceptance criteria
 docs/                      — Distilled agent-ready reference docs
   architecture.md          — System philosophy, aggregator model, tech stack
   domain-models.md         — Task, Habit, Note schemas + validation rules
@@ -104,6 +111,10 @@ docs/                      — Distilled agent-ready reference docs
   web-spec.md              — Angular 21+ architecture, SignalStore, components
   android-spec.md          — Kotlin/Compose, Room, WorkManager, MVVM
   heatmap-algorithm.md     — Quartile math, grid positioning
-  roadmap.md               — Web-first phasing plan
+  testing-spec.md          — TDD strategy, Karma/Jasmine, Angular 21+ patterns
+  roadmap.md               — Pointer to agents/ROADMAP.md
 .claude/commands/          — Workflow slash commands
+  implement-feature.md     — Guided feature implementation workflow
+  sync-design.md           — Sync docs/ from design.md changes
+  unit-test-writer.md      — Generate TDD-style unit tests
 ```

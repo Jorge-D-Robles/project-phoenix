@@ -154,6 +154,21 @@ export class TaskCardComponent {
 
 ---
 
+## Testing
+
+See `docs/testing-spec.md` for the full testing strategy. Key points:
+
+- **TDD**: Write `.spec.ts` files before implementation
+- **Runner**: Karma + Jasmine (`ng new --test-runner=karma`)
+- **Zoneless**: Use `await fixture.whenStable()`, not `fixture.detectChanges()`
+- **Signal inputs**: Set via `fixture.componentRef.setInput()`
+- **No zone.js utilities**: Use `jasmine.clock()` instead of `fakeAsync`/`tick`
+- **HTTP**: Use `provideHttpClient()` + `provideHttpClientTesting()`
+
+Use `/unit-test-writer` to generate specs following all conventions.
+
+---
+
 ## Agent Checklist: Before Committing Angular Code
 
 - [ ] Component is `standalone: true`
