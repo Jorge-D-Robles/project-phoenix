@@ -42,14 +42,19 @@ export const AuthService = signalStore(
       oauthService.configure({
         issuer: 'https://accounts.google.com',
         clientId: config.googleClientId,
+        dummyClientSecret: config.googleClientSecret,
         redirectUri: window.location.origin,
         scope: GOOGLE_SCOPES.baseline,
         responseType: 'code',
-        showDebugInformation: false,
+        showDebugInformation: true,
         strictDiscoveryDocumentValidation: false,
       });
 
-      await oauthService.loadDiscoveryDocumentAndTryLogin();
+      try {
+        await oauthService.loadDiscoveryDocumentAndTryLogin();
+      } catch (err) {
+        console.error('[AuthService] Discovery/login failed:', err);
+      }
 
       if (oauthService.hasValidAccessToken()) {
         const claims = oauthService.getIdentityClaims() as IdentityClaims | null;
