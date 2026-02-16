@@ -12,7 +12,7 @@ import { routes } from './app.routes';
 import { AUTH_CONFIG } from './core/auth.config';
 import { AuthService } from './core/auth.service';
 import { authInterceptor } from './core/auth.interceptor';
-import { environment } from '../environments/environment';
+import { environment } from '../environments/environment.development';
 
 function initAuth(authService: AuthService): () => Promise<void> {
   return () => authService.init();
