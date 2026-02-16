@@ -1,0 +1,168 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { provideNoopAnimations } from '@angular/platform-browser/animations';
+import { signal } from '@angular/core';
+import { TasksComponent } from './tasks.component';
+import { TasksStore } from '../../state/tasks.store';
+import { Task, TaskList, TaskFilter } from '../../data/models/task.model';
+
+const makeTasks = (): Task[] => [
+  {
+    id: 't1', localId: 'l1', title: 'Buy groceries', status: 'needsAction',
+    dueDateTime: '2026-02-20T00:00:00.000Z', notes: 'Milk, bread',
+    meta: null, parent: null, position: '001', updatedDateTime: '2026-02-16T00:00:00.000Z',
+  },
+  {
+    id: 't2', localId: 'l2', title: 'Walk the dog', status: 'completed',
+    dueDateTime: null, notes: null,
+    meta: null, parent: null, position: '002', updatedDateTime: '2026-02-16T00:00:00.000Z',
+  },
+  {
+    id: 't3', localId: 'l3', title: 'Sub-task', status: 'needsAction',
+    dueDateTime: null, notes: null,
+    meta: null, parent: 't1', position: '001', updatedDateTime: '2026-02-16T00:00:00.000Z',
+  },
+];
+
+const makeTaskLists = (): TaskList[] => [
+  { id: 'list1', title: 'My Tasks', updatedDateTime: '2026-02-16T00:00:00.000Z' },
+  { id: 'list2', title: 'Work', updatedDateTime: '2026-02-16T00:00:00.000Z' },
+];
+
+function createMockStore(overrides: {
+  tasks?: Task[];
+  taskLists?: TaskList[];
+  loading?: boolean;
+  error?: string | null;
+  filteredTasks?: Task[];
+  filter?: TaskFilter;
+  selectedListId?: string | null;
+} = {}) {
+  const tasks = overrides.tasks ?? makeTasks();
+  const filtered = overrides.filteredTasks ?? tasks;
+  const store = jasmine.createSpyObj('TasksStore',
+    ['loadTaskLists', 'loadTasks', 'addTask', 'updateTask', 'toggleTaskStatus', 'removeTask', 'setFilter'],
+    {
+      tasks: signal(tasks),
+      taskLists: signal(overrides.taskLists ?? makeTaskLists()),
+      loading: signal(overrides.loading ?? false),
+      error: signal(overrides.error ?? null),
+      filteredTasks: signal(filtered),
+      completionRate: signal(0),
+      taskCount: signal(tasks.length),
+      filter: signal(overrides.filter ?? 'ALL' as TaskFilter),
+      selectedListId: signal(overrides.selectedListId ?? 'list1'),
+    },
+  );
+  store.loadTaskLists.and.resolveTo();
+  store.loadTasks.and.resolveTo();
+  store.addTask.and.resolveTo();
+  store.updateTask.and.resolveTo();
+  store.toggleTaskStatus.and.resolveTo();
+  store.removeTask.and.resolveTo();
+  return store;
+}
+
+async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {}) {
+  const mockStore = createMockStore(storeOverrides);
+
+  await TestBed.configureTestingModule({
+    imports: [TasksComponent],
+    providers: [
+      { provide: TasksStore, useValue: mockStore },
+      provideNoopAnimations(),
+    ],
+  }).compileComponents();
+
+  const fixture = TestBed.createComponent(TasksComponent);
+  await fixture.whenStable();
+  return { fixture, mockStore };
+}
+
+describe('TasksComponent', () => {
+  afterEach(() => TestBed.resetTestingModule());
+
+  describe('initialization', () => {
+    it('should load task lists on init', async () => {
+      const { mockStore } = await setup();
+      expect(mockStore.loadTaskLists).toHaveBeenCalled();
+    });
+  });
+
+  describe('task list selector', () => {
+    it('should render task list selector', async () => {
+      const { fixture } = await setup();
+      const select = fixture.debugElement.query(By.css('[data-testid="list-selector"]'));
+      expect(select).toBeTruthy();
+    });
+  });
+
+  describe('filter tabs', () => {
+    it('should render filter tabs', async () => {
+      const { fixture } = await setup();
+      const tabs = fixture.debugElement.queryAll(By.css('[data-testid="filter-tab"]'));
+      expect(tabs.length).toBe(3);
+    });
+
+    it('should call setFilter when a tab is clicked', async () => {
+      const { fixture, mockStore } = await setup();
+      const tabs = fixture.debugElement.queryAll(By.css('[data-testid="filter-tab"]'));
+      tabs[1].nativeElement.querySelector('button').click();
+      await fixture.whenStable();
+      expect(mockStore.setFilter).toHaveBeenCalledWith('needsAction');
+    });
+  });
+
+  describe('task rendering', () => {
+    it('should render task cards for filtered tasks', async () => {
+      const { fixture } = await setup();
+      const cards = fixture.debugElement.queryAll(By.css('app-task-card'));
+      expect(cards.length).toBe(3);
+    });
+
+    it('should show empty state when no tasks', async () => {
+      const { fixture } = await setup({ tasks: [], filteredTasks: [] });
+      const empty = fixture.debugElement.query(By.css('[data-testid="empty-state"]'));
+      expect(empty).toBeTruthy();
+    });
+  });
+
+  describe('loading state', () => {
+    it('should show spinner when loading', async () => {
+      const { fixture } = await setup({ loading: true });
+      const spinner = fixture.debugElement.query(By.css('mat-spinner'));
+      expect(spinner).toBeTruthy();
+    });
+  });
+
+  describe('error state', () => {
+    it('should show error message when error exists', async () => {
+      const { fixture } = await setup({ error: 'Failed to load tasks' });
+      const error = fixture.debugElement.query(By.css('[data-testid="error-message"]'));
+      expect(error).toBeTruthy();
+      expect(error.nativeElement.textContent).toContain('Failed to load tasks');
+    });
+  });
+
+  describe('interactions', () => {
+    it('should toggle task status when card emits toggle', async () => {
+      const { fixture, mockStore } = await setup();
+      const card = fixture.debugElement.query(By.css('app-task-card'));
+      card.triggerEventHandler('toggle', 't1');
+      expect(mockStore.toggleTaskStatus).toHaveBeenCalledWith('t1');
+    });
+
+    it('should remove task when card emits delete', async () => {
+      const { fixture, mockStore } = await setup();
+      const card = fixture.debugElement.query(By.css('app-task-card'));
+      card.triggerEventHandler('delete', 't1');
+      expect(mockStore.removeTask).toHaveBeenCalledWith('t1');
+    });
+
+    it('should show FAB for adding a new task', async () => {
+      const { fixture } = await setup();
+      const fab = fixture.debugElement.query(By.css('[data-testid="add-task-fab"]'));
+      expect(fab).toBeTruthy();
+    });
+  });
+});
