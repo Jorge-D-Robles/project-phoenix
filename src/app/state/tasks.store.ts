@@ -139,6 +139,21 @@ export const TasksStore = signalStore(
     async moveTask(taskId: string, request: MoveTaskRequest): Promise<void> {
       const listId = store.selectedListId();
       if (!listId) return;
+
+      // Optimistic reorder
+      const currentTasks = [...store.tasks()];
+      const taskIdx = currentTasks.findIndex(t => t.id === taskId);
+      if (taskIdx === -1) return;
+
+      const [task] = currentTasks.splice(taskIdx, 1);
+      if (request.previous) {
+        const prevIdx = currentTasks.findIndex(t => t.id === request.previous);
+        currentTasks.splice(prevIdx + 1, 0, task);
+      } else {
+        currentTasks.unshift(task);
+      }
+      patchState(store, { tasks: currentTasks });
+
       try {
         const moved = await firstValueFrom(taskService.moveTask(listId, taskId, request));
         patchState(store, {
@@ -146,7 +161,13 @@ export const TasksStore = signalStore(
           error: null,
         });
       } catch {
-        patchState(store, { error: 'Failed to move task' });
+        // Rollback: reload from server
+        try {
+          const tasks = await firstValueFrom(taskService.getTasks(listId));
+          patchState(store, { tasks, error: 'Failed to move task' });
+        } catch {
+          patchState(store, { error: 'Failed to move task' });
+        }
       }
     },
 

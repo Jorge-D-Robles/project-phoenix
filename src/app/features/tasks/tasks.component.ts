@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
@@ -8,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TasksStore } from '../../state/tasks.store';
 import { TaskCardComponent } from './task-card.component';
 import { TaskDetailDialogComponent } from './task-detail-dialog.component';
-import { TaskFilter } from '../../data/models/task.model';
+import { Task, TaskFilter } from '../../data/models/task.model';
 
 @Component({
   selector: 'app-tasks',
@@ -20,6 +21,8 @@ import { TaskFilter } from '../../data/models/task.model';
     MatButtonModule,
     MatIconModule,
     MatButtonToggleModule,
+    CdkDropList,
+    CdkDrag,
     TaskCardComponent,
   ],
   template: `
@@ -72,9 +75,13 @@ import { TaskFilter } from '../../data/models/task.model';
       } @else {
         <!-- Task list -->
         @if (store.filteredTasks().length > 0) {
-          <div class="flex flex-col gap-2">
+          <div class="flex flex-col gap-2"
+               cdkDropList
+               data-testid="task-list"
+               (cdkDropListDropped)="onDrop($event)">
             @for (task of store.filteredTasks(); track task.id) {
               <app-task-card
+                cdkDrag
                 [task]="task"
                 (toggle)="store.toggleTaskStatus($event)"
                 (edit)="onEditTask($event)"
@@ -137,6 +144,18 @@ export class TasksComponent implements OnInit {
         this.store.addTask(result);
       }
     });
+  }
+
+  protected onDrop(event: CdkDragDrop<Task[]>): void {
+    if (event.previousIndex === event.currentIndex) return;
+
+    const tasks = [...this.store.filteredTasks()];
+    moveItemInArray(tasks, event.previousIndex, event.currentIndex);
+
+    const movedTaskId = tasks[event.currentIndex].id;
+    const previous = event.currentIndex > 0 ? tasks[event.currentIndex - 1].id : undefined;
+
+    this.store.moveTask(movedTaskId, previous ? { previous } : {});
   }
 
   protected onEditTask(taskId: string): void {

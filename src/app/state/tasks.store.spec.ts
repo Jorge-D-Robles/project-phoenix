@@ -310,14 +310,40 @@ describe('TasksStore', () => {
       mockTaskService.moveTask.and.returnValue(of(movedTask));
     });
 
-    it('should update the moved task in the store', async () => {
+    it('should reorder tasks and update from API', async () => {
       await store.moveTask('t1', { previous: 't3' });
+
+      // Reordered: [t2, t3, t1]
+      const ids = store.tasks().map(t => t.id);
+      expect(ids).toEqual(['t2', 't3', 't1']);
+
+      // Position updated from API response
       expect(store.tasks().find(t => t.id === 't1')?.position).toBe('00005');
+    });
+
+    it('should move task to first position when no previous', async () => {
+      const movedT3: Task = { ...MOCK_TASKS[2], position: '00000' };
+      mockTaskService.moveTask.and.returnValue(of(movedT3));
+
+      await store.moveTask('t3', {});
+
+      const ids = store.tasks().map(t => t.id);
+      expect(ids).toEqual(['t3', 't1', 't2']);
     });
 
     it('should call moveTask on the service', async () => {
       await store.moveTask('t1', { parent: 'p1', previous: 't3' });
       expect(mockTaskService.moveTask).toHaveBeenCalledWith('list1', 't1', { parent: 'p1', previous: 't3' });
+    });
+
+    it('should rollback to server state on move failure', async () => {
+      mockTaskService.moveTask.and.returnValue(throwError(() => new Error('API error')));
+
+      await store.moveTask('t1', { previous: 't3' });
+
+      // After rollback, tasks should be reloaded from server
+      expect(store.tasks()).toEqual(MOCK_TASKS);
+      expect(store.error()).toBe('Failed to move task');
     });
   });
 });

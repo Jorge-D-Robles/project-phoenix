@@ -41,7 +41,7 @@ function createMockStore(overrides: {
   const tasks = overrides.tasks ?? makeTasks();
   const filtered = overrides.filteredTasks ?? tasks;
   const store = jasmine.createSpyObj('TasksStore',
-    ['loadTaskLists', 'loadTasks', 'addTask', 'updateTask', 'toggleTaskStatus', 'removeTask', 'setFilter'],
+    ['loadTaskLists', 'loadTasks', 'addTask', 'updateTask', 'toggleTaskStatus', 'removeTask', 'moveTask', 'setFilter'],
     {
       tasks: signal(tasks),
       taskLists: signal(overrides.taskLists ?? makeTaskLists()),
@@ -60,6 +60,7 @@ function createMockStore(overrides: {
   store.updateTask.and.resolveTo();
   store.toggleTaskStatus.and.resolveTo();
   store.removeTask.and.resolveTo();
+  store.moveTask.and.resolveTo();
   return store;
 }
 
@@ -141,6 +142,56 @@ describe('TasksComponent', () => {
       const error = fixture.debugElement.query(By.css('[data-testid="error-message"]'));
       expect(error).toBeTruthy();
       expect(error.nativeElement.textContent).toContain('Failed to load tasks');
+    });
+  });
+
+  describe('drag and drop', () => {
+    it('should render drop list container', async () => {
+      const { fixture } = await setup();
+      const dropList = fixture.debugElement.query(By.css('[data-testid="task-list"]'));
+      expect(dropList).toBeTruthy();
+    });
+
+    it('should call moveTask when task is reordered', async () => {
+      const { fixture, mockStore } = await setup();
+      const dropList = fixture.debugElement.query(By.css('[data-testid="task-list"]'));
+
+      // Simulate dropping t1 (index 0) to after t3 (index 2)
+      dropList.triggerEventHandler('cdkDropListDropped', {
+        previousIndex: 0,
+        currentIndex: 2,
+      });
+
+      // After moveItemInArray([t1,t2,t3], 0, 2) → [t2,t3,t1]
+      // movedTask = t1 (at index 2), previous = t3 (at index 1)
+      expect(mockStore.moveTask).toHaveBeenCalledWith('t1', { previous: 't3' });
+    });
+
+    it('should not call moveTask when dropped at same position', async () => {
+      const { fixture, mockStore } = await setup();
+      const dropList = fixture.debugElement.query(By.css('[data-testid="task-list"]'));
+
+      dropList.triggerEventHandler('cdkDropListDropped', {
+        previousIndex: 1,
+        currentIndex: 1,
+      });
+
+      expect(mockStore.moveTask).not.toHaveBeenCalled();
+    });
+
+    it('should pass undefined previous when moved to first position', async () => {
+      const { fixture, mockStore } = await setup();
+      const dropList = fixture.debugElement.query(By.css('[data-testid="task-list"]'));
+
+      // Simulate dropping t3 (index 2) to first position (index 0)
+      dropList.triggerEventHandler('cdkDropListDropped', {
+        previousIndex: 2,
+        currentIndex: 0,
+      });
+
+      // After moveItemInArray([t1,t2,t3], 2, 0) → [t3,t1,t2]
+      // movedTask = t3 (at index 0), previous = undefined (first position)
+      expect(mockStore.moveTask).toHaveBeenCalledWith('t3', {});
     });
   });
 
