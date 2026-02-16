@@ -1,0 +1,112 @@
+import { inject, Injectable } from '@angular/core';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, expand, EMPTY, map, reduce } from 'rxjs';
+
+import {
+  CalendarEvent,
+  GoogleCalendarEvent,
+  GoogleCalendarEventsResponse,
+  getEventColor,
+  EventStatus,
+} from './models/calendar-event.model';
+
+const BASE_URL = 'https://www.googleapis.com/calendar/v3';
+const CALENDAR_ID = 'primary';
+const DAYS_BACK = 30;
+const DAYS_FORWARD = 90;
+
+/** Allowed HTML tags for event description sanitization */
+const ALLOWED_TAGS = new Set([
+  'b', 'i', 'u', 'em', 'strong', 'a', 'br', 'p', 'ul', 'ol', 'li', 'span',
+]);
+
+export interface CalendarSyncResult {
+  events: CalendarEvent[];
+  syncToken: string | null;
+}
+
+@Injectable({ providedIn: 'root' })
+export class CalendarService {
+  private readonly http = inject(HttpClient);
+
+  /** Initial sync: fetch events within a time window and return sync token */
+  getEvents(now: Date): Observable<CalendarSyncResult> {
+    const timeMin = new Date(now.getTime() - DAYS_BACK * 24 * 60 * 60 * 1000);
+    const timeMax = new Date(now.getTime() + DAYS_FORWARD * 24 * 60 * 60 * 1000);
+
+    const baseParams = new HttpParams()
+      .set('timeMin', timeMin.toISOString())
+      .set('timeMax', timeMax.toISOString())
+      .set('singleEvents', 'true')
+      .set('orderBy', 'startTime');
+
+    return this.fetchAllPages(baseParams).pipe(
+      map(({ events, syncToken }) => ({
+        events: events.filter(e => e.status !== 'cancelled'),
+        syncToken,
+      })),
+    );
+  }
+
+  /** Incremental sync: fetch only changed events since last sync token */
+  syncEvents(syncToken: string): Observable<CalendarSyncResult> {
+    const params = new HttpParams().set('syncToken', syncToken);
+
+    return this.fetchAllPages(params);
+  }
+
+  private fetchAllPages(baseParams: HttpParams): Observable<CalendarSyncResult> {
+    const fetchPage = (pageToken?: string) => {
+      let params = baseParams;
+      if (pageToken) {
+        params = params.set('pageToken', pageToken);
+      }
+      return this.http.get<GoogleCalendarEventsResponse>(
+        `${BASE_URL}/calendars/${CALENDAR_ID}/events`,
+        { params },
+      );
+    };
+
+    return fetchPage().pipe(
+      expand(res => res.nextPageToken ? fetchPage(res.nextPageToken) : EMPTY),
+      reduce(
+        (acc: { events: CalendarEvent[]; syncToken: string | null }, res) => {
+          const mapped = (res.items ?? []).map(raw => this.mapEvent(raw));
+          return {
+            events: [...acc.events, ...mapped],
+            syncToken: res.nextSyncToken ?? acc.syncToken,
+          };
+        },
+        { events: [], syncToken: null },
+      ),
+    );
+  }
+
+  private mapEvent(raw: GoogleCalendarEvent): CalendarEvent {
+    const allDay = !raw.start.dateTime;
+    return {
+      id: raw.id,
+      summary: raw.summary ?? '(No title)',
+      description: raw.description ? sanitizeHtml(raw.description) : null,
+      start: allDay ? raw.start.date! : raw.start.dateTime!,
+      end: allDay ? raw.end.date! : raw.end.dateTime!,
+      allDay,
+      colorId: raw.colorId ?? null,
+      color: getEventColor(raw.colorId),
+      location: raw.location ?? null,
+      htmlLink: raw.htmlLink ?? null,
+      status: raw.status as EventStatus,
+      updatedDateTime: raw.updated,
+    };
+  }
+}
+
+/** Strip disallowed HTML tags while preserving allowed ones and their attributes */
+export function sanitizeHtml(html: string): string {
+  return html.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g, (match, tag: string) => {
+    if (ALLOWED_TAGS.has(tag.toLowerCase())) {
+      return match;
+    }
+    return '';
+  });
+}
