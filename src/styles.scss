@@ -1,0 +1,50 @@
+@use '@angular/material' as mat;
+
+// Phoenix custom Material 3 theme
+$phoenix-theme: mat.define-theme((
+  color: (
+    theme-type: light,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto, sans-serif',
+    plain-family: 'Roboto, sans-serif',
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
+$phoenix-dark-theme: mat.define-theme((
+  color: (
+    theme-type: dark,
+    primary: mat.$azure-palette,
+    tertiary: mat.$blue-palette,
+  ),
+  typography: (
+    brand-family: 'Roboto, sans-serif',
+    plain-family: 'Roboto, sans-serif',
+  ),
+  density: (
+    scale: 0,
+  ),
+));
+
+// Light theme (default)
+html {
+  @include mat.all-component-themes($phoenix-theme);
+  color-scheme: light;
+}
+
+// Dark theme — activated by .dark class on <body>
+body.dark {
+  @include mat.all-component-colors($phoenix-dark-theme);
+  color-scheme: dark;
+}
+
+// Global resets
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+}
