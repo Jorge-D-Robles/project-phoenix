@@ -77,21 +77,28 @@ Integrate Google Calendar API for the day/schedule view.
 
 ### Deliverables
 
-- Implement `CalendarStore` (SignalStore) with sync token management
-- Build `CalendarService` API client (initial sync + incremental sync)
-- Create schedule/day view showing events alongside tasks
-- Map Google Event colors to Material 3 palette
-- Sanitize HTML event descriptions
+- [x] Implement `CalendarStore` (SignalStore) with sync token management
+- [x] Build `CalendarService` API client (initial sync + incremental sync)
+- [x] Create schedule/day view showing events alongside tasks
+- [x] Map Google Event colors to Material 3 palette
+- [x] Sanitize HTML event descriptions
 - Request `calendar.events` scope incrementally
+
+### Tickets
+
+- [x] PHX-022: Create Calendar domain model and event color map
+- [x] PHX-023: Build `CalendarService` API client
+- [x] PHX-024: Implement `CalendarStore` (SignalStore)
+- [x] PHX-025: Build Calendar day view UI components
 
 ### Acceptance Criteria
 
-- [ ] Events displayed for the current day/week
-- [ ] Sync token stored and reused for incremental updates
-- [ ] 410 Gone triggers full re-sync
-- [ ] Event colors map correctly to the Phoenix palette
-- [ ] HTML descriptions are sanitized (no XSS)
-- [ ] Events are read-only (no write-back to Calendar)
+- [x] Events displayed for the current day/week
+- [x] Sync token stored and reused for incremental updates
+- [x] 410 Gone triggers full re-sync
+- [x] Event colors map correctly to the Phoenix palette
+- [x] HTML descriptions are sanitized (no XSS)
+- [x] Events are read-only (no write-back to Calendar)
 
 ---
 
@@ -188,9 +195,9 @@ Each phase builds on the previous. Do not skip phases.
 
 ## Project Health
 
-- **Completion**: 35%
-- **Active Phase**: Phase 2 — Tasks Feature (near-complete, PHX-016 low-priority remains)
+- **Completion**: 50%
+- **Active Phase**: Phase 3 — Calendar Feature (complete). Next: Phase 4 (Habits)
 - **Active Platform**: Web (Angular 21)
 - **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
 - **Last Audit**: 2026-02-16 (Gemini)
-- **Status**: 🟢 GREEN. Phase 2 UI, drag-and-drop, and 429 retry complete. Only PHX-016 (incremental scope) remains as low-priority. Ready for Phase 3 (Calendar).
+- **Status**: 🟢 GREEN. Phase 3 complete — CalendarService (sync tokens, pagination, HTML sanitization), CalendarStore (initial/incremental sync, 410 re-sync), and day view UI all implemented with 57 new tests. Ready for Phase 4 (Habits).

@@ -13,10 +13,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| PHX-022 | Create Calendar domain model and color map | DONE | Claude | 2026-02-16 |
-| PHX-023 | Build `CalendarService` API client | DONE | Claude | 2026-02-16 |
-| PHX-024 | Implement `CalendarStore` (SignalStore) | DONE | Claude | 2026-02-16 |
-| PHX-025 | Build Calendar day view UI components | IN_PROGRESS | Claude | 2026-02-16 |
+| — | Phase 3 complete. Next: Phase 4 (Habits) | — | — | — |
 
 ## 📋 Backlog
 
@@ -28,12 +25,15 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee |
 |:---|:---|:---:|:---|
-| PHX-025 | Build Calendar day view UI components | IN_PROGRESS | Claude |
 
 ## ✅ Completed
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-025 | Build Calendar day view UI components | 2026-02-16 | Claude |
+| PHX-024 | Implement `CalendarStore` (SignalStore) | 2026-02-16 | Claude |
+| PHX-023 | Build `CalendarService` API client | 2026-02-16 | Claude |
+| PHX-022 | Create Calendar domain model and color map | 2026-02-16 | Claude |
 | PHX-021 | Implement drag-and-drop task reordering | 2026-02-16 | Claude |
 | PHX-020 | Implement 429 exponential backoff retry interceptor | 2026-02-16 | Claude |
 | PHX-019 | Build `TaskDetailDialogComponent` (create/edit) | 2026-02-16 | Claude |
