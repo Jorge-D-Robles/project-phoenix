@@ -18,11 +18,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Priority |
 |:---|:---|:---:|:---:|
-| PHX-007 | Implement `TasksStore` using NgRx Signals | TODO | High |
-| PHX-008 | Build `TaskService` for Google Tasks API | TODO | High |
 | PHX-009 | Create Task List and Detail UI components | TODO | Medium |
-| PHX-010 | Implement Phoenix metadata parser for Tasks | TODO | Medium |
-|:---|:---|:---:|:---:|
 
 ## 🏗️ In Progress
 
@@ -33,6 +29,9 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-010 | Implement Phoenix metadata parser for Tasks | 2026-02-16 | Claude |
+| PHX-008 | Build `TaskService` for Google Tasks API | 2026-02-16 | Claude |
+| PHX-007 | Implement `TasksStore` using NgRx Signals | 2026-02-16 | Claude |
 | PHX-006 | Implement OAuth 2.0 PKCE AuthService | 2026-02-16 | Claude |
 | PHX-005 | Configure Material 3 Theme & Dark Mode | 2026-02-16 | Claude |
 | PHX-004 | Scaffold Angular 21 project (Zoneless) | 2026-02-16 | Claude |

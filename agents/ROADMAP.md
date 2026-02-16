@@ -41,12 +41,19 @@ Integrate Google Tasks API and build the Tasks UI.
 
 ### Deliverables
 
-- Implement `TasksStore` (SignalStore) with loading/error/success states
-- Build `TaskService` API client (list, create, update, delete, move)
-- Implement `TaskParser` for Phoenix metadata extraction/injection
+- [x] Implement `TasksStore` (SignalStore) with loading/error/success states
+- [x] Build `TaskService` API client (list, create, update, delete, move)
+- [x] Implement `TaskParser` for Phoenix metadata extraction/injection
 - Create task list view, task detail/edit view, subtask support
 - Implement drag-and-drop reordering (uses `moveTask` API)
 - Request `tasks` scope incrementally on first access
+
+### Tickets
+
+- [x] PHX-007: Implement `TasksStore` using NgRx Signals
+- [x] PHX-008: Build `TaskService` for Google Tasks API
+- [x] PHX-010: Implement Phoenix metadata parser for Tasks
+- [ ] PHX-009: Create Task List and Detail UI components
 
 ### Acceptance Criteria
 
@@ -54,8 +61,8 @@ Integrate Google Tasks API and build the Tasks UI.
 - [ ] User can create, edit, complete, and delete tasks
 - [ ] Subtasks are supported (nesting via `parent` field)
 - [ ] Drag-and-drop reorders tasks (calls `moveTask` with `parent` + `previous`)
-- [ ] Phoenix metadata survives round-trips (write → read → write)
-- [ ] Pagination handled correctly for large task lists
+- [x] Phoenix metadata survives round-trips (write → read → write)
+- [x] Pagination handled correctly for large task lists
 - [ ] 429 responses trigger exponential backoff retry
 
 ---
