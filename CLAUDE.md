@@ -29,8 +29,8 @@
 5. **Read Spec**: Read the relevant `docs/` spec before implementing any feature.
 6. **Implement & Verify**: Follow conventions and refer to `design.md` for full context. Focus on one sub-task at a time — finish it, verify it, commit it.
 7. **Update Ticket**: Upon completion of each sub-task (or the full ticket if it was not decomposed), move it to `DONE` in `agents/TASKS.md`.
-8. **Sync Roadmap**: After completing a major ticket or a phase deliverable, update `agents/ROADMAP.md` to reflect the current progress (e.g., check off deliverables, update project health).
-9. **Prepare Next Work**: Before finishing a session, ensure `agents/TASKS.md` has actionable `TODO` tickets in the backlog so the next agent can immediately pick up work. If a completed ticket unlocks new work, create those tickets now. If a phase is complete, populate the next phase's backlog from `agents/ROADMAP.md`.
+8. **Quality Audit (Gemini)**: Act as a Principal Engineer. Before closing a major feature or phase, run `/auditor` to ensure design compliance, roadmap health, and workflow adherence. Review historical context (PRs/commits) to ensure high-quality evolution.
+9. **Sync Roadmap**: After completing a major ticket or a phase deliverable, update `agents/ROADMAP.md` to reflect the current progress (e.g., check off deliverables, update project health).
 10. **Sync & Push**: Follow the Git Workflow below after every fully validated change.
 
 ## Git Workflow

@@ -18,7 +18,14 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Priority |
 |:---|:---|:---:|:---:|
+| PHX-007 | Implement `TasksStore` using NgRx Signals | TODO | High |
+| PHX-008 | Build `TaskService` for Google Tasks API | TODO | High |
 | PHX-009 | Create Task List and Detail UI components | TODO | Medium |
+| PHX-010 | Implement Phoenix metadata parser for Tasks | TODO | Medium |
+| PHX-011 | Run initial codebase audit via `/auditor` | DONE | High |
+| PHX-012 | Configure Experimental Zoneless Change Detection | TODO | Critical |
+| PHX-013 | Refactor `AuthService` to use `SignalStore` | TODO | Medium |
+|:---|:---|:---:|:---:|
 
 ## 🏗️ In Progress
 
@@ -29,9 +36,6 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
-| PHX-010 | Implement Phoenix metadata parser for Tasks | 2026-02-16 | Claude |
-| PHX-008 | Build `TaskService` for Google Tasks API | 2026-02-16 | Claude |
-| PHX-007 | Implement `TasksStore` using NgRx Signals | 2026-02-16 | Claude |
 | PHX-006 | Implement OAuth 2.0 PKCE AuthService | 2026-02-16 | Claude |
 | PHX-005 | Configure Material 3 Theme & Dark Mode | 2026-02-16 | Claude |
 | PHX-004 | Scaffold Angular 21 project (Zoneless) | 2026-02-16 | Claude |
@@ -50,3 +54,4 @@ This board uses a ticket-based system to track granular units of work.
 5. **Closing**: Move to `DONE` and record the completion date.
 6. **Cleanup**: Periodically archive `DONE` tasks if the list grows too long.
 7. **New Tasks**: Use the next sequential ID when creating new tickets.
+8. **Quality Review (Gemini)**: Gemini acts as a Principal Engineer. Periodic `/auditor` checks are mandatory to ensure design compliance, roadmap health, and workflow adherence. Historical context from prior PRs and commits must be reviewed for every major change.
