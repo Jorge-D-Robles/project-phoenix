@@ -29,6 +29,8 @@ Project Phoenix is a **Client-Centric Aggregator**. There is no proprietary back
 | Concern | Web | Android |
 |---------|-----|---------|
 | **Framework** | Angular 21+ (Signals, no zone.js) | Kotlin + Jetpack Compose |
+| **UI Components** | Angular Material (Material 3) | Material 3 (Compose) |
+| **CSS** | Tailwind CSS (utility-first) | N/A (Compose modifiers) |
 | **State Management** | SignalStore (`@ngrx/signals`) | StateFlow in ViewModels |
 | **Build System** | esbuild (via Angular CLI) | Gradle + AGP |
 | **Local Persistence** | — (in-memory/SignalStore) | Room (SQLite) |

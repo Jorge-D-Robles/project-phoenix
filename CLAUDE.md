@@ -9,6 +9,8 @@
 ## Tech Stack
 
 - **Web**: Angular 21+ (Signals, zoneless, SignalStore), Material 3
+- **UI Components**: Angular Material (Google's Material Components) — prefer built-in Material components over custom implementations
+- **CSS**: Tailwind CSS — utility-first styling for all custom layout and design beyond Material components
 - **Android**: Kotlin, Jetpack Compose, Room, Hilt, WorkManager
 - **Auth**: OAuth 2.0 PKCE on both platforms
 - **APIs**: Google Tasks, Calendar, Drive, Docs
@@ -102,7 +104,7 @@ After completing any task, evaluate whether something was learned that should be
 - **Dates**: ISO 8601 UTC
 - **Local IDs**: UUID v4
 - **Metadata packing**: `\n---PHOENIX_META---\n` delimiter in Google Tasks notes field
-- **Web**: Standalone components, OnPush, SignalStore, no zone.js
+- **Web**: Standalone components, OnPush, SignalStore, no zone.js, Tailwind CSS, Angular Material components
 - **Android**: Compose, Room, Hilt DI, WorkManager sync
 
 ## Repo Layout

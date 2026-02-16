@@ -118,18 +118,35 @@ export class TaskCardComponent {
 
 ---
 
-## Styling & Theming: Material 3
+## Styling & Theming: Material 3 + Tailwind CSS
 
-### Setup
+### UI Components: Angular Material
 
 - Use **Angular Material 18+** with Material 3 Design Tokens
+- **Always prefer Angular Material components** over custom implementations (buttons, cards, dialogs, form fields, menus, toolbars, etc.)
 - Define a custom theme using the `mat.define-theme()` mixin
+- Import Material modules per-component in `imports` array (standalone components)
+
+### CSS: Tailwind CSS (Utility-First)
+
+- **Tailwind CSS** is the project's CSS framework for all custom styling
+- Use Tailwind utility classes for layout, spacing, typography, colors, and responsive design
+- Prefer Tailwind classes in templates over custom CSS — write custom CSS only when Tailwind cannot express the style (e.g. complex animations, pseudo-element content)
+- Use Tailwind's `@apply` directive sparingly in component stylesheets when reuse is needed
+- Coordinate Tailwind's color palette with the Material 3 theme tokens for visual consistency
+
+### Styling Priority (highest to lowest)
+
+1. **Angular Material component** — if a Material component exists for the UI element, use it
+2. **Tailwind utility classes** — for layout, spacing, and custom styling around Material components
+3. **Custom CSS** — last resort, for complex or unsupported styles only
 
 ### Dark Mode
 
 - Implement a `ThemeService` that toggles a CSS class on `<body>`
 - Persist the user's preference in `localStorage`
 - Respect `prefers-color-scheme` media query as default
+- Use Tailwind's `dark:` variant for dark-mode-specific utility classes
 
 ---
 
@@ -177,6 +194,8 @@ Use `/unit-test-writer` to generate specs following all conventions.
 - [ ] State mutations go through `patchState()` on a SignalStore
 - [ ] No `zone.js` imports — app runs in zoneless mode
 - [ ] No `any` types — all data is strictly typed
+- [ ] Uses Angular Material components where applicable — no custom reimplementations
+- [ ] Uses Tailwind CSS utility classes for layout/spacing — minimal custom CSS
 - [ ] Feature components live under `features/<feature-name>/`
 - [ ] Shared components live under `shared/`
 - [ ] Services in `core/` are `providedIn: 'root'`
