@@ -108,20 +108,27 @@ Build the habit tracker with heatmap visualization, backed by Drive appdata.
 
 ### Deliverables
 
-- Implement `HabitsStore` (SignalStore) for habit definitions and logs
-- Build `HabitService` — CRUD operations on `habits.json` in Drive appdata folder
-- Create habit list view (add, edit, archive habits)
-- Implement habit logging UI (quick-log today's contribution)
-- Build the heatmap visualization (CSS Grid, 365 cells, 4 quartile levels)
+- [x] Implement `HabitsStore` (SignalStore) for habit definitions and logs
+- [x] Build `HabitService` — CRUD operations on `habits.json` in Drive appdata folder
+- [x] Create habit list view (add, edit, archive habits)
+- [x] Implement habit logging UI (quick-log today's contribution)
+- [x] Build the heatmap visualization (CSS Grid, 365 cells, 4 quartile levels)
 - Request `drive.appdata` scope incrementally
+
+### Tickets
+
+- [x] PHX-026: Create Habit domain model and heatmap algorithm
+- [x] PHX-027: Build `HabitService` for Drive appdata CRUD
+- [x] PHX-028: Implement `HabitsStore` (SignalStore)
+- [x] PHX-029: Build Habits UI (list, log, heatmap)
 
 ### Acceptance Criteria
 
-- [ ] Habits CRUD works (create, read, update, archive)
-- [ ] Habit logs are sparse arrays stored in appdata
-- [ ] Heatmap renders 52 weeks of data with correct quartile coloring
-- [ ] Heatmap performance is smooth (OnPush + signal-based cells)
-- [ ] Empty state handled (no data = all Level 0)
+- [x] Habits CRUD works (create, read, update, archive)
+- [x] Habit logs are sparse arrays stored in appdata
+- [x] Heatmap renders 52 weeks of data with correct quartile coloring
+- [x] Heatmap performance is smooth (OnPush + signal-based cells)
+- [x] Empty state handled (no data = all Level 0)
 
 ---
 
@@ -131,21 +138,28 @@ Build Phoenix Notes backed by Google Drive.
 
 ### Deliverables
 
-- Implement `NotesStore` (SignalStore) for note listing and content
-- Build `NoteService` — CRUD on JSON files in `Phoenix_Notes` Drive folder
-- Create note list view (grid with color-coded cards, like Keep)
-- Create note editor (HTML/Markdown content)
-- Support labels and color selection
+- [x] Implement `NotesStore` (SignalStore) for note listing and content
+- [x] Build `NoteService` — CRUD on JSON files in `Phoenix_Notes` Drive folder
+- [x] Create note list view (grid with color-coded cards, like Keep)
+- [x] Create note editor (HTML/Markdown content)
+- [x] Support labels and color selection
 - Support file attachments (link Drive files)
 - Request `drive.file` scope incrementally
 
+### Tickets
+
+- [x] PHX-030: Create Note domain model and color map
+- [x] PHX-031: Build `NoteService` for Drive CRUD
+- [x] PHX-032: Implement `NotesStore` (SignalStore)
+- [x] PHX-033: Build Notes UI (grid, editor, labels)
+
 ### Acceptance Criteria
 
-- [ ] Notes CRUD works (create, read, update, delete)
-- [ ] Notes stored as JSON in `Phoenix_Notes` folder in user's Drive
-- [ ] Note colors match the 11-color enum from the schema
-- [ ] Labels are searchable/filterable
-- [ ] Content is sanitized before rendering
+- [x] Notes CRUD works (create, read, update, delete)
+- [x] Notes stored as JSON in `Phoenix_Notes` folder in user's Drive
+- [x] Note colors match the 11-color enum from the schema
+- [x] Labels are searchable/filterable
+- [x] Content is sanitized before rendering
 - [ ] Attachments link to existing Drive files
 
 ---
@@ -195,9 +209,9 @@ Each phase builds on the previous. Do not skip phases.
 
 ## Project Health
 
-- **Completion**: 50%
-- **Active Phase**: Phase 3 — Calendar Feature (complete). Next: Phase 4 (Habits)
-- **Active Platform**: Web (Angular 21)
+- **Completion**: 83%
+- **Active Phase**: Phases 4 & 5 complete. Next: Phase 6 (Android Transposition)
+- **Active Platform**: Web (Angular 21) — all web features complete
 - **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
 - **Last Audit**: 2026-02-16 (Gemini)
-- **Status**: 🟢 GREEN. Phase 3 complete — CalendarService (sync tokens, pagination, HTML sanitization), CalendarStore (initial/incremental sync, 410 re-sync), and day view UI all implemented with 57 new tests. Ready for Phase 4 (Habits).
+- **Status**: 🟢 GREEN. Phases 4 (Habits) and 5 (Notes) completed in parallel — HabitService (Drive appdata CRUD), HabitsStore, heatmap visualization (CSS Grid, getLevel algorithm, 365 cells), NoteService (Drive folder CRUD), NotesStore, note grid/editor UI all implemented with 170 new tests (386 total). Web platform feature-complete. Ready for Phase 6 (Android).

@@ -13,7 +13,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| — | Phase 3 complete. Next: Phase 4 (Habits) | — | — | — |
+| — | Phases 4 & 5 complete. Next: Phase 6 (Android) | — | — | — |
 
 ## 📋 Backlog
 
@@ -30,6 +30,14 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-033 | Build Notes UI (grid, editor, labels) | 2026-02-16 | Claude |
+| PHX-032 | Implement `NotesStore` (SignalStore) | 2026-02-16 | Claude |
+| PHX-031 | Build `NoteService` for Drive CRUD | 2026-02-16 | Claude |
+| PHX-030 | Create Note domain model and color map | 2026-02-16 | Claude |
+| PHX-029 | Build Habits UI (list, log, heatmap) | 2026-02-16 | Claude |
+| PHX-028 | Implement `HabitsStore` (SignalStore) | 2026-02-16 | Claude |
+| PHX-027 | Build `HabitService` for Drive appdata CRUD | 2026-02-16 | Claude |
+| PHX-026 | Create Habit domain model and heatmap algorithm | 2026-02-16 | Claude |
 | PHX-025 | Build Calendar day view UI components | 2026-02-16 | Claude |
 | PHX-024 | Implement `CalendarStore` (SignalStore) | 2026-02-16 | Claude |
 | PHX-023 | Build `CalendarService` API client | 2026-02-16 | Claude |
