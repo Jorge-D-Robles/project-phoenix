@@ -29,7 +29,8 @@
 5. **Read Spec**: Read the relevant `docs/` spec before implementing any feature.
 6. **Implement & Verify**: Follow conventions and refer to `design.md` for full context. Focus on one sub-task at a time — finish it, verify it, commit it.
 7. **Update Ticket**: Upon completion of each sub-task (or the full ticket if it was not decomposed), move it to `DONE` in `agents/TASKS.md`.
-8. **Sync & Push**: Follow the Git Workflow below after every fully validated change.
+8. **Sync Roadmap**: After completing a major ticket or a phase deliverable, update `agents/ROADMAP.md` to reflect the current progress (e.g., check off deliverables, update project health).
+9. **Sync & Push**: Follow the Git Workflow below after every fully validated change.
 
 ## Git Workflow
 

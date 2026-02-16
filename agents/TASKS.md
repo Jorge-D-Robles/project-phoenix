@@ -14,9 +14,14 @@ This board uses a ticket-based system to track granular units of work.
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
 
-## 📋 Backlog (Phase 1: Foundation)
+## 📋 Backlog (Phase 2: Tasks)
 
 | ID | Task | Status | Priority |
+|:---|:---|:---:|:---:|
+| PHX-007 | Implement `TasksStore` using NgRx Signals | TODO | High |
+| PHX-008 | Build `TaskService` for Google Tasks API | TODO | High |
+| PHX-009 | Create Task List and Detail UI components | TODO | Medium |
+| PHX-010 | Implement Phoenix metadata parser for Tasks | TODO | Medium |
 |:---|:---|:---:|:---:|
 
 ## 🏗️ In Progress

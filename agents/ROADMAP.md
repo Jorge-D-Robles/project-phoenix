@@ -10,28 +10,28 @@ Establish the Angular 21 project and implement OAuth 2.0 PKCE authentication.
 
 ### Deliverables
 
-- Initialize Angular 21 CLI workspace with zoneless mode and Karma test runner
-- Set up directory structure: `core/`, `data/`, `state/`, `features/`, `shared/`
-- Install dependencies: `@ngrx/signals`, `@angular/material`, OAuth library
-- Implement `AuthService` with OAuth 2.0 PKCE flow (baseline scopes: `openid`, `email`, `profile`)
-- Implement `AuthInterceptor` for token injection and 401 handling
-- Create login screen and authenticated shell (top-level layout with navigation)
-- Configure Material 3 theme + dark mode toggle via `ThemeService`
+- [x] Initialize Angular 21 CLI workspace with zoneless mode and Karma test runner
+- [x] Set up directory structure: `core/`, `data/`, `state/`, `features/`, `shared/`
+- [x] Install dependencies: `@ngrx/signals`, `@angular/material`, OAuth library
+- [x] Implement `AuthService` with OAuth 2.0 PKCE flow (baseline scopes: `openid`, `email`, `profile`)
+- [x] Implement `AuthInterceptor` for token injection and 401 handling
+- [x] Create login screen and authenticated shell (top-level layout with navigation)
+- [x] Configure Material 3 theme + dark mode toggle via `ThemeService`
 
 ### Acceptance Criteria
 
-- [ ] `ng serve` runs without errors
-- [ ] `ng test` runs with Karma/Jasmine and all specs pass
-- [ ] User can sign in with Google and see their profile info
-- [ ] Access token is attached to outgoing API requests
-- [ ] 401 triggers silent token refresh; failed refresh redirects to login
-- [ ] Dark mode toggle works and persists preference
+- [x] `ng serve` runs without errors
+- [x] `ng test` runs with Karma/Jasmine and all specs pass
+- [x] User can sign in with Google and see their profile info
+- [x] Access token is attached to outgoing API requests
+- [x] 401 triggers silent token refresh; failed refresh redirects to login
+- [x] Dark mode toggle works and persists preference
 
 ### Tickets
 
-- [ ] PHX-004: Scaffold Angular 21 project (Zoneless + Karma)
-- [ ] PHX-005: Configure Material 3 Theme & Dark Mode
-- [ ] PHX-006: Implement OAuth 2.0 PKCE AuthService
+- [x] PHX-004: Scaffold Angular 21 project (Zoneless + Karma)
+- [x] PHX-005: Configure Material 3 Theme & Dark Mode
+- [x] PHX-006: Implement OAuth 2.0 PKCE AuthService
 
 ---
 
@@ -177,7 +177,7 @@ Each phase builds on the previous. Do not skip phases.
 
 ## Project Health
 
-- **Completion**: 0%
-- **Active Phase**: Phase 1 — Angular Scaffold + Auth
+- **Completion**: 15%
+- **Active Phase**: Phase 2 — Tasks Feature
 - **Active Platform**: Web (Angular 21)
 - **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
