@@ -18,17 +18,22 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Priority |
 |:---|:---|:---:|:---:|
-| PHX-004 | Scaffold Angular 21 project (Zoneless) | TODO | High |
-| PHX-005 | Configure Material 3 Theme & Dark Mode | TODO | Medium |
-| PHX-006 | Implement OAuth 2.0 PKCE AuthService | TODO | High |
+
+## 🏗️ In Progress
+
+| ID | Task | Status | Assignee |
+|:---|:---|:---:|:---|
 
 ## ✅ Completed
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
-| PHX-001 | Initialize `agents/` tracking system | 2026-02-16 | Gemini |
-| PHX-002 | Migrate `docs/roadmap.md` to `agents/ROADMAP.md` | 2026-02-16 | Gemini |
+| PHX-006 | Implement OAuth 2.0 PKCE AuthService | 2026-02-16 | Claude |
+| PHX-005 | Configure Material 3 Theme & Dark Mode | 2026-02-16 | Claude |
+| PHX-004 | Scaffold Angular 21 project (Zoneless) | 2026-02-16 | Claude |
 | PHX-003 | Implement root `CLAUDE.md` updates for agent tracking | 2026-02-16 | Gemini |
+| PHX-002 | Migrate `docs/roadmap.md` to `agents/ROADMAP.md` | 2026-02-16 | Gemini |
+| PHX-001 | Initialize `agents/` tracking system | 2026-02-16 | Gemini |
 
 ---
 
