@@ -13,23 +13,22 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| — | Phase 2 complete. Next: Phase 3 (Calendar) | — | — | — |
+| PHX-022 | Create Calendar domain model and color map | IN_PROGRESS | Claude | 2026-02-16 |
+| PHX-023 | Build `CalendarService` API client | TODO | — | 2026-02-16 |
+| PHX-024 | Implement `CalendarStore` (SignalStore) | TODO | — | 2026-02-16 |
+| PHX-025 | Build Calendar day view UI components | TODO | — | 2026-02-16 |
 
-## 📋 Backlog (Phase 2: Tasks)
+## 📋 Backlog
 
 | ID | Task | Status | Priority |
 |:---|:---|:---:|:---:|
-| PHX-012 | Configure Experimental Zoneless Change Detection | DONE | Gemini | 2026-02-16 |
-| PHX-013 | Refactor `AuthService` to use `SignalStore` | DONE | Gemini | 2026-02-16 |
-| PHX-014 | Persist `localId` in `TaskMeta` | DONE | Gemini | 2026-02-16 |
-| PHX-015 | Fix hollow unit tests in `task.service.spec.ts` | DONE | Gemini | 2026-02-16 |
 | PHX-016 | Implement incremental OAuth scope request for Tasks API | TODO | Low |
-|:---|:---|:---:|:---:|
 
 ## 🏗️ In Progress
 
 | ID | Task | Status | Assignee |
 |:---|:---|:---:|:---|
+| PHX-022 | Create Calendar domain model and color map | IN_PROGRESS | Claude |
 
 ## ✅ Completed
 
