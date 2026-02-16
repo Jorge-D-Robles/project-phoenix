@@ -48,7 +48,7 @@ Integrate Google Tasks API and build the Tasks UI.
 - [x] Implement `TaskParser` for Phoenix metadata extraction/injection
 - [x] Persist `localId` in `TaskMeta` for cross-platform sync
 - [x] Create task list view, task detail/edit view, subtask support
-- Implement drag-and-drop reordering (uses `moveTask` API)
+- [x] Implement drag-and-drop reordering (uses `moveTask` API)
 - Request `tasks` scope incrementally on first access
 
 ### Tickets
@@ -64,10 +64,10 @@ Integrate Google Tasks API and build the Tasks UI.
 - [x] Tasks are fetched from Google Tasks API and displayed
 - [x] User can create, edit, complete, and delete tasks
 - [x] Subtasks are supported (nesting via `parent` field)
-- [ ] Drag-and-drop reorders tasks (calls `moveTask` with `parent` + `previous`)
+- [x] Drag-and-drop reorders tasks (calls `moveTask` with `parent` + `previous`)
 - [x] Phoenix metadata survives round-trips (write → read → write)
 - [x] Pagination handled correctly for large task lists
-- [ ] 429 responses trigger exponential backoff retry
+- [x] 429 responses trigger exponential backoff retry
 
 ---
 
@@ -188,9 +188,9 @@ Each phase builds on the previous. Do not skip phases.
 
 ## Project Health
 
-- **Completion**: 25%
-- **Active Phase**: Phase 2 — Tasks Feature
+- **Completion**: 35%
+- **Active Phase**: Phase 2 — Tasks Feature (near-complete, PHX-016 low-priority remains)
 - **Active Platform**: Web (Angular 21)
 - **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
 - **Last Audit**: 2026-02-16 (Gemini)
-- **Status**: 🟢 GREEN. Phase 2 Data Layer complete and stabilized. Zoneless detection, localId persistence, and test coverage improved.
+- **Status**: 🟢 GREEN. Phase 2 UI, drag-and-drop, and 429 retry complete. Only PHX-016 (incremental scope) remains as low-priority. Ready for Phase 3 (Calendar).
