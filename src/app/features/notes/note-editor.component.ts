@@ -5,7 +5,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { Note, NoteColor, NOTE_COLORS, DEFAULT_NOTE_COLOR } from '../../data/models/note.model';
+import { NOTE_COLORS, DEFAULT_NOTE_COLOR } from '../../data/models/note.model';
+import type { Note, NoteColor } from '../../data/models/note.model';
 
 export interface NoteFormData {
   title: string;

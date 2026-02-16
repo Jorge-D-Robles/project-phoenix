@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
-import { NoteEditorComponent, NoteFormData } from './note-editor.component';
-import { Note } from '../../data/models/note.model';
+import { NoteEditorComponent } from './note-editor.component';
+import type { NoteFormData } from './note-editor.component';
+import type { Note } from '../../data/models/note.model';
 
 function makeNote(overrides: Partial<Note> = {}): Note {
   return {
@@ -105,8 +106,8 @@ describe('NoteEditorComponent', () => {
       saveBtn.nativeElement.click();
 
       expect(emittedData).toBeDefined();
-      expect(emittedData!['title']).toBe('New Title');
-      expect(emittedData!['content']).toBe('New content');
+      expect(emittedData!.title).toBe('New Title');
+      expect(emittedData!.content).toBe('New content');
     });
   });
 

@@ -1,21 +1,13 @@
 import { HttpErrorResponse, HttpEvent, HttpHandlerFn, HttpInterceptorFn, HttpRequest } from '@angular/common/http';
 import { Observable, throwError, timer } from 'rxjs';
 import { catchError, switchMap } from 'rxjs/operators';
+import { isGoogleApiRequest } from './google-api.utils';
 
-const GOOGLE_API_HOST = 'googleapis.com';
 const MAX_RETRIES = 5;
-
-function isGoogleApiRequest(url: string): boolean {
-  try {
-    return new URL(url).hostname.endsWith(GOOGLE_API_HOST);
-  } catch {
-    return false;
-  }
-}
 
 /** Exponential backoff: 2^attempt seconds + random jitter (0-1000ms). */
 export function getBackoffDelay(attempt: number): number {
-  const base = Math.pow(2, attempt) * 1000;
+  const base = 2 ** attempt * 1000;
   const jitter = Math.random() * 1000;
   return base + jitter;
 }

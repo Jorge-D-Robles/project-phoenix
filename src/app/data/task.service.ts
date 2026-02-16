@@ -4,11 +4,13 @@ import { Observable, expand, reduce, EMPTY, map } from 'rxjs';
 
 import {
   Task,
+  TaskMeta,
+} from './models/task.model';
+import type {
   TaskList,
   CreateTaskRequest,
   UpdateTaskRequest,
   MoveTaskRequest,
-  TaskMeta,
 } from './models/task.model';
 import { TaskParser } from './task.parser';
 
@@ -58,9 +60,9 @@ export class TaskService {
       params = params.set('parent', request.parent);
     }
 
-    const localId = request.localId || crypto.randomUUID();
+    const localId = request.localId ?? crypto.randomUUID();
     const meta: TaskMeta = { localId };
-    const notes = TaskParser.serialize(request.notes || '', meta);
+    const notes = TaskParser.serialize(request.notes ?? '', meta);
 
     const body: Record<string, string | undefined> = {
       title: request.title,
@@ -134,11 +136,11 @@ export class TaskService {
     const parsed = TaskParser.parse(raw.notes ?? null);
     return {
       id: raw.id,
-      localId: parsed.meta?.localId || raw.id,
+      localId: parsed.meta?.localId ?? raw.id,
       title: raw.title,
-      status: raw.status as 'needsAction' | 'completed',
+      status: raw.status === 'completed' ? 'completed' : 'needsAction',
       dueDateTime: raw.due ?? null,
-      notes: parsed.userNotes || null,
+      notes: parsed.userNotes ?? null,
       meta: parsed.meta,
       parent: raw.parent ?? null,
       position: raw.position,

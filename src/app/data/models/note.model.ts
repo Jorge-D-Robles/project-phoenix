@@ -48,23 +48,23 @@ export interface Note {
   readonly id: string;
   readonly title: string;
   readonly content: string;
-  readonly labels: string[];
+  readonly labels: readonly string[];
   readonly color: NoteColor;
-  readonly attachments: NoteAttachment[];
+  readonly attachments: readonly NoteAttachment[];
   readonly created: string;
   readonly lastModified: string;
 }
 
 /** Google Drive API file resource (minimal shape) */
 export interface GoogleDriveFile {
-  id: string;
-  name: string;
-  mimeType: string;
+  readonly id: string;
+  readonly name: string;
+  readonly mimeType: string;
 }
 
 /** Google Drive API files.list response */
 export interface GoogleDriveFileList {
-  files?: GoogleDriveFile[];
+  readonly files?: GoogleDriveFile[];
 }
 
 /** Allowed HTML tags for note content sanitization */

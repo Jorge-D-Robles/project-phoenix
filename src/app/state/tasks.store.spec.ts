@@ -3,7 +3,7 @@ import { of, throwError } from 'rxjs';
 
 import { TasksStore } from './tasks.store';
 import { TaskService } from '../data/task.service';
-import { Task, TaskList } from '../data/models/task.model';
+import type { Task, TaskList } from '../data/models/task.model';
 
 const MOCK_TASKS: Task[] = [
   {
@@ -231,7 +231,7 @@ describe('TasksStore', () => {
     it('should preserve meta when updating only notes', async () => {
       // t2 has meta: { localId: 'uuid-2', tags: ['dev'] }
       await store.updateTask('t2', { notes: 'Updated notes' });
-      
+
       expect(mockTaskService.updateTask).toHaveBeenCalledWith('list1', 't2', jasmine.objectContaining({
         notes: 'Updated notes',
         meta: { localId: 'uuid-2', tags: ['dev'] }
@@ -241,7 +241,7 @@ describe('TasksStore', () => {
     it('should preserve notes when updating only meta', async () => {
       // t1 has notes: 'Milk and eggs'
       await store.updateTask('t1', { meta: { localId: 'uuid-1', tags: ['shopping'] } });
-      
+
       expect(mockTaskService.updateTask).toHaveBeenCalledWith('list1', 't1', jasmine.objectContaining({
         notes: 'Milk and eggs',
         meta: { localId: 'uuid-1', tags: ['shopping'] }
@@ -252,7 +252,7 @@ describe('TasksStore', () => {
   describe('method: removeTask', () => {
     beforeEach(async () => {
       await store.loadTasks('list1');
-      mockTaskService.deleteTask.and.returnValue(of(undefined));
+      mockTaskService.deleteTask.and.returnValue(of(void 0));
     });
 
     it('should remove the task from the store', async () => {

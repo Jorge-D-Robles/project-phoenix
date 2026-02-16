@@ -22,20 +22,20 @@ export interface HabitLog {
 
 /** Shape of the habits.json file stored in Google Drive appdata */
 export interface HabitsData {
-  habits: Habit[];
-  logs: HabitLog[];
+  readonly habits: readonly Habit[];
+  readonly logs: readonly HabitLog[];
 }
 
 /** Google Drive file resource (minimal shape) */
 export interface GoogleDriveFile {
-  id: string;
-  name: string;
-  mimeType: string;
+  readonly id: string;
+  readonly name: string;
+  readonly mimeType: string;
 }
 
 /** Google Drive files.list response */
 export interface GoogleDriveFileList {
-  files?: GoogleDriveFile[];
+  readonly files?: readonly GoogleDriveFile[];
 }
 
 /**

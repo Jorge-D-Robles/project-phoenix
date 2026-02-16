@@ -4,14 +4,13 @@ import { HeatmapComponent } from './heatmap.component';
 import { HabitLog } from '../../data/models/habit.model';
 
 describe('HeatmapComponent', () => {
-  async function setup(logs: HabitLog[] = [], color: string = '#4CAF50') {
+  async function setup(logs: HabitLog[] = []) {
     await TestBed.configureTestingModule({
       imports: [HeatmapComponent],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HeatmapComponent);
     fixture.componentRef.setInput('logs', logs);
-    fixture.componentRef.setInput('color', color);
     await fixture.whenStable();
     return fixture;
   }
@@ -41,7 +40,7 @@ describe('HeatmapComponent', () => {
 
     it('should render cells with appropriate levels when logs are provided', async () => {
       const today = new Date();
-      const todayStr = today.toISOString().split('T')[0];
+      const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
       const logs: HabitLog[] = [
         { habitId: 'h1', date: todayStr, value: 5 },
       ];

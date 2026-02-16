@@ -38,7 +38,7 @@ export const HabitsStore = signalStore(
     }),
     logsForSelectedHabit: computed(() => {
       const id = selectedHabitId();
-      if (!id) return [] as HabitLog[];
+      if (!id) return [];
       return logs().filter(l => l.habitId === id);
     }),
   })),
@@ -50,8 +50,10 @@ export const HabitsStore = signalStore(
           logs: store.logs(),
         }));
         patchState(store, { error: null });
-      } catch {
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Unknown error';
         patchState(store, { error: 'Failed to save habits data' });
+        console.error('HabitsStore.saveData failed:', message);
       }
     }
 
@@ -61,12 +63,14 @@ export const HabitsStore = signalStore(
         try {
           const data = await firstValueFrom(habitService.loadData());
           patchState(store, {
-            habits: data.habits,
-            logs: data.logs,
+            habits: [...data.habits],
+            logs: [...data.logs],
             loading: false,
           });
-        } catch {
+        } catch (e: unknown) {
+          const message = e instanceof Error ? e.message : 'Unknown error';
           patchState(store, { error: 'Failed to load habits data', loading: false });
+          console.error('HabitsStore.loadData failed:', message);
         }
       },
 
@@ -82,7 +86,7 @@ export const HabitsStore = signalStore(
         await saveData();
       },
 
-      async updateHabit(id: string, updates: Partial<Habit>): Promise<void> {
+      async updateHabit(id: string, updates: Partial<Omit<Habit, 'id' | 'created'>>): Promise<void> {
         const now = new Date().toISOString();
         patchState(store, {
           habits: store.habits().map(h =>

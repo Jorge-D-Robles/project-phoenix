@@ -3,7 +3,7 @@ import { of, throwError } from 'rxjs';
 
 import { HabitsStore } from './habits.store';
 import { HabitService } from '../data/habit.service';
-import { Habit, HabitLog, HabitsData } from '../data/models/habit.model';
+import type { Habit, HabitLog, HabitsData } from '../data/models/habit.model';
 
 const MOCK_HABITS: Habit[] = [
   {

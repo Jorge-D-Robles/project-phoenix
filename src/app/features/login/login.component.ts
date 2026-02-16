@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     }
   }
 
-  onLogin(): void {
-    this.authService.login();
+  async onLogin(): Promise<void> {
+    await this.authService.login();
   }
 }

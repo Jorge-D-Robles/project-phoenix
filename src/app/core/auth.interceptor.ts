@@ -3,16 +3,7 @@ import { inject } from '@angular/core';
 import { from, switchMap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from './auth.service';
-
-const GOOGLE_API_HOST = 'googleapis.com';
-
-function isGoogleApiRequest(url: string): boolean {
-  try {
-    return new URL(url).hostname.endsWith(GOOGLE_API_HOST);
-  } catch {
-    return false;
-  }
-}
+import { isGoogleApiRequest } from './google-api.utils';
 
 function addAuthHeader(req: HttpRequest<unknown>, token: string): HttpRequest<unknown> {
   return req.clone({

@@ -1,5 +1,5 @@
 import { TaskParser } from './task.parser';
-import { TaskMeta } from './models/task.model';
+import type { TaskMeta } from './models/task.model';
 
 describe('TaskParser', () => {
   describe('parse', () => {
@@ -131,7 +131,7 @@ describe('TaskParser', () => {
   });
 
   describe('round-trip', () => {
-    it('should survive parse → serialize → parse cycle', () => {
+    it('should survive parse \u2192 serialize \u2192 parse cycle', () => {
       const original = 'My task notes\n---PHOENIX_META---\n{"habitId":"h-1","tags":["daily"]}';
       const parsed = TaskParser.parse(original);
       const serialized = TaskParser.serialize(parsed.userNotes, parsed.meta);

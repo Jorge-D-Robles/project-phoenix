@@ -2,7 +2,7 @@ import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
-import { Task, TaskList, TaskFilter, CreateTaskRequest, UpdateTaskRequest, MoveTaskRequest } from '../data/models/task.model';
+import type { Task, TaskList, TaskFilter, CreateTaskRequest, UpdateTaskRequest, MoveTaskRequest } from '../data/models/task.model';
 import { TaskService } from '../data/task.service';
 
 interface TasksState {
@@ -89,7 +89,7 @@ export const TasksStore = signalStore(
       if (update.notes !== undefined && update.meta === undefined) {
         finalUpdate.meta = task.meta;
       } else if (update.meta !== undefined && update.notes === undefined) {
-        finalUpdate.notes = task.notes || '';
+        finalUpdate.notes = task.notes ?? '';
       }
 
       try {

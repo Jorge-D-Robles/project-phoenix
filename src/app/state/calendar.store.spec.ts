@@ -3,7 +3,7 @@ import { of, throwError } from 'rxjs';
 
 import { CalendarStore } from './calendar.store';
 import { CalendarService, CalendarSyncResult } from '../data/calendar.service';
-import { CalendarEvent, DEFAULT_EVENT_COLOR } from '../data/models/calendar-event.model';
+import { CalendarEvent } from '../data/models/calendar-event.model';
 
 function makeEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
   return {

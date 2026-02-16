@@ -3,8 +3,8 @@ import {
   NOTE_COLOR_MAP,
   DEFAULT_NOTE_COLOR,
   sanitizeNoteContent,
-  NoteColor,
 } from './note.model';
+import type { NoteColor } from './note.model';
 
 describe('Note Model', () => {
   describe('NOTE_COLORS', () => {

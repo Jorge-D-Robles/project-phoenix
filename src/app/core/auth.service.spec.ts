@@ -1,5 +1,4 @@
 import { TestBed } from '@angular/core/testing';
-import { patchState } from '@ngrx/signals';
 import { AuthService } from './auth.service';
 import { AUTH_CONFIG, AuthConfig } from './auth.config';
 import { OAuthService } from 'angular-oauth2-oidc';
@@ -134,7 +133,7 @@ describe('AuthService', () => {
     });
 
     it('should initiate code flow on login', async () => {
-      service.login();
+      await service.login();
       expect(mockOAuth.initCodeFlow).toHaveBeenCalled();
     });
 
@@ -146,12 +145,13 @@ describe('AuthService', () => {
       expect(service.user()).toBeNull();
     });
 
-    it('should return access token from OAuthService', () => {
+    it('should return access token from OAuthService', async () => {
+      mockOAuth.loadDiscoveryDocumentAndTryLogin.and.resolveTo(true);
       mockOAuth.hasValidAccessToken.and.returnValue(true);
+      mockOAuth.getIdentityClaims.and.returnValue({ email: 'test@gmail.com' });
       mockOAuth.getAccessToken.and.returnValue('real-token-123');
 
-      // Force authenticated state for this test
-      patchState(service as any, { isAuthenticated: true });
+      await service.init();
       expect(service.getAccessToken()).toBe('real-token-123');
     });
 
@@ -160,7 +160,11 @@ describe('AuthService', () => {
     });
 
     it('should refresh token via silent refresh', async () => {
-      patchState(service as any, { isAuthenticated: true });
+      mockOAuth.loadDiscoveryDocumentAndTryLogin.and.resolveTo(true);
+      mockOAuth.hasValidAccessToken.and.returnValue(true);
+      mockOAuth.getIdentityClaims.and.returnValue({ email: 'test@gmail.com' });
+      await service.init();
+
       mockOAuth.silentRefresh.and.resolveTo({} as never);
 
       const result = await service.refreshToken();
@@ -169,7 +173,11 @@ describe('AuthService', () => {
     });
 
     it('should logout on refresh failure', async () => {
-      patchState(service as any, { isAuthenticated: true });
+      mockOAuth.loadDiscoveryDocumentAndTryLogin.and.resolveTo(true);
+      mockOAuth.hasValidAccessToken.and.returnValue(true);
+      mockOAuth.getIdentityClaims.and.returnValue({ email: 'test@gmail.com' });
+      await service.init();
+
       mockOAuth.silentRefresh.and.rejectWith(new Error('refresh failed'));
 
       const result = await service.refreshToken();

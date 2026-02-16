@@ -59,22 +59,24 @@ export class TaskDetailDialogComponent {
 
   protected title = this.data.task?.title ?? '';
   protected notes = this.data.task?.notes ?? '';
-  protected dueDate: string | null = this.data.task?.dueDateTime ?? null;
+  protected dueDate: Date | null = this.data.task?.dueDateTime ? new Date(this.data.task.dueDateTime) : null;
 
   protected save(): void {
     if (!this.title.trim()) return;
+
+    const dueDateIso = this.dueDate ? this.dueDate.toISOString() : null;
 
     if (this.data.mode === 'create') {
       this.dialogRef.close({
         title: this.title.trim(),
         notes: this.notes || undefined,
-        dueDateTime: this.dueDate || undefined,
+        dueDateTime: dueDateIso || undefined,
       });
     } else {
       this.dialogRef.close({
         title: this.title.trim(),
         notes: this.notes || undefined,
-        dueDateTime: this.dueDate,
+        dueDateTime: dueDateIso,
       });
     }
   }

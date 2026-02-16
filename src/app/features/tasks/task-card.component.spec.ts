@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { TaskCardComponent } from './task-card.component';
-import { Task } from '../../data/models/task.model';
+import type { Task } from '../../data/models/task.model';
 
 const makeTask = (overrides: Partial<Task> = {}): Task => ({
   id: 'task-1',

@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, switchMap, map, of, forkJoin } from 'rxjs';
 
-import {
+import type {
   Note,
   GoogleDriveFile,
   GoogleDriveFileList,

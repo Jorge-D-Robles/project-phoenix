@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { TasksStore } from '../../state/tasks.store';
 import { TaskCardComponent } from './task-card.component';
 import { TaskDetailDialogComponent } from './task-detail-dialog.component';
-import { Task, TaskFilter } from '../../data/models/task.model';
+import type { Task, TaskFilter } from '../../data/models/task.model';
 
 @Component({
   selector: 'app-tasks',

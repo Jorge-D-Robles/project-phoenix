@@ -21,7 +21,8 @@ export class ThemeService {
   private loadInitialTheme(): boolean {
     const stored = localStorage.getItem(THEME_KEY);
     if (stored !== null) {
-      return JSON.parse(stored);
+      const parsed: unknown = JSON.parse(stored);
+      return parsed === true;
     }
     return window.matchMedia('(prefers-color-scheme: dark)').matches;
   }

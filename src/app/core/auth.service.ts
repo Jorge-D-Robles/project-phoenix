@@ -5,10 +5,16 @@ import { AUTH_CONFIG, GOOGLE_SCOPES } from './auth.config';
 import { UserProfile } from '../data/models/user.model';
 
 interface AuthState {
-  user: UserProfile | null;
-  isAuthenticated: boolean;
-  isLoading: boolean;
-  mockToken: string | null;
+  readonly user: UserProfile | null;
+  readonly isAuthenticated: boolean;
+  readonly isLoading: boolean;
+  readonly mockToken: string | null;
+}
+
+interface IdentityClaims {
+  readonly email?: string;
+  readonly name?: string;
+  readonly picture?: string;
 }
 
 const initialState: AuthState = {
@@ -46,13 +52,13 @@ export const AuthService = signalStore(
       await oauthService.loadDiscoveryDocumentAndTryLogin();
 
       if (oauthService.hasValidAccessToken()) {
-        const claims = oauthService.getIdentityClaims() as Record<string, string>;
+        const claims = oauthService.getIdentityClaims() as IdentityClaims | null;
         if (claims) {
           patchState(store, {
             user: {
-              email: claims['email'] ?? '',
-              name: claims['name'] ?? '',
-              picture: claims['picture'] ?? '',
+              email: claims.email ?? '',
+              name: claims.name ?? '',
+              picture: claims.picture ?? '',
             },
             isAuthenticated: true,
           });

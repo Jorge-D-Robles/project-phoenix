@@ -4,7 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
 import { TasksComponent } from './tasks.component';
 import { TasksStore } from '../../state/tasks.store';
-import { Task, TaskList, TaskFilter } from '../../data/models/task.model';
+import type { Task, TaskList, TaskFilter } from '../../data/models/task.model';
 
 const makeTasks = (): Task[] => [
   {
@@ -162,7 +162,7 @@ describe('TasksComponent', () => {
         currentIndex: 2,
       });
 
-      // After moveItemInArray([t1,t2,t3], 0, 2) → [t2,t3,t1]
+      // After moveItemInArray([t1,t2,t3], 0, 2) -> [t2,t3,t1]
       // movedTask = t1 (at index 2), previous = t3 (at index 1)
       expect(mockStore.moveTask).toHaveBeenCalledWith('t1', { previous: 't3' });
     });
@@ -189,7 +189,7 @@ describe('TasksComponent', () => {
         currentIndex: 0,
       });
 
-      // After moveItemInArray([t1,t2,t3], 2, 0) → [t3,t1,t2]
+      // After moveItemInArray([t1,t2,t3], 2, 0) -> [t3,t1,t2]
       // movedTask = t3 (at index 0), previous = undefined (first position)
       expect(mockStore.moveTask).toHaveBeenCalledWith('t3', {});
     });

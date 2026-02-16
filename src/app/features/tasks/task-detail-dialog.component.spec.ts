@@ -4,7 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { provideNativeDateAdapter } from '@angular/material/core';
 import { TaskDetailDialogComponent, TaskDialogData } from './task-detail-dialog.component';
-import { Task } from '../../data/models/task.model';
+import type { Task } from '../../data/models/task.model';
 
 const existingTask: Task = {
   id: 't1', localId: 'l1', title: 'Existing task', status: 'needsAction',

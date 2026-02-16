@@ -3,7 +3,7 @@ import { of, throwError } from 'rxjs';
 
 import { NotesStore } from './notes.store';
 import { NoteService } from '../data/note.service';
-import { Note } from '../data/models/note.model';
+import type { Note } from '../data/models/note.model';
 
 function makeNote(overrides: Partial<Note> = {}): Note {
   return {
@@ -227,7 +227,7 @@ describe('NotesStore', () => {
   describe('method: removeNote', () => {
     beforeEach(async () => {
       await store.loadNotes();
-      mockNoteService.deleteNote.and.returnValue(of(undefined as unknown as void));
+      mockNoteService.deleteNote.and.returnValue(of(void 0));
     });
 
     it('should remove the note from the store', async () => {

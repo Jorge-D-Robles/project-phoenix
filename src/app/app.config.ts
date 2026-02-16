@@ -10,7 +10,7 @@ import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
 
 import { routes } from './app.routes';
-import { AUTH_CONFIG, GOOGLE_SCOPES } from './core/auth.config';
+import { AUTH_CONFIG } from './core/auth.config';
 import { AuthService } from './core/auth.service';
 import { authInterceptor } from './core/auth.interceptor';
 import { retryInterceptor } from './core/retry.interceptor';

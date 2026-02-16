@@ -1,9 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
-import { CalendarService } from './calendar.service';
-import { GoogleCalendarEvent } from './models/calendar-event.model';
+import { CalendarService, CalendarSyncResult } from './calendar.service';
+import type { GoogleCalendarEvent } from './models/calendar-event.model';
 
 const BASE_URL = 'https://www.googleapis.com/calendar/v3';
 const CALENDAR_ID = 'primary';
@@ -89,7 +89,7 @@ describe('CalendarService', () => {
 
     it('should map Google events to CalendarEvent entities', () => {
       const now = new Date('2026-02-16T12:00:00Z');
-      let result: ReturnType<typeof service.getEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.getEvents(now).subscribe(r => result = r);
 
@@ -116,7 +116,7 @@ describe('CalendarService', () => {
 
     it('should handle all-day events (date instead of dateTime)', () => {
       const now = new Date('2026-02-16T12:00:00Z');
-      let result: ReturnType<typeof service.getEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.getEvents(now).subscribe(r => result = r);
 
@@ -138,7 +138,7 @@ describe('CalendarService', () => {
 
     it('should sanitize HTML descriptions', () => {
       const now = new Date('2026-02-16T12:00:00Z');
-      let result: ReturnType<typeof service.getEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.getEvents(now).subscribe(r => result = r);
 
@@ -161,7 +161,7 @@ describe('CalendarService', () => {
 
     it('should handle null/undefined descriptions', () => {
       const now = new Date('2026-02-16T12:00:00Z');
-      let result: ReturnType<typeof service.getEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.getEvents(now).subscribe(r => result = r);
 
@@ -178,7 +178,7 @@ describe('CalendarService', () => {
 
     it('should handle pagination via nextPageToken', () => {
       const now = new Date('2026-02-16T12:00:00Z');
-      let result: ReturnType<typeof service.getEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.getEvents(now).subscribe(r => result = r);
 
@@ -208,7 +208,7 @@ describe('CalendarService', () => {
 
     it('should filter out cancelled events', () => {
       const now = new Date('2026-02-16T12:00:00Z');
-      let result: ReturnType<typeof service.getEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.getEvents(now).subscribe(r => result = r);
 
@@ -242,7 +242,7 @@ describe('CalendarService', () => {
     });
 
     it('should return updated events and new syncToken', () => {
-      let result: ReturnType<typeof service.syncEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.syncEvents('old-token').subscribe(r => result = r);
 
@@ -261,7 +261,7 @@ describe('CalendarService', () => {
     });
 
     it('should include cancelled events in sync results (for deletion tracking)', () => {
-      let result: ReturnType<typeof service.syncEvents> extends import('rxjs').Observable<infer T> ? T : never;
+      let result: CalendarSyncResult;
 
       service.syncEvents('token').subscribe(r => result = r);
 

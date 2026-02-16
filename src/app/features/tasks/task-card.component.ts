@@ -69,11 +69,11 @@ import { Task } from '../../data/models/task.model';
   `,
 })
 export class TaskCardComponent {
-  task = input.required<Task>();
+  readonly task = input.required<Task>();
 
-  toggle = output<string>();
-  edit = output<string>();
-  delete = output<string>();
+  readonly toggle = output<string>();
+  readonly edit = output<string>();
+  readonly delete = output<string>();
 
-  isCompleted = computed(() => this.task().status === 'completed');
+  protected readonly isCompleted = computed(() => this.task().status === 'completed');
 }

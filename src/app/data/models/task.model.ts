@@ -1,9 +1,9 @@
 /** Phoenix metadata embedded in Google Tasks notes field */
 export interface TaskMeta {
-  localId?: string;
-  habitId?: string;
-  docLinks?: string[];
-  tags?: string[];
+  readonly localId?: string;
+  readonly habitId?: string;
+  readonly docLinks?: string[];
+  readonly tags?: string[];
 }
 
 /** Parsed result from TaskParser — separates user notes from Phoenix metadata */
@@ -59,10 +59,4 @@ export interface UpdateTaskRequest {
 export interface MoveTaskRequest {
   parent?: string;
   previous?: string;
-}
-
-/** Google Tasks API response envelope */
-export interface TaskListResponse<T> {
-  items: T[];
-  nextPageToken?: string;
 }

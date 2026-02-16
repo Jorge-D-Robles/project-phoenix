@@ -3,7 +3,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { Note, NOTE_COLOR_MAP } from '../../data/models/note.model';
+import { NOTE_COLOR_MAP } from '../../data/models/note.model';
+import type { Note } from '../../data/models/note.model';
 
 const PREVIEW_MAX_LENGTH = 200;
 

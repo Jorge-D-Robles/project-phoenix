@@ -57,7 +57,7 @@ import { HabitFrequency } from '../../data/models/habit.model';
                 <mat-icon>close</mat-icon>
               </button>
             </div>
-            <app-heatmap [logs]="store.logsForSelectedHabit()" [color]="selected.color" />
+            <app-heatmap [logs]="store.logsForSelectedHabit()" />
           </div>
         }
 
@@ -139,7 +139,8 @@ export class HabitsComponent implements OnInit {
   }
 
   protected onLogToday(habitId: string): void {
-    const today = new Date().toISOString().split('T')[0];
+    const now = new Date();
+    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
     this.store.logHabit(habitId, today, 1);
   }
 

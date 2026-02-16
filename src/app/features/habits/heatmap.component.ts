@@ -10,8 +10,8 @@ const DAYS_PER_WEEK = 7;
 const TOTAL_CELLS = WEEKS * DAYS_PER_WEEK;
 
 interface HeatmapCell {
-  date: string;
-  level: number;
+  readonly date: string;
+  readonly level: number;
 }
 
 @Component({
@@ -38,7 +38,6 @@ interface HeatmapCell {
 })
 export class HeatmapComponent {
   logs = input.required<HabitLog[]>();
-  color = input.required<string>();
 
   cells = computed<HeatmapCell[]>(() => {
     const logEntries = this.logs();
@@ -64,7 +63,10 @@ export class HeatmapComponent {
     for (let i = 0; i < TOTAL_CELLS; i++) {
       const cellDate = new Date(startDate);
       cellDate.setDate(startDate.getDate() + i);
-      const dateStr = cellDate.toISOString().split('T')[0];
+      const year = cellDate.getFullYear();
+      const month = String(cellDate.getMonth() + 1).padStart(2, '0');
+      const day = String(cellDate.getDate()).padStart(2, '0');
+      const dateStr = `${year}-${month}-${day}`;
       const value = logMap.get(dateStr) ?? 0;
       cells.push({
         date: dateStr,

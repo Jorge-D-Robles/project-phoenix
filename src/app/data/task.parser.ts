@@ -1,4 +1,4 @@
-import { ParsedTaskNotes, TaskMeta } from './models/task.model';
+import type { ParsedTaskNotes, TaskMeta } from './models/task.model';
 
 const DELIMITER = '\n---PHOENIX_META---\n';
 

@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { NoteCardComponent } from './note-card.component';
-import { Note, NOTE_COLOR_MAP } from '../../data/models/note.model';
+import type { Note } from '../../data/models/note.model';
 
 function makeNote(overrides: Partial<Note> = {}): Note {
   return {

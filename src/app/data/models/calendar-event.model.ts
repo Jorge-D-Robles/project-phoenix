@@ -51,21 +51,21 @@ export interface CalendarEvent {
 
 /** Google Calendar API event resource (raw shape) */
 export interface GoogleCalendarEvent {
-  id: string;
-  summary?: string;
-  description?: string;
-  start: { dateTime?: string; date?: string };
-  end: { dateTime?: string; date?: string };
-  colorId?: string;
-  location?: string;
-  htmlLink?: string;
-  status: string;
-  updated: string;
+  readonly id: string;
+  readonly summary?: string;
+  readonly description?: string;
+  readonly start: { dateTime?: string; date?: string };
+  readonly end: { dateTime?: string; date?: string };
+  readonly colorId?: string;
+  readonly location?: string;
+  readonly htmlLink?: string;
+  readonly status: string;
+  readonly updated: string;
 }
 
 /** Google Calendar API events.list response */
 export interface GoogleCalendarEventsResponse {
-  items?: GoogleCalendarEvent[];
-  nextSyncToken?: string;
-  nextPageToken?: string;
+  readonly items?: GoogleCalendarEvent[];
+  readonly nextSyncToken?: string;
+  readonly nextPageToken?: string;
 }

@@ -3,7 +3,7 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { provideHttpClient } from '@angular/common/http';
 
 import { TaskService } from './task.service';
-import { CreateTaskRequest, Task, TaskList, UpdateTaskRequest } from './models/task.model';
+import type { CreateTaskRequest, Task, TaskList, UpdateTaskRequest } from './models/task.model';
 
 describe('TaskService', () => {
   let service: TaskService;

@@ -1,4 +1,4 @@
-import { getEventColor, DEFAULT_EVENT_COLOR, EVENT_COLOR_MAP, EventColor } from './calendar-event.model';
+import { getEventColor, DEFAULT_EVENT_COLOR, EVENT_COLOR_MAP } from './calendar-event.model';
 
 describe('Calendar Event Color Mapping', () => {
   describe('EVENT_COLOR_MAP', () => {

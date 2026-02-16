@@ -4,7 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
 import { HabitsComponent } from './habits.component';
 import { HabitsStore } from '../../state/habits.store';
-import { Habit, HabitLog } from '../../data/models/habit.model';
+import type { Habit, HabitLog } from '../../data/models/habit.model';
 
 const MOCK_HABITS: Habit[] = [
   {

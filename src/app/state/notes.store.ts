@@ -2,15 +2,15 @@ import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
-import { Note } from '../data/models/note.model';
+import type { Note } from '../data/models/note.model';
 import { NoteService } from '../data/note.service';
 
 interface NotesState {
-  notes: Note[];
-  loading: boolean;
-  error: string | null;
-  selectedNoteId: string | null;
-  filterLabel: string | null;
+  readonly notes: Note[];
+  readonly loading: boolean;
+  readonly error: string | null;
+  readonly selectedNoteId: string | null;
+  readonly filterLabel: string | null;
 }
 
 const initialState: NotesState = {

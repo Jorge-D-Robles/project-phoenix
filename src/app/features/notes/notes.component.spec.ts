@@ -4,7 +4,7 @@ import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
 import { NotesComponent } from './notes.component';
 import { NotesStore } from '../../state/notes.store';
-import { Note } from '../../data/models/note.model';
+import type { Note } from '../../data/models/note.model';
 
 function makeNote(overrides: Partial<Note> = {}): Note {
   return {

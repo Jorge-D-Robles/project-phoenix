@@ -2,12 +2,12 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, expand, EMPTY, map, reduce } from 'rxjs';
 
+import type { EventStatus } from './models/calendar-event.model';
 import {
   CalendarEvent,
   GoogleCalendarEvent,
   GoogleCalendarEventsResponse,
   getEventColor,
-  EventStatus,
 } from './models/calendar-event.model';
 
 const BASE_URL = 'https://www.googleapis.com/calendar/v3';
@@ -57,10 +57,7 @@ export class CalendarService {
 
   private fetchAllPages(baseParams: HttpParams): Observable<CalendarSyncResult> {
     const fetchPage = (pageToken?: string) => {
-      let params = baseParams;
-      if (pageToken) {
-        params = params.set('pageToken', pageToken);
-      }
+      const params = pageToken ? baseParams.set('pageToken', pageToken) : baseParams;
       return this.http.get<GoogleCalendarEventsResponse>(
         `${BASE_URL}/calendars/${CALENDAR_ID}/events`,
         { params },
@@ -95,7 +92,7 @@ export class CalendarService {
       color: getEventColor(raw.colorId),
       location: raw.location ?? null,
       htmlLink: raw.htmlLink ?? null,
-      status: raw.status as EventStatus,
+      status: toEventStatus(raw.status),
       updatedDateTime: raw.updated,
     };
   }
@@ -109,4 +106,11 @@ export function sanitizeHtml(html: string): string {
     }
     return '';
   });
+}
+
+function toEventStatus(status: string): EventStatus {
+  if (status === 'confirmed' || status === 'tentative' || status === 'cancelled') {
+    return status;
+  }
+  return 'confirmed';
 }

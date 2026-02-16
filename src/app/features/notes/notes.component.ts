@@ -7,8 +7,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { FormsModule } from '@angular/forms';
 import { NotesStore } from '../../state/notes.store';
 import { NoteCardComponent } from './note-card.component';
-import { NoteEditorComponent, NoteFormData } from './note-editor.component';
-import { Note, DEFAULT_NOTE_COLOR } from '../../data/models/note.model';
+import { NoteEditorComponent } from './note-editor.component';
+import type { NoteFormData } from './note-editor.component';
+import type { Note } from '../../data/models/note.model';
 
 @Component({
   selector: 'app-notes',
