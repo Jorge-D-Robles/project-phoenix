@@ -60,6 +60,7 @@ After completing any task, evaluate whether something was learned that should be
 - **Successful pattern**: If a technique, workaround, or approach worked well and would be useful in future sessions, add it to the appropriate file (`CLAUDE.md`, relevant `docs/` spec, or a new `docs/` file if needed).
 - **Pitfall or common issue**: If an error, gotcha, or unexpected behavior was encountered and resolved, document it as a warning or known issue so future sessions don't repeat the mistake.
 - **Updated best practice**: If a convention, workflow step, or tool usage was refined during the session, update the existing documentation to reflect the better approach.
+- **New skill or subagent**: If a task required a multi-step workflow that could be reused (e.g. a repeated validation sequence, a common generation pattern, or a cross-cutting concern), create a new slash command in `.claude/commands/` or propose a subagent definition. Do this when the pattern has been executed successfully at least once and would save time or reduce errors in future sessions.
 
 ### Where to document
 
@@ -69,6 +70,7 @@ After completing any task, evaluate whether something was learned that should be
 | Domain-specific insight (e.g. API quirk) | The relevant `docs/` spec file |
 | New domain not yet covered | New `docs/<topic>.md` file |
 | Docs-level process change | `docs/CLAUDE.md` |
+| Reusable multi-step workflow | New `.claude/commands/<name>.md` slash command |
 
 ### Rules
 
