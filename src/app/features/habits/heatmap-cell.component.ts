@@ -6,7 +6,7 @@ const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 /** Light mode level colors (GitHub-style greens) */
-const LIGHT_COLORS: Record<number, string> = {
+export const LIGHT_COLORS: Record<number, string> = {
   0: '#ebedf0',
   1: '#9be9a8',
   2: '#40c463',
@@ -15,7 +15,7 @@ const LIGHT_COLORS: Record<number, string> = {
 };
 
 /** Dark mode level colors */
-const DARK_COLORS: Record<number, string> = {
+export const DARK_COLORS: Record<number, string> = {
   0: '#161b22',
   1: '#0e4429',
   2: '#006d32',
@@ -41,21 +41,27 @@ const DARK_COLORS: Record<number, string> = {
     :host { display: contents; }
 
     .cell {
-      width: 12px;
-      height: 12px;
+      position: relative;
+      width: 11px;
+      height: 11px;
       border-radius: 2px;
       cursor: default;
     }
 
-    /* Today indicator — outlined ring */
     .cell.today {
       outline: 2px solid #8ab4f8;
       outline-offset: -1px;
     }
 
-    /* Month divider — gap before month-start columns */
-    .cell.month-start {
-      margin-left: 4px;
+    .cell.month-start::before {
+      content: '';
+      position: absolute;
+      left: -2px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: currentColor;
+      opacity: 0.15;
     }
   `],
 })

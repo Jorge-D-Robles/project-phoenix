@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import { HeatmapCellComponent } from './heatmap-cell.component';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import { HeatmapCellComponent, LIGHT_COLORS, DARK_COLORS } from './heatmap-cell.component';
 import { HabitLog, getLevel } from '../../data/models/habit.model';
+import { ThemeService } from '../../core/theme.service';
 
 function formatDate(d: Date): string {
   const y = d.getFullYear();
@@ -38,46 +39,91 @@ export interface MonthLabel {
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [HeatmapCellComponent],
   template: `
-    <div class="heatmap-wrapper overflow-x-auto" data-testid="heatmap-wrapper">
-      <div class="heatmap-container">
-        <!-- Month labels row -->
-        <div class="month-labels" data-testid="month-labels">
-          @for (label of monthLabels(); track label.column) {
-            <span class="month-label" [style.grid-column]="label.column + 1">
-              {{ label.name }}
-            </span>
-          }
+    <div class="heatmap-wrapper" data-testid="heatmap-wrapper">
+      <div class="heatmap-layout">
+        <!-- Day labels (Mon, Wed, Fri) -->
+        <div class="day-labels">
+          <div class="month-spacer"></div>
+          <div class="day-grid">
+            @for (day of dayLabels; track $index) {
+              <span class="day-label">{{ day }}</span>
+            }
+          </div>
         </div>
 
-        <!-- Heatmap grid -->
-        <div data-testid="heatmap-grid" class="heatmap-grid">
-          @for (cell of cells(); track cell.date) {
-            <app-heatmap-cell
-              [level]="cell.level"
-              [date]="cell.date"
-              [monthStart]="cell.monthStart"
-              [isToday]="cell.isToday"
-              [isFuture]="cell.isFuture" />
-          }
+        <!-- Scrollable grid area -->
+        <div class="grid-area">
+          <div class="grid-content">
+            <!-- Month labels row -->
+            <div class="month-labels" data-testid="month-labels">
+              @for (label of monthLabels(); track label.column) {
+                <span class="month-label" [style.grid-column]="label.column + 1">
+                  {{ label.name }}
+                </span>
+              }
+            </div>
+
+            <!-- Heatmap grid -->
+            <div data-testid="heatmap-grid" class="heatmap-grid">
+              @for (cell of cells(); track cell.date) {
+                <app-heatmap-cell
+                  [level]="cell.level"
+                  [date]="cell.date"
+                  [monthStart]="cell.monthStart"
+                  [isToday]="cell.isToday"
+                  [isFuture]="cell.isFuture" />
+              }
+            </div>
+          </div>
         </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <span class="legend-text">Less</span>
+        @for (color of legendColors(); track $index) {
+          <div class="legend-cell" [style.backgroundColor]="color"></div>
+        }
+        <span class="legend-text">More</span>
       </div>
     </div>
   `,
   styles: [`
-    .heatmap-wrapper {
+    .heatmap-layout {
+      display: flex;
+      align-items: flex-start;
+    }
+    .day-labels {
+      flex-shrink: 0;
+      margin-right: 6px;
+    }
+    .month-spacer {
+      height: 20px;
+    }
+    .day-grid {
+      display: grid;
+      grid-template-rows: repeat(7, 11px);
+      gap: 3px;
+    }
+    .day-label {
+      font-size: 10px;
+      color: var(--mat-sys-on-surface-variant, #666);
+      line-height: 11px;
+    }
+    .grid-area {
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
+      min-width: 0;
     }
-    .heatmap-container {
+    .grid-content {
       width: fit-content;
-      min-width: 100%;
     }
     .month-labels {
       display: grid;
-      grid-template-columns: repeat(52, 14px);
-      gap: 0;
-      margin-bottom: 4px;
+      grid-template-columns: repeat(52, 11px);
+      column-gap: 3px;
       height: 16px;
+      margin-bottom: 4px;
     }
     .month-label {
       font-size: 11px;
@@ -86,15 +132,41 @@ export interface MonthLabel {
     }
     .heatmap-grid {
       display: grid;
-      grid-template-rows: repeat(7, 14px);
-      grid-template-columns: repeat(52, 14px);
+      grid-template-rows: repeat(7, 11px);
+      grid-template-columns: repeat(52, 11px);
       grid-auto-flow: column;
-      gap: 2px;
+      gap: 3px;
+    }
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 3px;
+      margin-top: 8px;
+    }
+    .legend-text {
+      font-size: 10px;
+      color: var(--mat-sys-on-surface-variant, #666);
+      margin: 0 2px;
+    }
+    .legend-cell {
+      width: 11px;
+      height: 11px;
+      border-radius: 2px;
     }
   `],
 })
 export class HeatmapComponent {
+  private readonly themeService = inject(ThemeService);
+
   logs = input.required<HabitLog[]>();
+
+  readonly dayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
+
+  legendColors = computed(() => {
+    const palette = this.themeService.isDark() ? DARK_COLORS : LIGHT_COLORS;
+    return [0, 1, 2, 3, 4].map(lvl => palette[lvl]);
+  });
 
   cells = computed<HeatmapCell[]>(() => {
     const logEntries = this.logs();
