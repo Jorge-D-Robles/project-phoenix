@@ -13,7 +13,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| — | Phase 8.5 complete. Next: Phase 9 (Android) | — | — | — |
+| — | All web phases complete. Focus: web improvements, bug fixes, new web features. Android deferred. | — | — | — |
 
 ## 📋 Backlog
 

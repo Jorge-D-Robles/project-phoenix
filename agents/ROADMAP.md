@@ -306,7 +306,9 @@ Enhance existing web features with richer functionality and better UX.
 
 ---
 
-## Phase 9: Android Transposition
+## Phase 9: Android Transposition — DEFERRED
+
+> **Status**: On hold. Focus is exclusively on the web platform for now. Android development will resume at a later date.
 
 Transpose the complete web feature set to native Android.
 
@@ -346,18 +348,19 @@ Phase 1 (Scaffold + Auth) ✅
                         └─→ Phase 7 (Focus Timer) ✅
                             └─→ Phase 8 (Weekly Review) ✅
                                 └─→ Phase 8.5 (Web Feature Polish) ✅
-                                    └─→ Phase 9 (Android)
+                                    └─→ Phase 9 (Android) ⏸ DEFERRED
 ```
 
-Each phase builds on the previous. Do not skip phases.
+Focus is on continued web platform development. Android is deferred indefinitely.
 
 ---
 
 ## Project Health
 
-- **Completion**: 90%
-- **Active Phase**: Phases 1-8.5 complete. Next: Phase 9 (Android Transposition)
-- **Active Platform**: Web (Angular 21) — all web features complete and polished
-- **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android, initial bundle size (910 kB with FullCalendar, exceeds 600 kB budget)
+- **Completion**: 100% of web platform
+- **Active Phase**: Web-only development. All 8.5 web phases complete. Next work: continued web improvements, bug fixes, and new web features.
+- **Active Platform**: Web (Angular 21) — sole focus
+- **Deferred**: Android (Phase 9) — on hold until further notice
+- **Primary Risks**: Initial bundle size (910 kB with FullCalendar, exceeds 600 kB budget), Google API quota limits
 - **Last Audit**: 2026-02-17
-- **Status**: 🟢 GREEN. Phase 8.5 complete — Full FullCalendar integration (Day/3-Day/Week/Month views), event detail dialogs, task search + due date chips + inline quick-add, note search + pin/archive + timestamps, global Cmd+K search, habit streak badges, dashboard quick-add. 633 tests total, all passing. Web platform fully polished. Ready for Phase 9 (Android).
+- **Status**: 🟢 GREEN. All web phases complete. 629 tests passing. Web platform is the sole development focus going forward.
