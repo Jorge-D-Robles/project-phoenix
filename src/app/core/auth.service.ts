@@ -47,6 +47,7 @@ export const AuthService = signalStore(
         responseType: 'code',
         showDebugInformation: true,
         strictDiscoveryDocumentValidation: false,
+        ...(config.googleClientSecret ? { dummyClientSecret: config.googleClientSecret } : {}),
       });
 
       try {
