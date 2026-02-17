@@ -5,12 +5,16 @@ import { firstValueFrom } from 'rxjs';
 import type { Note } from '../data/models/note.model';
 import { NoteService } from '../data/note.service';
 
+export type NoteTab = 'active' | 'archived';
+
 interface NotesState {
   readonly notes: Note[];
   readonly loading: boolean;
   readonly error: string | null;
   readonly selectedNoteId: string | null;
   readonly filterLabel: string | null;
+  readonly searchQuery: string;
+  readonly activeTab: NoteTab;
 }
 
 const initialState: NotesState = {
@@ -19,16 +23,38 @@ const initialState: NotesState = {
   error: null,
   selectedNoteId: null,
   filterLabel: null,
+  searchQuery: '',
+  activeTab: 'active',
 };
 
 export const NotesStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ notes, filterLabel, selectedNoteId }) => ({
+  withComputed(({ notes, filterLabel, selectedNoteId, searchQuery, activeTab }) => ({
     filteredNotes: computed(() => {
       const label = filterLabel();
-      if (!label) return notes();
-      return notes().filter(n => n.labels.includes(label));
+      const query = searchQuery().toLowerCase().trim();
+      const tab = activeTab();
+
+      let result = notes().filter(n => tab === 'archived' ? (n.archived ?? false) : !(n.archived ?? false));
+
+      if (label) {
+        result = result.filter(n => n.labels.includes(label));
+      }
+      if (query) {
+        result = result.filter(n =>
+          n.title.toLowerCase().includes(query) ||
+          n.content.toLowerCase().includes(query),
+        );
+      }
+      // Pinned notes first
+      return result.sort((a, b) => {
+        const aPinned = a.pinned ?? false;
+        const bPinned = b.pinned ?? false;
+        if (aPinned && !bPinned) return -1;
+        if (!aPinned && bPinned) return 1;
+        return b.lastModified.localeCompare(a.lastModified);
+      });
     }),
     selectedNote: computed(() => {
       const id = selectedNoteId();
@@ -112,6 +138,71 @@ export const NotesStore = signalStore(
 
     setFilter(label: string | null): void {
       patchState(store, { filterLabel: label });
+    },
+
+    setSearchQuery(query: string): void {
+      patchState(store, { searchQuery: query });
+    },
+
+    setActiveTab(tab: NoteTab): void {
+      patchState(store, { activeTab: tab });
+    },
+
+    async togglePin(id: string): Promise<void> {
+      const note = store.notes().find(n => n.id === id);
+      if (!note) return;
+      const updated = { ...note, pinned: !(note.pinned ?? false), lastModified: new Date().toISOString() };
+      patchState(store, {
+        notes: store.notes().map(n => n.id === id ? updated : n),
+        error: null,
+      });
+      const { id: _id, ...data } = updated;
+      try {
+        await firstValueFrom(noteService.updateNote(id, data));
+      } catch {
+        patchState(store, {
+          notes: store.notes().map(n => n.id === id ? note : n),
+          error: 'Failed to pin note',
+        });
+      }
+    },
+
+    async archiveNote(id: string): Promise<void> {
+      const note = store.notes().find(n => n.id === id);
+      if (!note) return;
+      const updated = { ...note, archived: true, lastModified: new Date().toISOString() };
+      patchState(store, {
+        notes: store.notes().map(n => n.id === id ? updated : n),
+        error: null,
+      });
+      const { id: _id, ...data } = updated;
+      try {
+        await firstValueFrom(noteService.updateNote(id, data));
+      } catch {
+        patchState(store, {
+          notes: store.notes().map(n => n.id === id ? note : n),
+          error: 'Failed to archive note',
+        });
+      }
+    },
+
+    async unarchiveNote(id: string): Promise<void> {
+      const note = store.notes().find(n => n.id === id);
+      if (!note) return;
+      const updated = { ...note, archived: false, lastModified: new Date().toISOString() };
+      patchState(store, {
+        notes: store.notes().map(n => n.id === id ? updated : n),
+        error: null,
+      });
+      const { id: _id, ...data } = updated;
+      try {
+        await firstValueFrom(noteService.updateNote(id, data));
+      } catch {
+        patchState(store, {
+          notes: store.notes().map(n => n.id === id ? note : n),
+          error: 'Failed to unarchive note',
+        });
+      }
     },
   })),
 );

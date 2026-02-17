@@ -3,6 +3,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { NOTE_COLOR_MAP } from '../../data/models/note.model';
 import type { Note } from '../../data/models/note.model';
 
@@ -12,7 +13,7 @@ const PREVIEW_MAX_LENGTH = 200;
   selector: 'app-note-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCardModule, MatChipsModule, MatIconModule, MatButtonModule],
+  imports: [MatCardModule, MatChipsModule, MatIconModule, MatButtonModule, MatTooltipModule],
   template: `
     <div
       data-testid="note-card"
@@ -22,18 +23,47 @@ const PREVIEW_MAX_LENGTH = 200;
       (click)="select.emit()"
     >
       <div class="flex items-start justify-between">
-        <span data-testid="note-title" class="text-sm font-semibold text-gray-800 truncate flex-1">
-          {{ note().title || 'Untitled' }}
-        </span>
-        <button
-          mat-icon-button
-          data-testid="note-delete"
-          class="!-mt-1 !-mr-1 !w-8 !h-8"
-          aria-label="Delete note"
-          (click)="onDelete($event)"
-        >
-          <mat-icon class="!text-base !w-4 !h-4 text-gray-500">close</mat-icon>
-        </button>
+        <div class="flex items-center gap-1 flex-1 min-w-0">
+          @if (note().pinned) {
+            <mat-icon data-testid="pin-indicator" class="!text-sm !w-4 !h-4 text-gray-500 shrink-0">push_pin</mat-icon>
+          }
+          <span data-testid="note-title" class="text-sm font-semibold text-gray-800 truncate">
+            {{ note().title || 'Untitled' }}
+          </span>
+        </div>
+        <div class="flex shrink-0 -mt-1 -mr-1">
+          <button
+            mat-icon-button
+            data-testid="note-pin"
+            class="!w-7 !h-7"
+            [matTooltip]="(note().pinned ? 'Unpin' : 'Pin') + ' note'"
+            (click)="onPin($event)"
+          >
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-500">
+              {{ note().pinned ? 'push_pin' : 'push_pin' }}
+            </mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            data-testid="note-archive"
+            class="!w-7 !h-7"
+            [matTooltip]="(note().archived ? 'Unarchive' : 'Archive') + ' note'"
+            (click)="onArchive($event)"
+          >
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-500">
+              {{ note().archived ? 'unarchive' : 'archive' }}
+            </mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            data-testid="note-delete"
+            class="!w-7 !h-7"
+            aria-label="Delete note"
+            (click)="onDelete($event)"
+          >
+            <mat-icon class="!text-sm !w-4 !h-4 text-gray-500">close</mat-icon>
+          </button>
+        </div>
       </div>
 
       @if (contentPreview()) {
@@ -55,6 +85,10 @@ const PREVIEW_MAX_LENGTH = 200;
           }
         </div>
       }
+
+      <p data-testid="note-timestamp" class="text-[10px] text-gray-400 mt-2">
+        {{ relativeTime() }}
+      </p>
     </div>
   `,
 })
@@ -63,6 +97,8 @@ export class NoteCardComponent {
 
   select = output<void>();
   delete = output<void>();
+  pin = output<void>();
+  archive = output<void>();
 
   protected backgroundColor = computed(() =>
     NOTE_COLOR_MAP[this.note().color] ?? NOTE_COLOR_MAP['DEFAULT'],
@@ -70,7 +106,6 @@ export class NoteCardComponent {
 
   protected contentPreview = computed(() => {
     const raw = this.note().content;
-    // Strip HTML tags for preview
     const text = raw.replace(/<[^>]*>/g, '');
     if (text.length > PREVIEW_MAX_LENGTH) {
       return text.substring(0, PREVIEW_MAX_LENGTH) + '...';
@@ -78,8 +113,32 @@ export class NoteCardComponent {
     return text;
   });
 
+  protected relativeTime = computed(() => {
+    const modified = new Date(this.note().lastModified);
+    const now = Date.now();
+    const diffMs = now - modified.getTime();
+    const diffMin = Math.floor(diffMs / 60000);
+    if (diffMin < 1) return 'just now';
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHours = Math.floor(diffMin / 60);
+    if (diffHours < 24) return `${diffHours}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 30) return `${diffDays}d ago`;
+    return modified.toLocaleDateString();
+  });
+
   protected onDelete(event: Event): void {
     event.stopPropagation();
     this.delete.emit();
+  }
+
+  protected onPin(event: Event): void {
+    event.stopPropagation();
+    this.pin.emit();
+  }
+
+  protected onArchive(event: Event): void {
+    event.stopPropagation();
+    this.archive.emit();
   }
 }

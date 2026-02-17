@@ -1,0 +1,99 @@
+/* FullCalendar Material 3 Theme Overrides */
+
+:host {
+  --fc-border-color: #e5e7eb;
+  --fc-today-bg-color: rgba(66, 133, 244, 0.08);
+  --fc-event-border-color: transparent;
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: rgba(0, 0, 0, 0.02);
+  --fc-now-indicator-color: #ea4335;
+  --fc-small-font-size: 0.85em;
+}
+
+:host-context(.dark) {
+  --fc-border-color: #374151;
+  --fc-today-bg-color: rgba(66, 133, 244, 0.12);
+  --fc-page-bg-color: transparent;
+  --fc-neutral-bg-color: rgba(255, 255, 255, 0.04);
+  --fc-neutral-text-color: #9ca3af;
+}
+
+/* Header toolbar */
+:host ::ng-deep .fc .fc-toolbar-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+/* Day header cells */
+:host ::ng-deep .fc .fc-col-header-cell {
+  padding: 8px 0;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+:host-context(.dark) ::ng-deep .fc .fc-col-header-cell {
+  color: #d1d5db;
+}
+
+/* Day number in month view */
+:host ::ng-deep .fc .fc-daygrid-day-number {
+  padding: 4px 8px;
+  font-size: 0.875rem;
+}
+
+:host-context(.dark) ::ng-deep .fc .fc-daygrid-day-number {
+  color: #d1d5db;
+}
+
+/* Time slots in week/day view */
+:host ::ng-deep .fc .fc-timegrid-slot-label-cushion {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+:host-context(.dark) ::ng-deep .fc .fc-timegrid-slot-label-cushion {
+  color: #9ca3af;
+}
+
+/* Event styling */
+:host ::ng-deep .fc .fc-event {
+  border-radius: 4px;
+  padding: 2px 4px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  border: none;
+}
+
+:host ::ng-deep .fc .fc-event:hover {
+  filter: brightness(0.9);
+}
+
+/* Now indicator */
+:host ::ng-deep .fc .fc-timegrid-now-indicator-line {
+  border-color: var(--fc-now-indicator-color);
+  border-width: 2px;
+}
+
+:host ::ng-deep .fc .fc-timegrid-now-indicator-arrow {
+  border-color: var(--fc-now-indicator-color);
+}
+
+/* Remove button default styles to let Material handle them */
+:host ::ng-deep .fc .fc-button {
+  display: none;
+}
+
+/* Scrollbar styling */
+:host ::ng-deep .fc-scroller {
+  scrollbar-width: thin;
+}
+
+/* Dark mode cell backgrounds */
+:host-context(.dark) ::ng-deep .fc .fc-daygrid-day {
+  background-color: transparent;
+}
+
+:host-context(.dark) ::ng-deep .fc td,
+:host-context(.dark) ::ng-deep .fc th {
+  border-color: #374151;
+}

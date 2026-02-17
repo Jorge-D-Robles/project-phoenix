@@ -14,6 +14,8 @@ function makeNote(overrides: Partial<Note> = {}): Note {
     labels: ['work'],
     color: 'BLUE',
     attachments: [],
+    pinned: false,
+    archived: false,
     created: '2026-02-16T10:00:00Z',
     lastModified: '2026-02-16T12:00:00Z',
     ...overrides,
@@ -34,9 +36,12 @@ function createMockStore(overrides: {
   selectedNote?: Note | null;
   filterLabel?: string | null;
   allLabels?: string[];
+  searchQuery?: string;
+  activeTab?: string;
 } = {}) {
   const store = jasmine.createSpyObj('NotesStore',
-    ['loadNotes', 'addNote', 'updateNote', 'removeNote', 'selectNote', 'setFilter'],
+    ['loadNotes', 'addNote', 'updateNote', 'removeNote', 'selectNote', 'setFilter',
+     'setSearchQuery', 'setActiveTab', 'togglePin', 'archiveNote', 'unarchiveNote'],
     {
       notes: signal(overrides.notes ?? MOCK_NOTES),
       filteredNotes: signal(overrides.filteredNotes ?? overrides.notes ?? MOCK_NOTES),
@@ -46,12 +51,17 @@ function createMockStore(overrides: {
       selectedNote: signal(overrides.selectedNote ?? null),
       filterLabel: signal(overrides.filterLabel ?? null),
       allLabels: signal(overrides.allLabels ?? ['work', 'personal']),
+      searchQuery: signal(overrides.searchQuery ?? ''),
+      activeTab: signal(overrides.activeTab ?? 'active'),
     },
   );
   store.loadNotes.and.resolveTo();
   store.addNote.and.resolveTo();
   store.updateNote.and.resolveTo();
   store.removeNote.and.resolveTo();
+  store.togglePin.and.resolveTo();
+  store.archiveNote.and.resolveTo();
+  store.unarchiveNote.and.resolveTo();
   return store;
 }
 

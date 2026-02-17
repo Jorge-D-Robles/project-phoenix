@@ -1,10 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { CdkDragDrop, CdkDropList, CdkDrag, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
 import { TasksStore } from '../../state/tasks.store';
 import { TaskCardComponent } from './task-card.component';
@@ -16,11 +19,14 @@ import type { Task, TaskFilter } from '../../data/models/task.model';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    FormsModule,
     MatSelectModule,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
     MatButtonToggleModule,
+    MatFormFieldModule,
+    MatInputModule,
     CdkDropList,
     CdkDrag,
     TaskCardComponent,
@@ -43,6 +49,21 @@ import type { Task, TaskFilter } from '../../data/models/task.model';
         </mat-form-field>
       </div>
 
+      <!-- Search bar -->
+      <mat-form-field appearance="outline" class="w-full mb-2" subscriptSizing="dynamic">
+        <mat-icon matPrefix class="mr-1">search</mat-icon>
+        <input matInput
+               data-testid="task-search"
+               placeholder="Search tasks..."
+               [ngModel]="store.searchQuery()"
+               (ngModelChange)="store.setSearchQuery($event)" />
+        @if (store.searchQuery()) {
+          <button matSuffix mat-icon-button (click)="store.setSearchQuery('')" aria-label="Clear search">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
       <!-- Filter tabs -->
       <mat-button-toggle-group
         class="mb-4"
@@ -58,6 +79,25 @@ import type { Task, TaskFilter } from '../../data/models/task.model';
           </mat-button-toggle>
         }
       </mat-button-toggle-group>
+
+      <!-- Inline quick-add -->
+      <div class="flex items-center gap-2 mb-4">
+        <mat-form-field appearance="outline" class="flex-1" subscriptSizing="dynamic">
+          <input matInput
+                 data-testid="quick-add-input"
+                 placeholder="Quick add task..."
+                 [(ngModel)]="quickAddTitle"
+                 (keydown.enter)="onQuickAdd()" />
+        </mat-form-field>
+        <button mat-icon-button
+                data-testid="quick-add-btn"
+                color="primary"
+                (click)="onQuickAdd()"
+                [disabled]="!quickAddTitle.trim()"
+                aria-label="Add task">
+          <mat-icon>add_circle</mat-icon>
+        </button>
+      </div>
 
       <!-- Error state -->
       @if (store.error(); as error) {
@@ -115,6 +155,8 @@ export class TasksComponent implements OnInit {
   protected readonly store = inject(TasksStore);
   private readonly dialog = inject(MatDialog);
 
+  protected quickAddTitle = '';
+
   protected readonly filters: { label: string; value: TaskFilter }[] = [
     { label: 'All', value: 'ALL' },
     { label: 'Active', value: 'needsAction' },
@@ -156,6 +198,13 @@ export class TasksComponent implements OnInit {
     const previous = event.currentIndex > 0 ? tasks[event.currentIndex - 1].id : undefined;
 
     this.store.moveTask(movedTaskId, previous ? { previous } : {});
+  }
+
+  protected onQuickAdd(): void {
+    const title = this.quickAddTitle.trim();
+    if (!title) return;
+    this.store.addTask({ title });
+    this.quickAddTitle = '';
   }
 
   protected onEditTask(taskId: string): void {

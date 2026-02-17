@@ -12,6 +12,7 @@ interface TasksState {
   readonly filter: TaskFilter;
   readonly selectedListId: string | null;
   readonly error: string | null;
+  readonly searchQuery: string;
 }
 
 const initialState: TasksState = {
@@ -21,17 +22,23 @@ const initialState: TasksState = {
   filter: 'ALL',
   selectedListId: null,
   error: null,
+  searchQuery: '',
 };
 
 export const TasksStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ tasks, filter }) => ({
+  withComputed(({ tasks, filter, searchQuery }) => ({
     filteredTasks: computed(() => {
       const currentFilter = filter();
-      return currentFilter === 'ALL'
+      const query = searchQuery().toLowerCase().trim();
+      let result = currentFilter === 'ALL'
         ? tasks()
         : tasks().filter(t => t.status === currentFilter);
+      if (query) {
+        result = result.filter(t => t.title.toLowerCase().includes(query));
+      }
+      return result;
     }),
     completionRate: computed(() => {
       const all = tasks();
@@ -206,6 +213,10 @@ export const TasksStore = signalStore(
 
     setFilter(filter: TaskFilter): void {
       patchState(store, { filter });
+    },
+
+    setSearchQuery(query: string): void {
+      patchState(store, { searchQuery: query });
     },
   })),
 );

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { Habit } from '../../data/models/habit.model';
 
@@ -7,7 +8,7 @@ import { Habit } from '../../data/models/habit.model';
   selector: 'app-habit-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatChipsModule, MatIconModule],
   template: `
     <div
       data-testid="habit-card"
@@ -22,9 +23,22 @@ import { Habit } from '../../data/models/habit.model';
       ></div>
 
       <div class="flex flex-col flex-1 min-w-0">
-        <span data-testid="habit-title" class="text-sm font-medium truncate">
-          {{ habit().title }}
-        </span>
+        <div class="flex items-center gap-2">
+          <span data-testid="habit-title" class="text-sm font-medium truncate">
+            {{ habit().title }}
+          </span>
+          @if (streak() > 0) {
+            <mat-chip-set>
+              <mat-chip data-testid="streak-badge"
+                        class="!text-xs !min-h-[22px] !px-2 !bg-orange-100 !text-orange-700
+                               dark:!bg-orange-900 dark:!text-orange-300"
+                        highlighted>
+                <mat-icon class="!text-sm !w-4 !h-4 mr-0.5">local_fire_department</mat-icon>
+                {{ streak() }}-day streak
+              </mat-chip>
+            </mat-chip-set>
+          }
+        </div>
         <span
           data-testid="habit-frequency"
           class="text-xs text-gray-500 dark:text-gray-400"
@@ -46,6 +60,7 @@ import { Habit } from '../../data/models/habit.model';
 })
 export class HabitCardComponent {
   habit = input.required<Habit>();
+  streak = input<number>(0);
 
   log = output<string>();
   select = output<string>();

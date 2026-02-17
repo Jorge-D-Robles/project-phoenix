@@ -13,6 +13,8 @@ function makeNote(overrides: Partial<Note> = {}): Note {
     labels: ['work', 'important'],
     color: 'BLUE',
     attachments: [],
+    pinned: false,
+    archived: false,
     created: '2026-02-16T10:00:00Z',
     lastModified: '2026-02-16T12:00:00Z',
     ...overrides,

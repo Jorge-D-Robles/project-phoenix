@@ -7,12 +7,12 @@ import type { Note } from '../../data/models/note.model';
 const MOCK_NOTES: Note[] = [
   {
     id: 'n1', title: 'Meeting notes', content: '<p>Discussed roadmap</p>',
-    labels: ['work'], color: 'BLUE', attachments: [],
+    labels: ['work'], color: 'BLUE', attachments: [], pinned: false, archived: false,
     created: '2026-02-16T00:00:00Z', lastModified: '2026-02-16T12:00:00Z',
   },
   {
     id: 'n2', title: 'Shopping list', content: 'Milk, bread, eggs',
-    labels: [], color: 'YELLOW', attachments: [],
+    labels: [], color: 'YELLOW', attachments: [], pinned: false, archived: false,
     created: '2026-02-15T00:00:00Z', lastModified: '2026-02-15T12:00:00Z',
   },
 ];

@@ -13,7 +13,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| — | Phases 6-8 complete. Next: Phase 9 (Android) | — | — | — |
+| — | Phase 8.5 complete. Next: Phase 9 (Android) | — | — | — |
 
 ## 📋 Backlog
 
@@ -30,7 +30,13 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
-| PHX-043 | Build InsightsComponent and wire /insights route | 2026-02-16 | Claude |
+| PHX-050 | Add global search (Cmd+K) and streak badges to habits | 2026-02-17 | Claude |
+| PHX-049 | Enhance Notes with search, pin/archive, timestamps | 2026-02-17 | Claude |
+| PHX-048 | Enhance Tasks with search, due date chips, inline quick-add | 2026-02-17 | Claude |
+| PHX-047 | Create EventDetailDialogComponent and calendar theme | 2026-02-17 | Claude |
+| PHX-046 | Rewrite CalendarComponent with FullCalendar (Day/3-Day/Week/Month) | 2026-02-17 | Claude |
+| PHX-045 | Extend CalendarStore for multi-view support and date ranges | 2026-02-17 | Claude |
+| PHX-044 | Install FullCalendar packages | 2026-02-17 | Claude |
 | PHX-043 | Build InsightsComponent and wire /insights route | 2026-02-16 | Claude |
 | PHX-042 | Build Insights UI components (score card, trend chart, streaks, summary) | 2026-02-16 | Claude |
 | PHX-041 | Implement `InsightsStore` (SignalStore) with analytics computations | 2026-02-16 | Claude |

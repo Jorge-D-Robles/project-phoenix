@@ -106,27 +106,27 @@ const MOCK_LOGS: HabitLog[] = [
 const MOCK_NOTES: Note[] = [
   {
     id: 'n1', title: 'Recent note', content: 'Content 1',
-    labels: ['work'], color: 'BLUE', attachments: [],
+    labels: ['work'], color: 'BLUE', attachments: [], pinned: false, archived: false,
     created: '2026-02-16T00:00:00Z', lastModified: '2026-02-16T12:00:00Z',
   },
   {
     id: 'n2', title: 'Older note', content: 'Content 2',
-    labels: [], color: 'DEFAULT', attachments: [],
+    labels: [], color: 'DEFAULT', attachments: [], pinned: false, archived: false,
     created: '2026-02-15T00:00:00Z', lastModified: '2026-02-15T12:00:00Z',
   },
   {
     id: 'n3', title: 'Oldest note', content: 'Content 3',
-    labels: [], color: 'DEFAULT', attachments: [],
+    labels: [], color: 'DEFAULT', attachments: [], pinned: false, archived: false,
     created: '2026-02-14T00:00:00Z', lastModified: '2026-02-14T12:00:00Z',
   },
   {
     id: 'n4', title: 'Second recent', content: 'Content 4',
-    labels: ['personal'], color: 'GREEN', attachments: [],
+    labels: ['personal'], color: 'GREEN', attachments: [], pinned: false, archived: false,
     created: '2026-02-16T00:00:00Z', lastModified: '2026-02-16T10:00:00Z',
   },
   {
     id: 'n5', title: 'Fifth note', content: 'Content 5',
-    labels: [], color: 'DEFAULT', attachments: [],
+    labels: [], color: 'DEFAULT', attachments: [], pinned: false, archived: false,
     created: '2026-02-13T00:00:00Z', lastModified: '2026-02-13T12:00:00Z',
   },
 ];

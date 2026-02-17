@@ -39,6 +39,30 @@ export const HabitsStore = signalStore(
       if (!id) return [];
       return logs().filter(l => l.habitId === id);
     }),
+    /** Streak counts per habit (consecutive days backward from today) */
+    streaks: computed((): Map<string, number> => {
+      const allLogs = logs();
+      const map = new Map<string, number>();
+      for (const habit of habits().filter(h => !h.archived)) {
+        const habitLogs = new Set(
+          allLogs.filter(l => l.habitId === habit.id && l.value > 0).map(l => l.date),
+        );
+        let streak = 0;
+        const today = new Date();
+        for (let i = 0; i < 365; i++) {
+          const d = new Date(today);
+          d.setDate(d.getDate() - i);
+          const key = d.toISOString().split('T')[0];
+          if (habitLogs.has(key)) {
+            streak++;
+          } else {
+            break;
+          }
+        }
+        map.set(habit.id, streak);
+      }
+      return map;
+    }),
   })),
   withMethods((store, habitService = inject(HabitService)) => {
     async function saveData(): Promise<void> {

@@ -6,12 +6,17 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { CalendarEvent } from '../data/models/calendar-event.model';
 import { CalendarService } from '../data/calendar.service';
 
+export type CalendarViewMode = 'dayGridMonth' | 'timeGridWeek' | 'timeGrid3Day' | 'timeGridDay';
+
 interface CalendarState {
   readonly events: CalendarEvent[];
   readonly loading: boolean;
   readonly error: string | null;
   readonly syncToken: string | null;
   readonly selectedDate: string;
+  readonly viewMode: CalendarViewMode;
+  readonly visibleRangeStart: string | null;
+  readonly visibleRangeEnd: string | null;
 }
 
 const initialState: CalendarState = {
@@ -20,21 +25,32 @@ const initialState: CalendarState = {
   error: null,
   syncToken: null,
   selectedDate: new Date().toISOString().split('T')[0],
+  viewMode: 'timeGridWeek',
+  visibleRangeStart: null,
+  visibleRangeEnd: null,
 };
 
 export const CalendarStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed(({ events, selectedDate }) => ({
+  withComputed(({ events, selectedDate, visibleRangeStart, visibleRangeEnd }) => ({
     eventsForSelectedDate: computed(() => {
       const date = selectedDate();
       return events().filter(event => {
         if (event.allDay) {
-          // All-day events: start is a date string (YYYY-MM-DD)
           return event.start <= date && event.end > date;
         }
-        // Timed events: compare the date portion of the ISO dateTime
         return event.start.substring(0, 10) === date;
+      });
+    }),
+    eventsForRange: computed(() => {
+      const start = visibleRangeStart();
+      const end = visibleRangeEnd();
+      if (!start || !end) return events();
+      return events().filter(event => {
+        const eventStart = event.start.substring(0, 10);
+        const eventEnd = event.end.substring(0, 10);
+        return eventEnd >= start && eventStart <= end;
       });
     }),
   })),
@@ -107,6 +123,14 @@ export const CalendarStore = signalStore(
 
     selectDate(date: string): void {
       patchState(store, { selectedDate: date });
+    },
+
+    setViewMode(mode: CalendarViewMode): void {
+      patchState(store, { viewMode: mode });
+    },
+
+    setDateRange(start: string, end: string): void {
+      patchState(store, { visibleRangeStart: start, visibleRangeEnd: end });
     },
   })),
 );

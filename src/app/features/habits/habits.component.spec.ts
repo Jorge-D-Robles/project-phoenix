@@ -54,6 +54,7 @@ function createMockStore(overrides: {
       logsForSelectedHabit: signal(overrides.logsForSelectedHabit ?? []),
       loading: signal(overrides.loading ?? false),
       error: signal(overrides.error ?? null),
+      streaks: signal(new Map<string, number>()),
     },
   );
   store.loadData.and.resolveTo();

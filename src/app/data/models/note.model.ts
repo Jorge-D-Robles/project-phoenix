@@ -51,6 +51,8 @@ export interface Note {
   readonly labels: readonly string[];
   readonly color: NoteColor;
   readonly attachments: readonly NoteAttachment[];
+  readonly pinned: boolean;
+  readonly archived: boolean;
   readonly created: string;
   readonly lastModified: string;
 }

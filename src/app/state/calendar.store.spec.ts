@@ -225,4 +225,44 @@ describe('CalendarStore', () => {
       expect(store.selectedDate()).toBe('2026-03-01');
     });
   });
+
+  describe('method: setViewMode', () => {
+    it('should update viewMode', () => {
+      store.setViewMode('dayGridMonth');
+      expect(store.viewMode()).toBe('dayGridMonth');
+    });
+
+    it('should default to timeGridWeek', () => {
+      expect(store.viewMode()).toBe('timeGridWeek');
+    });
+  });
+
+  describe('method: setDateRange', () => {
+    it('should update visibleRangeStart and visibleRangeEnd', () => {
+      store.setDateRange('2026-02-10', '2026-02-17');
+      expect(store.visibleRangeStart()).toBe('2026-02-10');
+      expect(store.visibleRangeEnd()).toBe('2026-02-17');
+    });
+  });
+
+  describe('computed: eventsForRange', () => {
+    it('should return all events when no range is set', async () => {
+      await store.initialSync();
+      expect(store.eventsForRange().length).toBe(4);
+    });
+
+    it('should filter events within visible range', async () => {
+      await store.initialSync();
+      store.setDateRange('2026-02-16', '2026-02-16');
+      const rangeEvents = store.eventsForRange();
+      // evt1, evt2 on 2026-02-16, evt4 all-day spanning 2026-02-16 to 2026-02-17
+      expect(rangeEvents.length).toBe(3);
+    });
+
+    it('should exclude events outside the range', async () => {
+      await store.initialSync();
+      store.setDateRange('2026-03-01', '2026-03-07');
+      expect(store.eventsForRange().length).toBe(0);
+    });
+  });
 });

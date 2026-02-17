@@ -2,8 +2,9 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { CalendarComponent } from './calendar.component';
-import { CalendarStore } from '../../state/calendar.store';
+import { CalendarStore, CalendarViewMode } from '../../state/calendar.store';
 import { CalendarEvent } from '../../data/models/calendar-event.model';
 
 function makeEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
@@ -32,20 +33,28 @@ const MOCK_EVENTS: CalendarEvent[] = [
 function createMockStore(overrides: {
   events?: CalendarEvent[];
   eventsForSelectedDate?: CalendarEvent[];
+  eventsForRange?: CalendarEvent[];
   loading?: boolean;
   error?: string | null;
   selectedDate?: string;
   syncToken?: string | null;
+  viewMode?: CalendarViewMode;
+  visibleRangeStart?: string | null;
+  visibleRangeEnd?: string | null;
 } = {}) {
   const store = jasmine.createSpyObj('CalendarStore',
-    ['initialSync', 'incrementalSync', 'selectDate'],
+    ['initialSync', 'incrementalSync', 'selectDate', 'setViewMode', 'setDateRange'],
     {
       events: signal(overrides.events ?? MOCK_EVENTS),
       eventsForSelectedDate: signal(overrides.eventsForSelectedDate ?? MOCK_EVENTS),
+      eventsForRange: signal(overrides.eventsForRange ?? MOCK_EVENTS),
       loading: signal(overrides.loading ?? false),
       error: signal(overrides.error ?? null),
       selectedDate: signal(overrides.selectedDate ?? '2026-02-16'),
       syncToken: signal(overrides.syncToken ?? null),
+      viewMode: signal(overrides.viewMode ?? 'timeGridWeek'),
+      visibleRangeStart: signal(overrides.visibleRangeStart ?? null),
+      visibleRangeEnd: signal(overrides.visibleRangeEnd ?? null),
     },
   );
   store.initialSync.and.resolveTo();
@@ -55,18 +64,20 @@ function createMockStore(overrides: {
 
 async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {}) {
   const mockStore = createMockStore(storeOverrides);
+  const mockDialog = jasmine.createSpyObj('MatDialog', ['open']);
 
   await TestBed.configureTestingModule({
     imports: [CalendarComponent],
     providers: [
       { provide: CalendarStore, useValue: mockStore },
+      { provide: MatDialog, useValue: mockDialog },
       provideNoopAnimations(),
     ],
   }).compileComponents();
 
   const fixture = TestBed.createComponent(CalendarComponent);
   await fixture.whenStable();
-  return { fixture, mockStore };
+  return { fixture, mockStore, mockDialog };
 }
 
 describe('CalendarComponent', () => {
@@ -77,50 +88,40 @@ describe('CalendarComponent', () => {
       const { mockStore } = await setup();
       expect(mockStore.initialSync).toHaveBeenCalled();
     });
-  });
 
-  describe('date navigation', () => {
-    it('should display the selected date', async () => {
+    it('should render the FullCalendar component', async () => {
       const { fixture } = await setup();
-      const dateLabel = fixture.debugElement.query(By.css('[data-testid="selected-date"]'));
-      expect(dateLabel).toBeTruthy();
-      expect(dateLabel.nativeElement.textContent).toBeTruthy();
-    });
-
-    it('should call selectDate with previous day when back button clicked', async () => {
-      const { fixture, mockStore } = await setup({ selectedDate: '2026-02-16' });
-      const prevBtn = fixture.debugElement.query(By.css('[data-testid="prev-day"]'));
-      prevBtn.nativeElement.click();
-      expect(mockStore.selectDate).toHaveBeenCalledWith('2026-02-15');
-    });
-
-    it('should call selectDate with next day when forward button clicked', async () => {
-      const { fixture, mockStore } = await setup({ selectedDate: '2026-02-16' });
-      const nextBtn = fixture.debugElement.query(By.css('[data-testid="next-day"]'));
-      nextBtn.nativeElement.click();
-      expect(mockStore.selectDate).toHaveBeenCalledWith('2026-02-17');
-    });
-
-    it('should call selectDate with today when today button clicked', async () => {
-      const { fixture, mockStore } = await setup({ selectedDate: '2026-03-01' });
-      const todayBtn = fixture.debugElement.query(By.css('[data-testid="today-btn"]'));
-      todayBtn.nativeElement.click();
-      const today = new Date().toISOString().split('T')[0];
-      expect(mockStore.selectDate).toHaveBeenCalledWith(today);
+      const fc = fixture.debugElement.query(By.css('[data-testid="full-calendar"]'));
+      expect(fc).toBeTruthy();
     });
   });
 
-  describe('event rendering', () => {
-    it('should render event cards for day events', async () => {
+  describe('view mode toggling', () => {
+    it('should render all 4 view toggle buttons', async () => {
       const { fixture } = await setup();
-      const cards = fixture.debugElement.queryAll(By.css('app-event-card'));
-      expect(cards.length).toBe(2);
+      const toggleGroup = fixture.debugElement.query(By.css('[data-testid="view-toggle"]'));
+      expect(toggleGroup).toBeTruthy();
+      const buttons = fixture.debugElement.queryAll(By.css('mat-button-toggle'));
+      expect(buttons.length).toBe(4);
     });
 
-    it('should show empty state when no events', async () => {
-      const { fixture } = await setup({ eventsForSelectedDate: [] });
-      const empty = fixture.debugElement.query(By.css('[data-testid="empty-state"]'));
-      expect(empty).toBeTruthy();
+    it('should call setViewMode when a view button is clicked', async () => {
+      const { fixture, mockStore } = await setup();
+      const buttons = fixture.debugElement.queryAll(By.css('mat-button-toggle'));
+      // Click the Month button (last one)
+      const monthButton = buttons[3];
+      monthButton.nativeElement.querySelector('button')?.click();
+      fixture.detectChanges();
+      expect(mockStore.setViewMode).toHaveBeenCalledWith('dayGridMonth');
+    });
+  });
+
+  describe('navigation controls', () => {
+    it('should render prev, next, and today buttons', async () => {
+      const { fixture } = await setup();
+      expect(fixture.debugElement.query(By.css('[data-testid="prev-btn"]'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('[data-testid="next-btn"]'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('[data-testid="today-btn"]'))).toBeTruthy();
     });
   });
 

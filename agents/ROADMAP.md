@@ -266,6 +266,46 @@ Build an analytics page showing productivity trends, habit streaks, and a compos
 
 ---
 
+## Phase 8.5: Web Feature Polish
+
+Enhance existing web features with richer functionality and better UX.
+
+### Deliverables
+
+- [x] Replace basic calendar day-view with FullCalendar (Day/3-Day/Week/Month views)
+- [x] Add event detail dialog with Google Calendar link
+- [x] Add task search bar and inline quick-add
+- [x] Add due date color-coded chips (overdue/today/upcoming)
+- [x] Add note search, pin/archive support, and active/archived tabs
+- [x] Add relative timestamps to note cards
+- [x] Add global search dialog (Cmd+K / Ctrl+K) across tasks, notes, habits, events
+- [x] Add habit streak badges
+- [x] Add quick-add task button to dashboard widget
+
+### Tickets
+
+- [x] PHX-044: Install FullCalendar packages
+- [x] PHX-045: Extend CalendarStore for multi-view support and date ranges
+- [x] PHX-046: Rewrite CalendarComponent with FullCalendar (Day/3-Day/Week/Month)
+- [x] PHX-047: Create EventDetailDialogComponent and calendar theme
+- [x] PHX-048: Enhance Tasks with search, due date chips, inline quick-add
+- [x] PHX-049: Enhance Notes with search, pin/archive, timestamps
+- [x] PHX-050: Add global search (Cmd+K) and streak badges to habits
+
+### Acceptance Criteria
+
+- [x] Calendar shows Day, 3-Day, Week, and Month views via FullCalendar
+- [x] Clicking an event opens a detail dialog with description and Google link
+- [x] Tasks filterable by search query (title match)
+- [x] Due dates shown as color-coded chips
+- [x] Notes support pin (sorted first) and archive (tab filter)
+- [x] Cmd+K opens global search across all features
+- [x] Habit cards show streak count when > 0
+- [x] All 633 tests pass
+- [x] Build succeeds (FullCalendar increases initial bundle size)
+
+---
+
 ## Phase 9: Android Transposition
 
 Transpose the complete web feature set to native Android.
@@ -305,7 +345,8 @@ Phase 1 (Scaffold + Auth) ✅
                     └─→ Phase 6 (Dashboard) ✅
                         └─→ Phase 7 (Focus Timer) ✅
                             └─→ Phase 8 (Weekly Review) ✅
-                                └─→ Phase 9 (Android)
+                                └─→ Phase 8.5 (Web Feature Polish) ✅
+                                    └─→ Phase 9 (Android)
 ```
 
 Each phase builds on the previous. Do not skip phases.
@@ -314,9 +355,9 @@ Each phase builds on the previous. Do not skip phases.
 
 ## Project Health
 
-- **Completion**: 89%
-- **Active Phase**: Phases 6-8 complete. Next: Phase 9 (Android Transposition)
-- **Active Platform**: Web (Angular 21) — all web features complete
-- **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android
-- **Last Audit**: 2026-02-16
-- **Status**: 🟢 GREEN. Phases 6-8 complete — Dashboard Today View (DashboardStore, 5 widgets, responsive grid), Focus Timer (FocusService, FocusStore, toolbar timer, settings dialog), Weekly Review (InsightsStore, score card, trend charts, streaks, summary). 615 tests total, all passing. Web platform fully feature-complete with 8 feature areas. Ready for Phase 9 (Android).
+- **Completion**: 90%
+- **Active Phase**: Phases 1-8.5 complete. Next: Phase 9 (Android Transposition)
+- **Active Platform**: Web (Angular 21) — all web features complete and polished
+- **Primary Risks**: Google API Quota limits, OAuth flow complexity on Android, initial bundle size (910 kB with FullCalendar, exceeds 600 kB budget)
+- **Last Audit**: 2026-02-17
+- **Status**: 🟢 GREEN. Phase 8.5 complete — Full FullCalendar integration (Day/3-Day/Week/Month views), event detail dialogs, task search + due date chips + inline quick-add, note search + pin/archive + timestamps, global Cmd+K search, habit streak badges, dashboard quick-add. 633 tests total, all passing. Web platform fully polished. Ready for Phase 9 (Android).

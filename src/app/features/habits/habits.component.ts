@@ -67,6 +67,7 @@ import { HabitFrequency } from '../../data/models/habit.model';
             @for (habit of store.activeHabits(); track habit.id) {
               <app-habit-card
                 [habit]="habit"
+                [streak]="store.streaks().get(habit.id) ?? 0"
                 (log)="onLogToday($event)"
                 (select)="store.selectHabit($event)"
               />

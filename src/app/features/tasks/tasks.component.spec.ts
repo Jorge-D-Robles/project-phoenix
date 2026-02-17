@@ -41,7 +41,7 @@ function createMockStore(overrides: {
   const tasks = overrides.tasks ?? makeTasks();
   const filtered = overrides.filteredTasks ?? tasks;
   const store = jasmine.createSpyObj('TasksStore',
-    ['loadTaskLists', 'loadTasks', 'addTask', 'updateTask', 'toggleTaskStatus', 'removeTask', 'moveTask', 'setFilter'],
+    ['loadTaskLists', 'loadTasks', 'addTask', 'updateTask', 'toggleTaskStatus', 'removeTask', 'moveTask', 'setFilter', 'setSearchQuery'],
     {
       tasks: signal(tasks),
       taskLists: signal(overrides.taskLists ?? makeTaskLists()),
@@ -52,6 +52,7 @@ function createMockStore(overrides: {
       taskCount: signal(tasks.length),
       filter: signal(overrides.filter ?? 'ALL' as TaskFilter),
       selectedListId: signal(overrides.selectedListId ?? 'list1'),
+      searchQuery: signal(''),
     },
   );
   store.loadTaskLists.and.resolveTo();

@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatDialog } from '@angular/material/dialog';
 import { DashboardStore } from '../../state/dashboard.store';
 import { TasksStore } from '../../state/tasks.store';
 import { HabitsStore } from '../../state/habits.store';
+import { TaskDetailDialogComponent } from '../tasks/task-detail-dialog.component';
 import { GreetingHeaderComponent } from './greeting-header.component';
 import { TaskSummaryWidgetComponent } from './task-summary-widget.component';
 import { ScheduleTimelineWidgetComponent } from './schedule-timeline-widget.component';
@@ -32,6 +35,7 @@ import { RecentNotesWidgetComponent } from './recent-notes-widget.component';
         <app-task-summary-widget
           [tasks]="dashboardStore.todayTasks()"
           (toggle)="onToggleTask($event)"
+          (addTask)="onAddTask()"
         />
         <app-schedule-timeline-widget
           [events]="dashboardStore.todayEvents()"
@@ -51,6 +55,8 @@ export class DashboardComponent {
   protected readonly dashboardStore = inject(DashboardStore);
   private readonly tasksStore = inject(TasksStore);
   private readonly habitsStore = inject(HabitsStore);
+  private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
 
   protected readonly todayFormatted = computed(() => {
     return new Date().toLocaleDateString('en-US', {
@@ -72,5 +78,17 @@ export class DashboardComponent {
   protected onLogHabit(habitId: string): void {
     const today = new Date().toISOString().split('T')[0];
     this.habitsStore.logHabit(habitId, today, 1);
+  }
+
+  protected onAddTask(): void {
+    const dialogRef = this.dialog.open(TaskDetailDialogComponent, {
+      width: '480px',
+      data: { mode: 'create' },
+    });
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.tasksStore.addTask(result);
+      }
+    });
   }
 }

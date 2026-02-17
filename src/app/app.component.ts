@@ -5,9 +5,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDialog } from '@angular/material/dialog';
 import { ThemeService } from './core/theme.service';
 import { AuthService } from './core/auth.service';
 import { FocusTimerComponent } from './features/focus/focus-timer.component';
+import { GlobalSearchDialogComponent } from './shared/global-search-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -22,8 +25,12 @@ import { FocusTimerComponent } from './features/focus/focus-timer.component';
     MatListModule,
     MatIconModule,
     MatButtonModule,
+    MatTooltipModule,
     FocusTimerComponent,
   ],
+  host: {
+    '(document:keydown)': 'onKeydown($event)',
+  },
   template: `
     @if (authService.isAuthenticated()) {
       <mat-sidenav-container class="h-screen">
@@ -49,6 +56,14 @@ import { FocusTimerComponent } from './features/focus/focus-timer.component';
             </button>
             <span class="text-lg font-medium">Project Phoenix</span>
             <span class="flex-1"></span>
+
+            <button mat-icon-button
+                    data-testid="global-search-btn"
+                    (click)="openSearch()"
+                    matTooltip="Search (Cmd+K)"
+                    aria-label="Search">
+              <mat-icon>search</mat-icon>
+            </button>
 
             <app-focus-timer data-testid="focus-timer" />
 
@@ -85,6 +100,7 @@ import { FocusTimerComponent } from './features/focus/focus-timer.component';
 export class App {
   protected readonly themeService = inject(ThemeService);
   protected readonly authService = inject(AuthService);
+  private readonly dialog = inject(MatDialog);
 
   protected readonly navLinks = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -97,5 +113,20 @@ export class App {
 
   constructor() {
     this.themeService.init();
+  }
+
+  protected onKeydown(event: KeyboardEvent): void {
+    if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
+      event.preventDefault();
+      this.openSearch();
+    }
+  }
+
+  protected openSearch(): void {
+    if (!this.authService.isAuthenticated()) return;
+    this.dialog.open(GlobalSearchDialogComponent, {
+      width: '560px',
+      panelClass: 'global-search-panel',
+    });
   }
 }

@@ -45,7 +45,7 @@ const MOCK_HABIT_STATUS: HabitStatusEntry[] = [
 const MOCK_NOTES: Note[] = [
   {
     id: 'n1', title: 'Note', content: 'Content',
-    labels: [], color: 'DEFAULT', attachments: [],
+    labels: [], color: 'DEFAULT', attachments: [], pinned: false, archived: false,
     created: '2026-02-16T00:00:00Z', lastModified: '2026-02-16T12:00:00Z',
   },
 ];

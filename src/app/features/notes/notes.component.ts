@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, Component, inject, OnInit, signal } from '@angular/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
-import { NotesStore } from '../../state/notes.store';
+import { NotesStore, NoteTab } from '../../state/notes.store';
 import { NoteCardComponent } from './note-card.component';
 import { NoteEditorComponent } from './note-editor.component';
 import type { NoteFormData } from './note-editor.component';
@@ -18,34 +20,63 @@ import type { Note } from '../../data/models/note.model';
   imports: [
     MatProgressSpinnerModule,
     MatButtonModule,
+    MatButtonToggleModule,
     MatIconModule,
     MatSelectModule,
     MatFormFieldModule,
+    MatInputModule,
     FormsModule,
     NoteCardComponent,
     NoteEditorComponent,
   ],
   template: `
     <div class="p-6 max-w-5xl mx-auto">
-      <div class="flex items-center justify-between mb-6">
+      <div class="flex items-center justify-between mb-4">
         <h1 class="text-2xl font-bold">Notes</h1>
 
-        @if (store.allLabels().length > 0) {
-          <mat-form-field appearance="outline" class="!w-48" subscriptSizing="dynamic">
-            <mat-label>Filter by label</mat-label>
-            <mat-select
-              data-testid="label-filter"
-              [ngModel]="store.filterLabel()"
-              (ngModelChange)="store.setFilter($event)"
-            >
-              <mat-option [value]="null">All</mat-option>
-              @for (label of store.allLabels(); track label) {
-                <mat-option [value]="label">{{ label }}</mat-option>
-              }
-            </mat-select>
-          </mat-form-field>
-        }
+        <div class="flex items-center gap-2">
+          @if (store.allLabels().length > 0) {
+            <mat-form-field appearance="outline" class="!w-40" subscriptSizing="dynamic">
+              <mat-label>Label</mat-label>
+              <mat-select
+                data-testid="label-filter"
+                [ngModel]="store.filterLabel()"
+                (ngModelChange)="store.setFilter($event)"
+              >
+                <mat-option [value]="null">All</mat-option>
+                @for (label of store.allLabels(); track label) {
+                  <mat-option [value]="label">{{ label }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          }
+        </div>
       </div>
+
+      <!-- Search bar -->
+      <mat-form-field appearance="outline" class="w-full mb-2" subscriptSizing="dynamic">
+        <mat-icon matPrefix class="mr-1">search</mat-icon>
+        <input matInput
+               data-testid="note-search"
+               placeholder="Search notes..."
+               [ngModel]="store.searchQuery()"
+               (ngModelChange)="store.setSearchQuery($event)" />
+        @if (store.searchQuery()) {
+          <button matSuffix mat-icon-button (click)="store.setSearchQuery('')" aria-label="Clear search">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </mat-form-field>
+
+      <!-- Active / Archived tabs -->
+      <mat-button-toggle-group
+        class="mb-4"
+        [value]="store.activeTab()"
+        (change)="store.setActiveTab($event.value)"
+      >
+        <mat-button-toggle data-testid="tab-active" value="active">Notes</mat-button-toggle>
+        <mat-button-toggle data-testid="tab-archived" value="archived">Archived</mat-button-toggle>
+      </mat-button-toggle-group>
 
       <!-- Error state -->
       @if (store.error(); as error) {
@@ -81,6 +112,8 @@ import type { Note } from '../../data/models/note.model';
                 [note]="note"
                 (select)="onSelectNote(note)"
                 (delete)="onDeleteNote(note.id)"
+                (pin)="store.togglePin(note.id)"
+                (archive)="note.archived ? store.unarchiveNote(note.id) : store.archiveNote(note.id)"
               />
             }
           </div>
@@ -150,6 +183,8 @@ export class NotesComponent implements OnInit {
         color: formData.color,
         labels: formData.labels,
         attachments: [],
+        pinned: false,
+        archived: false,
         created: now,
         lastModified: now,
       });

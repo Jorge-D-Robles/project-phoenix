@@ -2,19 +2,28 @@ import { ChangeDetectionStrategy, Component, input, output } from '@angular/core
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import type { Task } from '../../data/models/task.model';
 
 @Component({
   selector: 'app-task-summary-widget',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCardModule, MatCheckboxModule, MatIconModule],
+  imports: [MatCardModule, MatCheckboxModule, MatIconModule, MatButtonModule],
   template: `
     <mat-card data-testid="task-summary-card" class="h-full">
       <mat-card-header>
         <mat-card-title class="flex items-center gap-2 text-base">
           <mat-icon>check_circle</mat-icon>
           Today's Tasks
+          <span class="flex-1"></span>
+          <button mat-icon-button
+                  data-testid="task-quick-add"
+                  class="!w-8 !h-8"
+                  aria-label="Add task"
+                  (click)="addTask.emit()">
+            <mat-icon class="!text-xl">add</mat-icon>
+          </button>
         </mat-card-title>
       </mat-card-header>
       <mat-card-content class="mt-3">
@@ -53,4 +62,5 @@ import type { Task } from '../../data/models/task.model';
 export class TaskSummaryWidgetComponent {
   readonly tasks = input.required<Task[]>();
   readonly toggle = output<string>();
+  readonly addTask = output<void>();
 }
