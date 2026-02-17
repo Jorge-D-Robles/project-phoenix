@@ -31,11 +31,12 @@ describe('HeatmapComponent', () => {
       expect(cells.length).toBe(364);
     });
 
-    it('should render all cells at level 0 when logs are empty', async () => {
+    it('should render past cells at level 0 and future cells at level -1 when logs are empty', async () => {
       const fixture = await setup([]);
       const cells = fixture.debugElement.queryAll(By.css('.cell'));
       cells.forEach(cell => {
-        expect(cell.nativeElement.getAttribute('data-level')).toBe('0');
+        const level = cell.nativeElement.getAttribute('data-level');
+        expect(level === '0' || level === '-1').toBeTrue();
       });
     });
 
@@ -130,6 +131,32 @@ describe('HeatmapComponent', () => {
       for (const cell of firstWeekCells) {
         expect(cell.monthStart).toBe(false);
       }
+    });
+
+    it('should mark exactly one cell as isToday', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      const todayCells = cells.filter(c => c.isToday);
+      expect(todayCells.length).toBe(1);
+    });
+
+    it('should have today as the last non-future cell', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      const todayIdx = cells.findIndex(c => c.isToday);
+      // All cells after today should be future
+      for (let i = todayIdx + 1; i < cells.length; i++) {
+        expect(cells[i].isFuture).toBeTrue();
+      }
+      // Today itself is not future
+      expect(cells[todayIdx].isFuture).toBeFalse();
+    });
+
+    it('should align grid to Sunday boundaries (first cell is a Sunday)', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      const firstDate = new Date(cells[0].date + 'T00:00:00');
+      expect(firstDate.getDay()).toBe(0); // Sunday
     });
   });
 });

@@ -12,6 +12,8 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
   template: `
     <div class="cell"
          [class.month-start]="monthStart()"
+         [class.today]="isToday()"
+         [class.future]="isFuture()"
          [attr.data-level]="level()"
          [matTooltip]="tooltip()"
          matTooltipPosition="above">
@@ -28,6 +30,19 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
     .cell[data-level="3"] { background: #30a14e; }
     .cell[data-level="4"] { background: #216e39; }
 
+    /* Future cells (after today) — transparent */
+    .cell.future { background: transparent !important; }
+
+    /* Today indicator — outlined ring */
+    .cell.today {
+      outline: 2px solid #1a73e8;
+      outline-offset: -1px;
+      border-radius: 2px;
+    }
+    :host-context(body.dark) .cell.today {
+      outline-color: #8ab4f8;
+    }
+
     /* Dark mode colors */
     :host-context(body.dark) .cell[data-level="0"] { background: #161b22; }
     :host-context(body.dark) .cell[data-level="1"] { background: #0e4429; }
@@ -35,13 +50,13 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
     :host-context(body.dark) .cell[data-level="3"] { background: #26a641; }
     :host-context(body.dark) .cell[data-level="4"] { background: #39d353; }
 
-    /* Month divider — left border on the first column of a new month */
+    /* Month divider — visible left border on month-start columns */
     .cell.month-start {
-      border-left: 2px solid rgba(0, 0, 0, 0.1);
-      margin-left: 1px;
+      border-left: 2px solid rgba(0, 0, 0, 0.25);
+      margin-left: 2px;
     }
     :host-context(body.dark) .cell.month-start {
-      border-left-color: rgba(255, 255, 255, 0.12);
+      border-left-color: rgba(255, 255, 255, 0.25);
     }
   `],
 })
@@ -49,6 +64,8 @@ export class HeatmapCellComponent {
   level = input.required<number>();
   date = input<string>('');
   monthStart = input<boolean>(false);
+  isToday = input<boolean>(false);
+  isFuture = input<boolean>(false);
 
   tooltip = computed(() => {
     const d = this.date();
