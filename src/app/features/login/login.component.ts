@@ -56,5 +56,8 @@ export class LoginComponent implements OnInit {
 
   async onLogin(): Promise<void> {
     await this.authService.login();
+    if (this.authService.isAuthenticated()) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 }

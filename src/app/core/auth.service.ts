@@ -56,17 +56,26 @@ export const AuthService = signalStore(
       }
 
       if (oauthService.hasValidAccessToken()) {
-        const claims = oauthService.getIdentityClaims() as IdentityClaims | null;
-        if (claims) {
-          patchState(store, {
-            user: {
-              email: claims.email ?? '',
-              name: claims.name ?? '',
-              picture: claims.picture ?? '',
-            },
-            isAuthenticated: true,
-          });
+        let claims = oauthService.getIdentityClaims() as IdentityClaims | null;
+
+        // If claims are empty, try loading user profile from userinfo endpoint
+        if (!claims?.email) {
+          try {
+            await oauthService.loadUserProfile();
+            claims = oauthService.getIdentityClaims() as IdentityClaims | null;
+          } catch {
+            // User info fetch failed — proceed with token-only auth
+          }
         }
+
+        patchState(store, {
+          user: {
+            email: claims?.email ?? '',
+            name: claims?.name ?? '',
+            picture: claims?.picture ?? '',
+          },
+          isAuthenticated: true,
+        });
       }
     },
 
