@@ -6,7 +6,7 @@ import { OAuthService } from 'angular-oauth2-oidc';
 describe('AuthService', () => {
   describe('mock mode', () => {
     let service: AuthService;
-    const mockConfig: AuthConfig = { useMock: true, googleClientId: 'test-client', googleClientSecret: '' };
+    const mockConfig: AuthConfig = { useMock: true, googleClientId: 'test-client' };
 
     beforeEach(() => {
       TestBed.configureTestingModule({
@@ -73,7 +73,7 @@ describe('AuthService', () => {
   describe('real mode', () => {
     let service: AuthService;
     let mockOAuth: jasmine.SpyObj<OAuthService>;
-    const realConfig: AuthConfig = { useMock: false, googleClientId: 'real-client-id', googleClientSecret: 'test-secret' };
+    const realConfig: AuthConfig = { useMock: false, googleClientId: 'real-client-id' };
 
     beforeEach(() => {
       mockOAuth = jasmine.createSpyObj('OAuthService', [

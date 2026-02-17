@@ -1,5 +1,4 @@
 export const environment = {
   useMock: false,
   googleClientId: '14248333268-fk4f0h221949kbhegtp8tj9ch7d3gmsf.apps.googleusercontent.com',
-  googleClientSecret: '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',
 };

@@ -42,7 +42,6 @@ export const AuthService = signalStore(
       oauthService.configure({
         issuer: 'https://accounts.google.com',
         clientId: config.googleClientId,
-        dummyClientSecret: config.googleClientSecret,
         redirectUri: window.location.origin,
         scope: [GOOGLE_SCOPES.baseline, GOOGLE_SCOPES.tasks, GOOGLE_SCOPES.calendar, GOOGLE_SCOPES.drive].join(' '),
         responseType: 'code',
