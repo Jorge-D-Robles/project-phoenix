@@ -15,6 +15,7 @@ export interface HeatmapCell {
   readonly date: string;
   readonly level: number;
   readonly weekIndex: number;
+  readonly monthStart: boolean;
 }
 
 export interface MonthLabel {
@@ -42,7 +43,10 @@ export interface MonthLabel {
         <!-- Heatmap grid -->
         <div data-testid="heatmap-grid" class="heatmap-grid">
           @for (cell of cells(); track cell.date) {
-            <app-heatmap-cell [level]="cell.level" [date]="cell.date" />
+            <app-heatmap-cell
+              [level]="cell.level"
+              [date]="cell.date"
+              [monthStart]="cell.monthStart" />
           }
         </div>
       </div>
@@ -101,6 +105,19 @@ export class HeatmapComponent {
     const startDate = new Date(today);
     startDate.setDate(today.getDate() - (TOTAL_CELLS - 1));
 
+    // Pre-compute which week columns start a new month
+    const monthStartWeeks = new Set<number>();
+    let prevMonth = -1;
+    for (let week = 0; week < WEEKS; week++) {
+      const d = new Date(startDate);
+      d.setDate(startDate.getDate() + week * DAYS_PER_WEEK);
+      const m = d.getMonth();
+      if (m !== prevMonth && week > 0) {
+        monthStartWeeks.add(week);
+      }
+      prevMonth = m;
+    }
+
     const cells: HeatmapCell[] = [];
     for (let i = 0; i < TOTAL_CELLS; i++) {
       const cellDate = new Date(startDate);
@@ -110,10 +127,12 @@ export class HeatmapComponent {
       const day = String(cellDate.getDate()).padStart(2, '0');
       const dateStr = `${year}-${month}-${day}`;
       const value = logMap.get(dateStr) ?? 0;
+      const weekIndex = Math.floor(i / DAYS_PER_WEEK);
       cells.push({
         date: dateStr,
         level: getLevel(value, maxValue),
-        weekIndex: Math.floor(i / DAYS_PER_WEEK),
+        weekIndex,
+        monthStart: monthStartWeeks.has(weekIndex),
       });
     }
 

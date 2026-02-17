@@ -112,5 +112,24 @@ describe('HeatmapComponent', () => {
         expect(cell.date).toMatch(datePattern);
       }
     });
+
+    it('should mark some cells as monthStart for month boundaries', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      // Count unique weeks that are month boundaries
+      const monthStartWeeks = new Set(cells.filter(c => c.monthStart).map(c => c.weekIndex));
+      // 52 weeks spans ~12 month boundaries (first week excluded)
+      expect(monthStartWeeks.size).toBeGreaterThanOrEqual(11);
+      expect(monthStartWeeks.size).toBeLessThanOrEqual(13);
+    });
+
+    it('should not mark first week as monthStart', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      const firstWeekCells = cells.filter(c => c.weekIndex === 0);
+      for (const cell of firstWeekCells) {
+        expect(cell.monthStart).toBe(false);
+      }
+    });
   });
 });

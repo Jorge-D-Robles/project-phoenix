@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HeatmapCellComponent } from './heatmap-cell.component';
 
 describe('HeatmapCellComponent', () => {
-  async function setup(level: number, date = '') {
+  async function setup(level: number, date = '', monthStart = false) {
     await TestBed.configureTestingModule({
       imports: [HeatmapCellComponent, NoopAnimationsModule],
     }).compileComponents();
@@ -14,6 +14,7 @@ describe('HeatmapCellComponent', () => {
     if (date) {
       fixture.componentRef.setInput('date', date);
     }
+    fixture.componentRef.setInput('monthStart', monthStart);
     await fixture.whenStable();
     return fixture;
   }
@@ -75,6 +76,20 @@ describe('HeatmapCellComponent', () => {
       expect(tip).toContain('Mon');
       expect(tip).toContain('Jun 15, 2026');
       expect(tip).toContain('Level 4');
+    });
+  });
+
+  describe('month divider', () => {
+    it('should add month-start class when monthStart is true', async () => {
+      const fixture = await setup(0, '2026-03-01', true);
+      const cell = fixture.debugElement.query(By.css('.cell'));
+      expect(cell.nativeElement.classList.contains('month-start')).toBe(true);
+    });
+
+    it('should not add month-start class when monthStart is false', async () => {
+      const fixture = await setup(0, '2026-03-15', false);
+      const cell = fixture.debugElement.query(By.css('.cell'));
+      expect(cell.nativeElement.classList.contains('month-start')).toBe(false);
     });
   });
 });
