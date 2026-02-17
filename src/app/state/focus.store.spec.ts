@@ -383,6 +383,120 @@ describe('FocusStore', () => {
     });
   });
 
+  /** Helper that temporarily replaces window.Notification and restores it afterward */
+  function withNotificationMock(
+    permission: NotificationPermission,
+    fn: (notificationSpy: jasmine.Spy) => void,
+  ): void {
+    const original = window.Notification;
+    const notificationSpy = jasmine.createSpy('Notification');
+    const mockNotification = Object.assign(notificationSpy, { permission }) as unknown as typeof Notification;
+    Object.defineProperty(window, 'Notification', { value: mockNotification, configurable: true, writable: true });
+    try {
+      fn(notificationSpy);
+    } finally {
+      Object.defineProperty(window, 'Notification', { value: original, configurable: true, writable: true });
+    }
+  }
+
+  describe('method: requestNotificationPermission', () => {
+    it('should call Notification.requestPermission when permission is default', async () => {
+      const requestPermissionSpy = jasmine.createSpy('requestPermission').and.resolveTo('granted' as NotificationPermission);
+      const original = window.Notification;
+      const mockNotification = Object.assign(
+        jasmine.createSpy('Notification'),
+        { permission: 'default' as NotificationPermission, requestPermission: requestPermissionSpy },
+      ) as unknown as typeof Notification;
+      Object.defineProperty(window, 'Notification', { value: mockNotification, configurable: true, writable: true });
+
+      await store.requestNotificationPermission();
+
+      expect(requestPermissionSpy).toHaveBeenCalled();
+      Object.defineProperty(window, 'Notification', { value: original, configurable: true, writable: true });
+    });
+
+    it('should not call requestPermission when permission is already granted', async () => {
+      const requestPermissionSpy = jasmine.createSpy('requestPermission').and.resolveTo('granted' as NotificationPermission);
+      const original = window.Notification;
+      const mockNotification = Object.assign(
+        jasmine.createSpy('Notification'),
+        { permission: 'granted' as NotificationPermission, requestPermission: requestPermissionSpy },
+      ) as unknown as typeof Notification;
+      Object.defineProperty(window, 'Notification', { value: mockNotification, configurable: true, writable: true });
+
+      await store.requestNotificationPermission();
+
+      expect(requestPermissionSpy).not.toHaveBeenCalled();
+      Object.defineProperty(window, 'Notification', { value: original, configurable: true, writable: true });
+    });
+
+    it('should not call requestPermission when permission is denied', async () => {
+      const requestPermissionSpy = jasmine.createSpy('requestPermission').and.resolveTo('denied' as NotificationPermission);
+      const original = window.Notification;
+      const mockNotification = Object.assign(
+        jasmine.createSpy('Notification'),
+        { permission: 'denied' as NotificationPermission, requestPermission: requestPermissionSpy },
+      ) as unknown as typeof Notification;
+      Object.defineProperty(window, 'Notification', { value: mockNotification, configurable: true, writable: true });
+
+      await store.requestNotificationPermission();
+
+      expect(requestPermissionSpy).not.toHaveBeenCalled();
+      Object.defineProperty(window, 'Notification', { value: original, configurable: true, writable: true });
+    });
+  });
+
+  describe('notifications on timer complete', () => {
+    beforeEach(async () => {
+      await store.loadData();
+    });
+
+    afterEach(() => {
+      if (store.timerStatus() !== 'IDLE') {
+        store.stopTimer();
+      }
+    });
+
+    it('should fire a Notification when work timer completes and permission is granted', () => {
+      withNotificationMock('granted', (notificationSpy) => {
+        store.startTimer();
+        while (store.remainingSeconds() > 1) {
+          store.tick();
+        }
+        store.tick();
+
+        expect(notificationSpy).toHaveBeenCalledWith(
+          'Focus Session Complete',
+          jasmine.objectContaining({ body: 'Time for a break! Great work.' }),
+        );
+      });
+    });
+
+    it('should not fire a Notification when permission is not granted', () => {
+      withNotificationMock('denied', (notificationSpy) => {
+        store.startTimer();
+        while (store.remainingSeconds() > 1) {
+          store.tick();
+        }
+        store.tick();
+
+        expect(notificationSpy).not.toHaveBeenCalled();
+      });
+    });
+
+    it('should still transition state correctly when timer completes (regression)', () => {
+      store.startTimer();
+      while (store.remainingSeconds() > 1) {
+        store.tick();
+      }
+      store.tick();
+
+      expect(store.sessionsCompleted()).toBe(1);
+      expect(store.timerType()).toBe('SHORT_BREAK');
+      expect(store.timerStatus()).toBe('IDLE');
+    });
+  });
+
   describe('error handling', () => {
     it('should set error when save sessions fails', async () => {
       await store.loadData();

@@ -115,6 +115,53 @@ export const FocusStore = signalStore(
       }
     }
 
+    function notifyTimerComplete(completedType: FocusSessionType): void {
+      // Browser notification (SSR-safe)
+      if ('Notification' in window && Notification.permission === 'granted') {
+        let title: string;
+        let body: string;
+
+        if (completedType === 'WORK') {
+          title = 'Focus Session Complete';
+          body = 'Time for a break! Great work.';
+        } else if (completedType === 'SHORT_BREAK') {
+          title = 'Break Over';
+          body = 'Ready to focus again?';
+        } else {
+          title = 'Long Break Over';
+          body = 'Ready for another round?';
+        }
+
+        new Notification(title, { body });
+      }
+
+      // Audio chime via Web Audio API
+      try {
+        const AudioContextClass = window.AudioContext ?? (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+        const ctx = new AudioContextClass();
+        const gainNode = ctx.createGain();
+        gainNode.gain.setValueAtTime(0.3, ctx.currentTime);
+        gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.4);
+        gainNode.connect(ctx.destination);
+
+        const osc1 = ctx.createOscillator();
+        osc1.frequency.setValueAtTime(800, ctx.currentTime);
+        osc1.connect(gainNode);
+        osc1.start(ctx.currentTime);
+        osc1.stop(ctx.currentTime + 0.15);
+
+        const osc2 = ctx.createOscillator();
+        osc2.frequency.setValueAtTime(1000, ctx.currentTime + 0.15);
+        osc2.connect(gainNode);
+        osc2.start(ctx.currentTime + 0.15);
+        osc2.stop(ctx.currentTime + 0.30);
+
+        osc2.onended = () => ctx.close();
+      } catch {
+        // AudioContext unavailable (e.g. test environment) — silently ignore
+      }
+    }
+
     function onTimerComplete(): void {
       const timerType = store.timerType();
       const sessionStart = store.currentSessionStart();
@@ -171,6 +218,8 @@ export const FocusStore = signalStore(
           startTimer();
         }
       }
+
+      notifyTimerComplete(timerType);
     }
 
     function tick(): void {
@@ -294,6 +343,12 @@ export const FocusStore = signalStore(
         const newSettings: FocusSettings = { ...store.settings(), ...updates };
         patchState(store, { settings: newSettings });
         await saveSettings(newSettings);
+      },
+
+      async requestNotificationPermission(): Promise<void> {
+        if ('Notification' in window && Notification.permission === 'default') {
+          await Notification.requestPermission();
+        }
       },
     };
   }),

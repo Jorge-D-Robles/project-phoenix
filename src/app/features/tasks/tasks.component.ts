@@ -9,6 +9,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { TasksStore } from '../../state/tasks.store';
 import { TaskCardComponent } from './task-card.component';
 import { TaskDetailDialogComponent } from './task-detail-dialog.component';
@@ -27,6 +28,7 @@ import type { Task, TaskFilter } from '../../data/models/task.model';
     MatButtonToggleModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
     CdkDropList,
     CdkDrag,
     TaskCardComponent,
@@ -125,7 +127,7 @@ import type { Task, TaskFilter } from '../../data/models/task.model';
                 [task]="task"
                 (toggle)="store.toggleTaskStatus($event)"
                 (edit)="onEditTask($event)"
-                (delete)="store.removeTask($event)"
+                (delete)="onDeleteTask($event)"
               />
             }
           </div>
@@ -154,6 +156,7 @@ import type { Task, TaskFilter } from '../../data/models/task.model';
 export class TasksComponent implements OnInit {
   protected readonly store = inject(TasksStore);
   private readonly dialog = inject(MatDialog);
+  private readonly snackBar = inject(MatSnackBar);
 
   protected quickAddTitle = '';
 
@@ -205,6 +208,22 @@ export class TasksComponent implements OnInit {
     if (!title) return;
     this.store.addTask({ title });
     this.quickAddTitle = '';
+  }
+
+  protected onDeleteTask(taskId: string): void {
+    const task = this.store.tasks().find(t => t.id === taskId);
+    if (!task) return;
+
+    this.store.removeTask(taskId);
+
+    const snackBarRef = this.snackBar.open('Task deleted', 'Undo', { duration: 5000 });
+    snackBarRef.onAction().subscribe(() => {
+      this.store.addTask({
+        title: task.title,
+        notes: task.notes ?? undefined,
+        dueDateTime: task.dueDateTime ?? undefined,
+      });
+    });
   }
 
   protected onEditTask(taskId: string): void {

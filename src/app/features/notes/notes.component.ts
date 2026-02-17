@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 import { FormsModule } from '@angular/forms';
 import { NotesStore, NoteTab } from '../../state/notes.store';
 import { NoteCardComponent } from './note-card.component';
@@ -25,6 +26,7 @@ import type { Note } from '../../data/models/note.model';
     MatSelectModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSnackBarModule,
     FormsModule,
     NoteCardComponent,
     NoteEditorComponent,
@@ -141,6 +143,7 @@ import type { Note } from '../../data/models/note.model';
 })
 export class NotesComponent implements OnInit {
   protected readonly store = inject(NotesStore);
+  private readonly snackBar = inject(MatSnackBar);
 
   protected showEditor = signal(false);
   protected editingNote = signal<Note | null>(null);
@@ -195,8 +198,25 @@ export class NotesComponent implements OnInit {
   }
 
   protected onDeleteNote(id: string): void {
-    if (window.confirm('Are you sure you want to delete this note?')) {
-      this.store.removeNote(id);
-    }
+    const note = this.store.notes().find(n => n.id === id);
+    if (!note) return;
+
+    this.store.removeNote(id);
+
+    const snackBarRef = this.snackBar.open('Note deleted', 'Undo', { duration: 5000 });
+    snackBarRef.onAction().subscribe(() => {
+      const now = new Date().toISOString();
+      this.store.addNote({
+        title: note.title,
+        content: note.content,
+        color: note.color,
+        labels: [...note.labels],
+        attachments: [...note.attachments],
+        pinned: note.pinned,
+        archived: note.archived,
+        created: note.created,
+        lastModified: now,
+      });
+    });
   }
 }

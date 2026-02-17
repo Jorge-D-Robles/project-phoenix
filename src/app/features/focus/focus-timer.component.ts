@@ -102,6 +102,7 @@ export class FocusTimerComponent {
   });
 
   protected onStart(): void {
+    this.store.requestNotificationPermission();
     this.store.startTimer();
   }
 

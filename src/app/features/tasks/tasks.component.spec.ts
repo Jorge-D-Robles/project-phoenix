@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
 import { TasksComponent } from './tasks.component';
 import { TasksStore } from '../../state/tasks.store';
 import type { Task, TaskList, TaskFilter } from '../../data/models/task.model';
@@ -65,8 +67,18 @@ function createMockStore(overrides: {
   return store;
 }
 
+function createMockSnackBar() {
+  const actionSubject = new Subject<void>();
+  const snackBarRef = jasmine.createSpyObj('MatSnackBarRef', ['onAction', 'dismiss']);
+  snackBarRef.onAction.and.returnValue(actionSubject.asObservable());
+  const mockSnackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
+  mockSnackBar.open.and.returnValue(snackBarRef);
+  return { mockSnackBar, snackBarRef, actionSubject };
+}
+
 async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {}) {
   const mockStore = createMockStore(storeOverrides);
+  const { mockSnackBar, snackBarRef, actionSubject } = createMockSnackBar();
 
   await TestBed.configureTestingModule({
     imports: [TasksComponent],
@@ -74,11 +86,19 @@ async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {})
       { provide: TasksStore, useValue: mockStore },
       provideNoopAnimations(),
     ],
-  }).compileComponents();
+  })
+  .overrideComponent(TasksComponent, {
+    set: {
+      providers: [
+        { provide: MatSnackBar, useValue: mockSnackBar },
+      ],
+    },
+  })
+  .compileComponents();
 
   const fixture = TestBed.createComponent(TasksComponent);
   await fixture.whenStable();
-  return { fixture, mockStore };
+  return { fixture, mockStore, mockSnackBar, snackBarRef, actionSubject };
 }
 
 describe('TasksComponent', () => {
@@ -204,17 +224,80 @@ describe('TasksComponent', () => {
       expect(mockStore.toggleTaskStatus).toHaveBeenCalledWith('t1');
     });
 
-    it('should remove task when card emits delete', async () => {
-      const { fixture, mockStore } = await setup();
+    it('should call removeTask and show snackbar when card emits delete', async () => {
+      const { fixture, mockStore, mockSnackBar } = await setup();
       const card = fixture.debugElement.query(By.css('app-task-card'));
       card.triggerEventHandler('delete', 't1');
+      await fixture.whenStable();
+
       expect(mockStore.removeTask).toHaveBeenCalledWith('t1');
+      expect(mockSnackBar.open).toHaveBeenCalledWith('Task deleted', 'Undo', { duration: 5000 });
     });
 
     it('should show FAB for adding a new task', async () => {
       const { fixture } = await setup();
       const fab = fixture.debugElement.query(By.css('[data-testid="add-task-fab"]'));
       expect(fab).toBeTruthy();
+    });
+  });
+
+  describe('delete task with snackbar undo', () => {
+    it('should not call removeTask when task id is not found in store.tasks', async () => {
+      // tasks() returns empty so find() returns undefined, but filteredTasks renders cards
+      const emptyTaskStore = createMockStore({ tasks: [], filteredTasks: makeTasks() });
+      const { mockSnackBar: snackBarMock } = createMockSnackBar();
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [TasksComponent],
+        providers: [
+          { provide: TasksStore, useValue: emptyTaskStore },
+          provideNoopAnimations(),
+        ],
+      })
+      .overrideComponent(TasksComponent, {
+        set: { providers: [{ provide: MatSnackBar, useValue: snackBarMock }] },
+      })
+      .compileComponents();
+      const f = TestBed.createComponent(TasksComponent);
+      await f.whenStable();
+      const card = f.debugElement.query(By.css('app-task-card'));
+      card.triggerEventHandler('delete', 't1');
+      await f.whenStable();
+
+      expect(emptyTaskStore.removeTask).not.toHaveBeenCalled();
+      expect(snackBarMock.open).not.toHaveBeenCalled();
+    });
+
+    it('should call addTask with task data when undo action is triggered', async () => {
+      const { fixture, mockStore, actionSubject } = await setup();
+      const card = fixture.debugElement.query(By.css('app-task-card'));
+      card.triggerEventHandler('delete', 't1');
+      await fixture.whenStable();
+
+      // Simulate clicking Undo
+      actionSubject.next();
+      await fixture.whenStable();
+
+      expect(mockStore.addTask).toHaveBeenCalledWith(jasmine.objectContaining({
+        title: 'Buy groceries',
+        notes: 'Milk, bread',
+      }));
+    });
+
+    it('should call addTask with undefined notes when task has no notes', async () => {
+      const { fixture, mockStore, actionSubject } = await setup();
+      const cards = fixture.debugElement.queryAll(By.css('app-task-card'));
+      // t2 has no notes (null)
+      cards[1].triggerEventHandler('delete', 't2');
+      await fixture.whenStable();
+
+      actionSubject.next();
+      await fixture.whenStable();
+
+      expect(mockStore.addTask).toHaveBeenCalledWith(jasmine.objectContaining({
+        title: 'Walk the dog',
+        notes: undefined,
+      }));
     });
   });
 });

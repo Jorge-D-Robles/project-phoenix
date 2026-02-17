@@ -11,9 +11,28 @@ import { Task } from '../../data/models/task.model';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DatePipe, MatCheckboxModule, MatChipsModule, MatIconModule, MatIconButton],
+  styles: [`
+    @keyframes task-complete-pulse {
+      0%   { background-color: transparent; transform: scale(1); }
+      30%  { background-color: var(--complete-pulse-color, rgba(187, 247, 208, 0.6)); transform: scale(1.01); }
+      100% { background-color: transparent; transform: scale(1); }
+    }
+    @keyframes task-uncomplete-fade {
+      0%   { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    .task-completing {
+      animation: task-complete-pulse 300ms ease-out forwards;
+    }
+    .task-uncompleting {
+      animation: task-uncomplete-fade 200ms ease-in forwards;
+    }
+  `],
   template: `
     <div class="flex items-start gap-3 px-4 py-3 rounded-lg border border-gray-200 dark:border-gray-700
-                hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group">
+                hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors group"
+         [class.task-completing]="isCompleted()"
+         [class.task-uncompleting]="!isCompleted()">
       <mat-checkbox
         [checked]="isCompleted()"
         (change)="toggle.emit(task().id)"

@@ -28,6 +28,7 @@ function createMockStore() {
     stopTimer: jasmine.createSpy('stopTimer'),
     unlinkTask: jasmine.createSpy('unlinkTask'),
     updateSettings: jasmine.createSpy('updateSettings'),
+    requestNotificationPermission: jasmine.createSpy('requestNotificationPermission').and.resolveTo(undefined),
   };
 }
 
@@ -77,6 +78,25 @@ describe('FocusTimerComponent', () => {
       const startBtn = fixture.debugElement.query(By.css('[data-testid="focus-start-btn"]'));
       startBtn.nativeElement.click();
       expect(mockStore.startTimer).toHaveBeenCalled();
+    });
+
+    it('should call requestNotificationPermission before startTimer on play click', async () => {
+      const callOrder: string[] = [];
+      mockStore.requestNotificationPermission.and.callFake(() => {
+        callOrder.push('requestNotificationPermission');
+        return Promise.resolve(undefined);
+      });
+      mockStore.startTimer.and.callFake(() => {
+        callOrder.push('startTimer');
+      });
+
+      await fixture.whenStable();
+      const startBtn = fixture.debugElement.query(By.css('[data-testid="focus-start-btn"]'));
+      startBtn.nativeElement.click();
+
+      expect(mockStore.requestNotificationPermission).toHaveBeenCalled();
+      expect(callOrder[0]).toBe('requestNotificationPermission');
+      expect(callOrder[1]).toBe('startTimer');
     });
   });
 

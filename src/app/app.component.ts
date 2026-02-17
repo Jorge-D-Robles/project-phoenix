@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatListModule } from '@angular/material/list';
@@ -11,6 +11,7 @@ import { ThemeService } from './core/theme.service';
 import { AuthService } from './core/auth.service';
 import { FocusTimerComponent } from './features/focus/focus-timer.component';
 import { GlobalSearchDialogComponent } from './shared/global-search-dialog.component';
+import { KeyboardHelpDialogComponent } from './shared/keyboard-help-dialog.component';
 
 @Component({
   selector: 'app-root',
@@ -101,6 +102,7 @@ export class App {
   protected readonly themeService = inject(ThemeService);
   protected readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);
+  private readonly router = inject(Router);
 
   protected readonly navLinks = [
     { path: '/dashboard', label: 'Dashboard', icon: 'dashboard' },
@@ -111,14 +113,76 @@ export class App {
     { path: '/insights', label: 'Insights', icon: 'insights' },
   ];
 
+  private pendingGoto = false;
+  private gotoTimeoutId: ReturnType<typeof window.setTimeout> | null = null;
+
   constructor() {
     this.themeService.init();
   }
 
   protected onKeydown(event: KeyboardEvent): void {
+    // Always handle Cmd+K regardless of auth state
     if ((event.metaKey || event.ctrlKey) && event.key === 'k') {
       event.preventDefault();
       this.openSearch();
+      return;
+    }
+
+    if (!this.authService.isAuthenticated()) return;
+
+    // Skip shortcuts when typing in an input field
+    const target = event.target as HTMLElement;
+    if (
+      target instanceof HTMLInputElement ||
+      target instanceof HTMLTextAreaElement ||
+      target.isContentEditable
+    ) {
+      return;
+    }
+
+    // Handle pending goto chord (second key after 'g')
+    if (this.pendingGoto) {
+      this.clearGotoTimeout();
+      this.pendingGoto = false;
+
+      const gotoMap: Record<string, string> = {
+        d: '/dashboard',
+        t: '/tasks',
+        c: '/calendar',
+        h: '/habits',
+        n: '/notes',
+        i: '/insights',
+      };
+
+      const route = gotoMap[event.key];
+      if (route) {
+        event.preventDefault();
+        this.router.navigate([route]);
+      }
+      return;
+    }
+
+    // Handle single-key shortcuts
+    if (event.key === '?') {
+      event.preventDefault();
+      this.openHelp();
+      return;
+    }
+
+    if (event.key === 'g') {
+      event.preventDefault();
+      this.pendingGoto = true;
+      this.gotoTimeoutId = window.setTimeout(() => {
+        this.pendingGoto = false;
+        this.gotoTimeoutId = null;
+      }, 1000);
+    }
+  }
+
+  private clearGotoTimeout(): void {
+    if (this.gotoTimeoutId !== null) {
+      window.clearTimeout(this.gotoTimeoutId);
+      this.gotoTimeoutId = null;
     }
   }
 
@@ -127,6 +191,13 @@ export class App {
     this.dialog.open(GlobalSearchDialogComponent, {
       width: '560px',
       panelClass: 'global-search-panel',
+    });
+  }
+
+  protected openHelp(): void {
+    this.dialog.open(KeyboardHelpDialogComponent, {
+      width: '480px',
+      maxHeight: '80vh',
     });
   }
 }

@@ -2,6 +2,8 @@ import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { provideNoopAnimations } from '@angular/platform-browser/animations';
 import { signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Subject } from 'rxjs';
 import { NotesComponent } from './notes.component';
 import { NotesStore } from '../../state/notes.store';
 import type { Note } from '../../data/models/note.model';
@@ -65,8 +67,18 @@ function createMockStore(overrides: {
   return store;
 }
 
+function createMockSnackBar() {
+  const actionSubject = new Subject<void>();
+  const snackBarRef = jasmine.createSpyObj('MatSnackBarRef', ['onAction', 'dismiss']);
+  snackBarRef.onAction.and.returnValue(actionSubject.asObservable());
+  const mockSnackBar = jasmine.createSpyObj('MatSnackBar', ['open']);
+  mockSnackBar.open.and.returnValue(snackBarRef);
+  return { mockSnackBar, snackBarRef, actionSubject };
+}
+
 async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {}) {
   const mockStore = createMockStore(storeOverrides);
+  const { mockSnackBar, snackBarRef, actionSubject } = createMockSnackBar();
 
   await TestBed.configureTestingModule({
     imports: [NotesComponent],
@@ -74,11 +86,19 @@ async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {})
       { provide: NotesStore, useValue: mockStore },
       provideNoopAnimations(),
     ],
-  }).compileComponents();
+  })
+  .overrideComponent(NotesComponent, {
+    set: {
+      providers: [
+        { provide: MatSnackBar, useValue: mockSnackBar },
+      ],
+    },
+  })
+  .compileComponents();
 
   const fixture = TestBed.createComponent(NotesComponent);
   await fixture.whenStable();
-  return { fixture, mockStore };
+  return { fixture, mockStore, mockSnackBar, snackBarRef, actionSubject };
 }
 
 describe('NotesComponent', () => {
@@ -127,6 +147,64 @@ describe('NotesComponent', () => {
       const { fixture } = await setup();
       const fab = fixture.debugElement.query(By.css('[data-testid="add-note-btn"]'));
       expect(fab).toBeTruthy();
+    });
+  });
+
+  describe('delete note with snackbar undo', () => {
+    it('should call removeNote and show snackbar when delete is triggered', async () => {
+      const { fixture, mockStore, mockSnackBar } = await setup();
+      const card = fixture.debugElement.query(By.css('app-note-card'));
+      card.triggerEventHandler('delete', 'n1');
+      await fixture.whenStable();
+
+      expect(mockStore.removeNote).toHaveBeenCalledWith('n1');
+      expect(mockSnackBar.open).toHaveBeenCalledWith('Note deleted', 'Undo', { duration: 5000 });
+    });
+
+    it('should not call removeNote when note id is not found in store.notes', async () => {
+      // Override notes() to return empty so find() returns undefined
+      const emptyStore = createMockStore({ notes: [], filteredNotes: MOCK_NOTES });
+      const { mockSnackBar: snackBarMock } = createMockSnackBar();
+      await TestBed.resetTestingModule();
+      await TestBed.configureTestingModule({
+        imports: [NotesComponent],
+        providers: [
+          { provide: NotesStore, useValue: emptyStore },
+          provideNoopAnimations(),
+        ],
+      })
+      .overrideComponent(NotesComponent, {
+        set: { providers: [{ provide: MatSnackBar, useValue: snackBarMock }] },
+      })
+      .compileComponents();
+      const f = TestBed.createComponent(NotesComponent);
+      await f.whenStable();
+      // filteredNotes has notes, so cards render; but notes() is empty so find returns undefined
+      const card = f.debugElement.query(By.css('app-note-card'));
+      card.triggerEventHandler('delete', 'n1');
+      await f.whenStable();
+
+      expect(emptyStore.removeNote).not.toHaveBeenCalled();
+      expect(snackBarMock.open).not.toHaveBeenCalled();
+    });
+
+    it('should call addNote with note data when undo action is triggered', async () => {
+      const { fixture, mockStore, actionSubject } = await setup();
+      const card = fixture.debugElement.query(By.css('app-note-card'));
+      card.triggerEventHandler('delete', 'n1');
+      await fixture.whenStable();
+
+      // Simulate clicking Undo
+      actionSubject.next();
+      await fixture.whenStable();
+
+      expect(mockStore.addNote).toHaveBeenCalledWith(jasmine.objectContaining({
+        title: 'Work Note',
+        content: '<p>Hello world</p>',
+        color: 'BLUE',
+        pinned: false,
+        archived: false,
+      }));
     });
   });
 });

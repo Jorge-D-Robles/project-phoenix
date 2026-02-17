@@ -91,6 +91,22 @@ describe('TaskCardComponent', () => {
       expect(titleEl.nativeElement.classList.contains('line-through')).toBeFalse();
     });
 
+    it('should apply task-completing animation class when task is completed', async () => {
+      fixture.componentRef.setInput('task', makeTask({ status: 'completed' }));
+      await fixture.whenStable();
+
+      const cardEl = fixture.debugElement.query(By.css('.task-completing'));
+      expect(cardEl).toBeTruthy();
+    });
+
+    it('should not apply task-completing animation class when task is active', async () => {
+      fixture.componentRef.setInput('task', makeTask({ status: 'needsAction' }));
+      await fixture.whenStable();
+
+      const cardEl = fixture.debugElement.query(By.css('.task-completing'));
+      expect(cardEl).toBeFalsy();
+    });
+
     it('should show subtask indicator when parent is set', async () => {
       fixture.componentRef.setInput('task', makeTask({ parent: 'parent-1' }));
       await fixture.whenStable();
