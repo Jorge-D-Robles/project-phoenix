@@ -31,6 +31,7 @@ import { WeeklySummaryCardComponent } from './weekly-summary-card.component';
         <app-score-card
           [score]="store.productivityScore()"
           label="Productivity Score"
+          [tooltip]="productivityTooltip"
           data-testid="productivity-score-card">
         </app-score-card>
 
@@ -78,6 +79,9 @@ import { WeeklySummaryCardComponent } from './weekly-summary-card.component';
 })
 export class InsightsComponent {
   protected readonly store = inject(InsightsStore);
+
+  protected readonly productivityTooltip =
+    'Weighted score over 28 days: Tasks completed (40%) + Habit consistency (35%) + Focus time (25%)';
 
   /** Convert task completion data to chart format (last 7 days for readability) */
   taskChartData = computed<ChartDataPoint[]>(() => {

@@ -1,18 +1,28 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-score-card',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [MatCardModule, MatProgressBarModule],
+  imports: [MatCardModule, MatIconModule, MatProgressBarModule, MatTooltipModule],
   template: `
     <mat-card class="h-full">
       <mat-card-content class="flex flex-col items-center gap-2 p-6">
-        <span class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide"
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide flex items-center gap-1"
               data-testid="score-label">
           {{ label() }}
+          @if (tooltip()) {
+            <mat-icon class="text-base cursor-help text-gray-400"
+                      [matTooltip]="tooltip()"
+                      matTooltipPosition="above"
+                      data-testid="score-tooltip">
+              info_outline
+            </mat-icon>
+          }
         </span>
         <span class="text-5xl font-bold"
               data-testid="score-value"
@@ -33,6 +43,7 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 export class ScoreCardComponent {
   score = input.required<number>();
   label = input.required<string>();
+  tooltip = input<string>('');
 
   scoreColorClass = computed(() => {
     const s = this.score();
