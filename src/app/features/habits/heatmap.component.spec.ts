@@ -1,12 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HeatmapComponent } from './heatmap.component';
 import { HabitLog } from '../../data/models/habit.model';
 
 describe('HeatmapComponent', () => {
   async function setup(logs: HabitLog[] = []) {
     await TestBed.configureTestingModule({
-      imports: [HeatmapComponent],
+      imports: [HeatmapComponent, NoopAnimationsModule],
     }).compileComponents();
 
     const fixture = TestBed.createComponent(HeatmapComponent);
@@ -53,6 +54,63 @@ describe('HeatmapComponent', () => {
         c => c.nativeElement.getAttribute('data-level') !== '0',
       );
       expect(nonZeroCells.length).toBeGreaterThan(0);
+    });
+
+    it('should be wrapped in a scrollable container', async () => {
+      const fixture = await setup();
+      const wrapper = fixture.debugElement.query(By.css('[data-testid="heatmap-wrapper"]'));
+      expect(wrapper).toBeTruthy();
+    });
+  });
+
+  describe('month labels', () => {
+    it('should render month labels', async () => {
+      const fixture = await setup();
+      const labels = fixture.debugElement.query(By.css('[data-testid="month-labels"]'));
+      expect(labels).toBeTruthy();
+    });
+
+    it('should render between 12 and 14 month labels for a full year', async () => {
+      const fixture = await setup();
+      const labels = fixture.debugElement.queryAll(By.css('.month-label'));
+      // 52 weeks spans ~12-13 months, so we expect 12-14 labels
+      expect(labels.length).toBeGreaterThanOrEqual(12);
+      expect(labels.length).toBeLessThanOrEqual(14);
+    });
+
+    it('should have three-letter month abbreviations', async () => {
+      const fixture = await setup();
+      const labels = fixture.debugElement.queryAll(By.css('.month-label'));
+      const validMonths = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      for (const label of labels) {
+        const text = label.nativeElement.textContent.trim();
+        expect(validMonths).toContain(text);
+      }
+    });
+  });
+
+  describe('cells data', () => {
+    it('should include weekIndex in each cell', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      expect(cells.length).toBe(364);
+      // First 7 cells should be week 0
+      for (let i = 0; i < 7; i++) {
+        expect(cells[i].weekIndex).toBe(0);
+      }
+      // Next 7 cells should be week 1
+      for (let i = 7; i < 14; i++) {
+        expect(cells[i].weekIndex).toBe(1);
+      }
+    });
+
+    it('should include date strings in YYYY-MM-DD format', async () => {
+      const fixture = await setup();
+      const cells = fixture.componentInstance.cells();
+      const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+      for (const cell of cells) {
+        expect(cell.date).toMatch(datePattern);
+      }
     });
   });
 });

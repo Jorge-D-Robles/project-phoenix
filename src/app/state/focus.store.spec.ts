@@ -6,12 +6,22 @@ import { FocusService } from '../data/focus.service';
 import { DEFAULT_FOCUS_SETTINGS } from '../data/models/focus-session.model';
 import type { FocusSession, FocusSettings } from '../data/models/focus-session.model';
 
+function todayISO(): string {
+  return new Date().toISOString().split('T')[0];
+}
+
+function yesterdayISO(): string {
+  const d = new Date();
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().split('T')[0];
+}
+
 const MOCK_SESSIONS: FocusSession[] = [
   {
     id: 'fs1',
     taskId: 't1',
     taskTitle: 'Write report',
-    startTime: '2026-02-16T10:00:00Z',
+    startTime: `${todayISO()}T10:00:00Z`,
     plannedDuration: 25,
     actualDuration: 25,
     completed: true,
@@ -21,7 +31,7 @@ const MOCK_SESSIONS: FocusSession[] = [
     id: 'fs2',
     taskId: null,
     taskTitle: null,
-    startTime: '2026-02-15T14:00:00Z',
+    startTime: `${yesterdayISO()}T14:00:00Z`,
     plannedDuration: 25,
     actualDuration: 25,
     completed: true,
