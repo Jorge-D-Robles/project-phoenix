@@ -6,12 +6,12 @@ import type { Task, TaskList, TaskFilter, CreateTaskRequest, UpdateTaskRequest, 
 import { TaskService } from '../data/task.service';
 
 interface TasksState {
-  tasks: Task[];
-  taskLists: TaskList[];
-  loading: boolean;
-  filter: TaskFilter;
-  selectedListId: string | null;
-  error: string | null;
+  readonly tasks: Task[];
+  readonly taskLists: TaskList[];
+  readonly loading: boolean;
+  readonly filter: TaskFilter;
+  readonly selectedListId: string | null;
+  readonly error: string | null;
 }
 
 const initialState: TasksState = {

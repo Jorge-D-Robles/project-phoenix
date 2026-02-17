@@ -6,11 +6,11 @@ import { Habit, HabitLog } from '../data/models/habit.model';
 import { HabitService } from '../data/habit.service';
 
 interface HabitsState {
-  habits: Habit[];
-  logs: HabitLog[];
-  loading: boolean;
-  error: string | null;
-  selectedHabitId: string | null;
+  readonly habits: Habit[];
+  readonly logs: HabitLog[];
+  readonly loading: boolean;
+  readonly error: string | null;
+  readonly selectedHabitId: string | null;
 }
 
 const initialState: HabitsState = {
@@ -22,9 +22,7 @@ const initialState: HabitsState = {
 };
 
 /** Generate a UUID v4 */
-function uuid(): string {
-  return crypto.randomUUID();
-}
+const uuid = (): string => crypto.randomUUID();
 
 export const HabitsStore = signalStore(
   { providedIn: 'root' },

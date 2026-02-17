@@ -7,19 +7,19 @@ import type { FocusSession, FocusSessionType, FocusSettings, TimerStatus } from 
 import { FocusService } from '../data/focus.service';
 
 interface FocusState {
-  sessions: FocusSession[];
-  settings: FocusSettings;
-  loading: boolean;
-  error: string | null;
+  readonly sessions: FocusSession[];
+  readonly settings: FocusSettings;
+  readonly loading: boolean;
+  readonly error: string | null;
 
   // Ephemeral timer state
-  timerStatus: TimerStatus;
-  timerType: FocusSessionType;
-  remainingSeconds: number;
-  currentSessionStart: string | null;
-  linkedTaskId: string | null;
-  linkedTaskTitle: string | null;
-  sessionsCompleted: number;
+  readonly timerStatus: TimerStatus;
+  readonly timerType: FocusSessionType;
+  readonly remainingSeconds: number;
+  readonly currentSessionStart: string | null;
+  readonly linkedTaskId: string | null;
+  readonly linkedTaskTitle: string | null;
+  readonly sessionsCompleted: number;
 }
 
 const initialState: FocusState = {
@@ -37,14 +37,10 @@ const initialState: FocusState = {
 };
 
 /** Generate a UUID v4 */
-function uuid(): string {
-  return crypto.randomUUID();
-}
+const uuid = (): string => crypto.randomUUID();
 
 /** Get today's date string in YYYY-MM-DD format */
-function todayDateString(): string {
-  return new Date().toISOString().slice(0, 10);
-}
+const todayDateString = (): string => new Date().toISOString().slice(0, 10);
 
 export const FocusStore = signalStore(
   { providedIn: 'root' },
@@ -92,6 +88,8 @@ export const FocusStore = signalStore(
           return settings.shortBreakDuration * 60;
         case 'LONG_BREAK':
           return settings.longBreakDuration * 60;
+        default:
+          throw new Error(`Unknown focus session type: ${type}`);
       }
     }
 

@@ -2,15 +2,16 @@ import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed, withMethods, patchState } from '@ngrx/signals';
 import { firstValueFrom } from 'rxjs';
 
+import { HttpErrorResponse } from '@angular/common/http';
 import { CalendarEvent } from '../data/models/calendar-event.model';
 import { CalendarService } from '../data/calendar.service';
 
 interface CalendarState {
-  events: CalendarEvent[];
-  loading: boolean;
-  error: string | null;
-  syncToken: string | null;
-  selectedDate: string;
+  readonly events: CalendarEvent[];
+  readonly loading: boolean;
+  readonly error: string | null;
+  readonly syncToken: string | null;
+  readonly selectedDate: string;
 }
 
 const initialState: CalendarState = {
@@ -85,7 +86,7 @@ export const CalendarStore = signalStore(
           error: null,
         });
       } catch (error: unknown) {
-        if (typeof error === 'object' && error !== null && 'status' in error && (error as { status: number }).status === 410) {
+        if (error instanceof HttpErrorResponse && error.status === 410) {
           // 410 Gone — sync token invalidated, do full re-sync
           patchState(store, { syncToken: null });
           try {

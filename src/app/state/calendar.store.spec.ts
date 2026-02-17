@@ -1,4 +1,5 @@
 import { TestBed } from '@angular/core/testing';
+import { HttpErrorResponse } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 
 import { CalendarStore } from './calendar.store';
@@ -181,7 +182,7 @@ describe('CalendarStore', () => {
     });
 
     it('should trigger full re-sync on 410 Gone', async () => {
-      const error = { status: 410 } as { status: number };
+      const error = new HttpErrorResponse({ status: 410, statusText: 'Gone' });
       mockCalendarService.syncEvents.and.returnValue(throwError(() => error));
       // After 410, it should call getEvents for a full re-sync
       mockCalendarService.getEvents.and.returnValue(of(MOCK_SYNC_RESULT));

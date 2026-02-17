@@ -12,19 +12,19 @@ import type { Habit } from '../data/models/habit.model';
 import type { Note } from '../data/models/note.model';
 
 export interface HabitStatusEntry {
-  habit: Habit;
-  loggedToday: boolean;
-  todayValue: number;
+  readonly habit: Habit;
+  readonly loggedToday: boolean;
+  readonly todayValue: number;
 }
 
 export interface CompletionSummary {
-  done: number;
-  total: number;
-  percentage: number;
+  readonly done: number;
+  readonly total: number;
+  readonly percentage: number;
 }
 
 interface DashboardState {
-  initialized: boolean;
+  readonly initialized: boolean;
 }
 
 const initialState: DashboardState = {

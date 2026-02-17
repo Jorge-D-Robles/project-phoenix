@@ -1,4 +1,4 @@
-import { computed, inject, InjectionToken, Signal } from '@angular/core';
+import { computed, inject, InjectionToken, signal, Signal } from '@angular/core';
 import { signalStore, withState, withComputed } from '@ngrx/signals';
 
 import { TasksStore } from './tasks.store';
@@ -9,42 +9,42 @@ import type { FocusSession } from '../data/models/focus-session.model';
 
 /** Per-day count entry for timeline data */
 export interface DayCount {
-  date: string;   // YYYY-MM-DD
-  count: number;
+  readonly date: string;   // YYYY-MM-DD
+  readonly count: number;
 }
 
 /** Per-day event entry with count and duration */
 export interface DayEventEntry {
-  date: string;
-  count: number;
-  totalMinutes: number;
+  readonly date: string;
+  readonly count: number;
+  readonly totalMinutes: number;
 }
 
 /** Per-day focus entry with total minutes */
 export interface DayFocusEntry {
-  date: string;
-  minutes: number;
+  readonly date: string;
+  readonly minutes: number;
 }
 
 /** Streak data for a single habit */
 export interface HabitStreakInfo {
-  habit: Habit;
-  currentStreak: number;
-  longestStreak: number;
-  consistency: number; // 0-100
+  readonly habit: Habit;
+  readonly currentStreak: number;
+  readonly longestStreak: number;
+  readonly consistency: number; // 0-100
 }
 
 /** Weekly summary stats */
 export interface WeekSummary {
-  tasksCompleted: number;
-  habitsLogged: number;
-  focusMinutes: number;
-  eventsAttended: number;
-  productivityScore: number;
+  readonly tasksCompleted: number;
+  readonly habitsLogged: number;
+  readonly focusMinutes: number;
+  readonly eventsAttended: number;
+  readonly productivityScore: number;
 }
 
 interface InsightsState {
-  dateRangeDays: number;
+  readonly dateRangeDays: number;
 }
 
 const initialState: InsightsState = {
@@ -97,7 +97,7 @@ export const InsightsStore = signalStore(
   withState(initialState),
   withComputed((state, tasksStore = inject(TasksStore), calendarStore = inject(CalendarStore), habitsStore = inject(HabitsStore)) => {
     // Optionally inject focus sessions — gracefully degrade to empty array
-    const focusSessions: Signal<FocusSession[]> = inject(FOCUS_SESSIONS, { optional: true }) ?? (() => []) as unknown as Signal<FocusSession[]>;
+    const focusSessions: Signal<FocusSession[]> = inject(FOCUS_SESSIONS, { optional: true }) ?? signal<FocusSession[]>([]);
 
     const dateRange = computed(() => getDateRange(state.dateRangeDays()));
 

@@ -5,7 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDatepickerModule } from '@angular/material/datepicker';
-import { Task } from '../../data/models/task.model';
+import type { Task } from '../../data/models/task.model';
 
 export interface TaskDialogData {
   mode: 'create' | 'edit';
