@@ -1,4 +1,7 @@
-import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
+import {
+  afterNextRender, ChangeDetectionStrategy, Component, computed,
+  ElementRef, inject, input, viewChild,
+} from '@angular/core';
 import { HeatmapCellComponent, LIGHT_COLORS, DARK_COLORS } from './heatmap-cell.component';
 import { HabitLog, getLevel } from '../../data/models/habit.model';
 import { ThemeService } from '../../core/theme.service';
@@ -52,7 +55,7 @@ export interface MonthLabel {
         </div>
 
         <!-- Scrollable grid area -->
-        <div class="grid-area">
+        <div class="grid-area" #gridArea>
           <div class="grid-content">
             <!-- Month labels row -->
             <div class="month-labels" data-testid="month-labels">
@@ -95,20 +98,20 @@ export interface MonthLabel {
     }
     .day-labels {
       flex-shrink: 0;
-      margin-right: 6px;
+      margin-right: 4px;
     }
     .month-spacer {
-      height: 20px;
+      height: 18px;
     }
     .day-grid {
       display: grid;
-      grid-template-rows: repeat(7, 11px);
-      gap: 3px;
+      grid-template-rows: repeat(7, 10px);
+      gap: 2px;
     }
     .day-label {
-      font-size: 10px;
+      font-size: 9px;
       color: var(--mat-sys-on-surface-variant, #666);
-      line-height: 11px;
+      line-height: 10px;
     }
     .grid-area {
       overflow-x: auto;
@@ -120,22 +123,22 @@ export interface MonthLabel {
     }
     .month-labels {
       display: grid;
-      grid-template-columns: repeat(52, 11px);
-      column-gap: 3px;
-      height: 16px;
+      grid-template-columns: repeat(52, 10px);
+      column-gap: 2px;
+      height: 14px;
       margin-bottom: 4px;
     }
     .month-label {
-      font-size: 11px;
+      font-size: 10px;
       color: var(--mat-sys-on-surface-variant, #666);
       white-space: nowrap;
     }
     .heatmap-grid {
       display: grid;
-      grid-template-rows: repeat(7, 11px);
-      grid-template-columns: repeat(52, 11px);
+      grid-template-rows: repeat(7, 10px);
+      grid-template-columns: repeat(52, 10px);
       grid-auto-flow: column;
-      gap: 3px;
+      gap: 2px;
     }
     .legend {
       display: flex;
@@ -145,23 +148,34 @@ export interface MonthLabel {
       margin-top: 8px;
     }
     .legend-text {
-      font-size: 10px;
+      font-size: 9px;
       color: var(--mat-sys-on-surface-variant, #666);
       margin: 0 2px;
     }
     .legend-cell {
-      width: 11px;
-      height: 11px;
+      width: 10px;
+      height: 10px;
       border-radius: 2px;
     }
   `],
 })
 export class HeatmapComponent {
   private readonly themeService = inject(ThemeService);
+  private readonly gridArea = viewChild<ElementRef<HTMLElement>>('gridArea');
 
   logs = input.required<HabitLog[]>();
 
   readonly dayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
+
+  constructor() {
+    // Auto-scroll to the right so today is visible
+    afterNextRender(() => {
+      const el = this.gridArea()?.nativeElement;
+      if (el) {
+        el.scrollLeft = el.scrollWidth;
+      }
+    });
+  }
 
   legendColors = computed(() => {
     const palette = this.themeService.isDark() ? DARK_COLORS : LIGHT_COLORS;

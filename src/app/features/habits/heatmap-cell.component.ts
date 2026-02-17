@@ -42,8 +42,8 @@ export const DARK_COLORS: Record<number, string> = {
 
     .cell {
       position: relative;
-      width: 11px;
-      height: 11px;
+      width: 10px;
+      height: 10px;
       border-radius: 2px;
       cursor: default;
     }
