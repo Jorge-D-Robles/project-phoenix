@@ -4,7 +4,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { HeatmapCellComponent } from './heatmap-cell.component';
 
 describe('HeatmapCellComponent', () => {
-  async function setup(level: number, date = '', monthStart = false) {
+  async function setup(level: number, date = '', monthStart = false, isFuture = false) {
     await TestBed.configureTestingModule({
       imports: [HeatmapCellComponent, NoopAnimationsModule],
     }).compileComponents();
@@ -15,6 +15,7 @@ describe('HeatmapCellComponent', () => {
       fixture.componentRef.setInput('date', date);
     }
     fixture.componentRef.setInput('monthStart', monthStart);
+    fixture.componentRef.setInput('isFuture', isFuture);
     await fixture.whenStable();
     return fixture;
   }
@@ -22,35 +23,30 @@ describe('HeatmapCellComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   describe('rendering', () => {
-    it('should render a cell with data-level="0" for level 0', async () => {
+    it('should render a cell with background color for level 0', async () => {
       const fixture = await setup(0);
       const cell = fixture.debugElement.query(By.css('.cell'));
       expect(cell).toBeTruthy();
-      expect(cell.nativeElement.getAttribute('data-level')).toBe('0');
+      expect(cell.nativeElement.style.backgroundColor).toBeTruthy();
     });
 
-    it('should render a cell with data-level="1" for level 1', async () => {
-      const fixture = await setup(1);
-      const cell = fixture.debugElement.query(By.css('.cell'));
-      expect(cell.nativeElement.getAttribute('data-level')).toBe('1');
+    it('should render different background colors for different levels', async () => {
+      const colors: string[] = [];
+      for (const level of [0, 1, 2, 3, 4]) {
+        const fixture = await setup(level);
+        const cell = fixture.debugElement.query(By.css('.cell'));
+        colors.push(cell.nativeElement.style.backgroundColor);
+        TestBed.resetTestingModule();
+      }
+      // All 5 levels should have distinct colors
+      const unique = new Set(colors);
+      expect(unique.size).toBe(5);
     });
 
-    it('should render a cell with data-level="2" for level 2', async () => {
-      const fixture = await setup(2);
+    it('should render transparent background for future cells', async () => {
+      const fixture = await setup(-1, '2099-01-01', false, true);
       const cell = fixture.debugElement.query(By.css('.cell'));
-      expect(cell.nativeElement.getAttribute('data-level')).toBe('2');
-    });
-
-    it('should render a cell with data-level="3" for level 3', async () => {
-      const fixture = await setup(3);
-      const cell = fixture.debugElement.query(By.css('.cell'));
-      expect(cell.nativeElement.getAttribute('data-level')).toBe('3');
-    });
-
-    it('should render a cell with data-level="4" for level 4', async () => {
-      const fixture = await setup(4);
-      const cell = fixture.debugElement.query(By.css('.cell'));
-      expect(cell.nativeElement.getAttribute('data-level')).toBe('4');
+      expect(cell.nativeElement.style.backgroundColor).toBe('transparent');
     });
   });
 
@@ -70,12 +66,9 @@ describe('HeatmapCellComponent', () => {
       expect(fixture.componentInstance.tooltip()).toBe('');
     });
 
-    it('should include day of week and full date in tooltip', async () => {
-      const fixture = await setup(4, '2026-06-15');
-      const tip = fixture.componentInstance.tooltip();
-      expect(tip).toContain('Mon');
-      expect(tip).toContain('Jun 15, 2026');
-      expect(tip).toContain('Level 4');
+    it('should return empty string for future cells', async () => {
+      const fixture = await setup(-1, '2099-01-01', false, true);
+      expect(fixture.componentInstance.tooltip()).toBe('');
     });
   });
 

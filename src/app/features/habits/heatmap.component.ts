@@ -162,7 +162,7 @@ export class HeatmapComponent {
     const startDate = new Date(currentSunday);
     startDate.setDate(currentSunday.getDate() - (WEEKS - 1) * DAYS_PER_WEEK);
 
-    const labels: MonthLabel[] = [];
+    const allLabels: MonthLabel[] = [];
     let lastMonth = -1;
 
     for (let week = 0; week < WEEKS; week++) {
@@ -172,8 +172,17 @@ export class HeatmapComponent {
       const month = cellDate.getMonth();
 
       if (month !== lastMonth) {
-        labels.push({ name: SHORT_MONTHS[month], column: week });
+        allLabels.push({ name: SHORT_MONTHS[month], column: week });
         lastMonth = month;
+      }
+    }
+
+    // Filter out labels that would overlap (need at least 3 columns apart)
+    const MIN_GAP = 3;
+    const labels: MonthLabel[] = [];
+    for (const label of allLabels) {
+      if (labels.length === 0 || label.column - labels[labels.length - 1].column >= MIN_GAP) {
+        labels.push(label);
       }
     }
 

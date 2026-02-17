@@ -1,8 +1,27 @@
-import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ThemeService } from '../../core/theme.service';
 
 const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+/** Light mode level colors (GitHub-style greens) */
+const LIGHT_COLORS: Record<number, string> = {
+  0: '#ebedf0',
+  1: '#9be9a8',
+  2: '#40c463',
+  3: '#30a14e',
+  4: '#216e39',
+};
+
+/** Dark mode level colors */
+const DARK_COLORS: Record<number, string> = {
+  0: '#161b22',
+  1: '#0e4429',
+  2: '#006d32',
+  3: '#26a641',
+  4: '#39d353',
+};
 
 @Component({
   selector: 'app-heatmap-cell',
@@ -13,8 +32,7 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
     <div class="cell"
          [class.month-start]="monthStart()"
          [class.today]="isToday()"
-         [class.future]="isFuture()"
-         [attr.data-level]="level()"
+         [style.backgroundColor]="bgColor()"
          [matTooltip]="tooltip()"
          matTooltipPosition="above">
     </div>
@@ -22,54 +40,44 @@ const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov
   styles: [`
     :host { display: contents; }
 
-    /* Light mode colors (default) */
-    .cell { width: 12px; height: 12px; border-radius: 2px; cursor: default; }
-    .cell[data-level="0"] { background: #ebedf0; }
-    .cell[data-level="1"] { background: #9be9a8; }
-    .cell[data-level="2"] { background: #40c463; }
-    .cell[data-level="3"] { background: #30a14e; }
-    .cell[data-level="4"] { background: #216e39; }
-
-    /* Future cells (after today) — transparent */
-    .cell.future { background: transparent !important; }
+    .cell {
+      width: 12px;
+      height: 12px;
+      border-radius: 2px;
+      cursor: default;
+    }
 
     /* Today indicator — outlined ring */
     .cell.today {
-      outline: 2px solid #1a73e8;
+      outline: 2px solid #8ab4f8;
       outline-offset: -1px;
-      border-radius: 2px;
-    }
-    :host-context(body.dark) .cell.today {
-      outline-color: #8ab4f8;
     }
 
-    /* Dark mode colors */
-    :host-context(body.dark) .cell[data-level="0"] { background: #161b22; }
-    :host-context(body.dark) .cell[data-level="1"] { background: #0e4429; }
-    :host-context(body.dark) .cell[data-level="2"] { background: #006d32; }
-    :host-context(body.dark) .cell[data-level="3"] { background: #26a641; }
-    :host-context(body.dark) .cell[data-level="4"] { background: #39d353; }
-
-    /* Month divider — visible left border on month-start columns */
+    /* Month divider — gap before month-start columns */
     .cell.month-start {
-      border-left: 2px solid rgba(0, 0, 0, 0.25);
-      margin-left: 2px;
-    }
-    :host-context(body.dark) .cell.month-start {
-      border-left-color: rgba(255, 255, 255, 0.25);
+      margin-left: 4px;
     }
   `],
 })
 export class HeatmapCellComponent {
+  private readonly themeService = inject(ThemeService);
+
   level = input.required<number>();
   date = input<string>('');
   monthStart = input<boolean>(false);
   isToday = input<boolean>(false);
   isFuture = input<boolean>(false);
 
+  bgColor = computed(() => {
+    if (this.isFuture()) return 'transparent';
+    const lvl = this.level();
+    const palette = this.themeService.isDark() ? DARK_COLORS : LIGHT_COLORS;
+    return palette[lvl] ?? palette[0];
+  });
+
   tooltip = computed(() => {
     const d = this.date();
-    if (!d) return '';
+    if (!d || this.isFuture()) return '';
     const parsed = new Date(d + 'T00:00:00');
     const day = DAYS[parsed.getDay()];
     const month = MONTHS[parsed.getMonth()];

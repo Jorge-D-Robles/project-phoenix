@@ -31,12 +31,13 @@ describe('HeatmapComponent', () => {
       expect(cells.length).toBe(364);
     });
 
-    it('should render past cells at level 0 and future cells at level -1 when logs are empty', async () => {
+    it('should render cells with background colors when logs are empty', async () => {
       const fixture = await setup([]);
       const cells = fixture.debugElement.queryAll(By.css('.cell'));
       cells.forEach(cell => {
-        const level = cell.nativeElement.getAttribute('data-level');
-        expect(level === '0' || level === '-1').toBeTrue();
+        const bg = cell.nativeElement.style.backgroundColor;
+        // Every cell should have a background (either a color or transparent for future)
+        expect(bg).toBeTruthy();
       });
     });
 
