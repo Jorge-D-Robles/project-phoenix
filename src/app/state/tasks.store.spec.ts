@@ -50,27 +50,12 @@ describe('TasksStore', () => {
   });
 
   describe('initial state', () => {
-    it('should have empty tasks array', () => {
+    it('should have correct defaults', () => {
       expect(store.tasks()).toEqual([]);
-    });
-
-    it('should have empty task lists array', () => {
       expect(store.taskLists()).toEqual([]);
-    });
-
-    it('should not be loading', () => {
       expect(store.loading()).toBe(false);
-    });
-
-    it('should have ALL as default filter', () => {
       expect(store.filter()).toBe('ALL');
-    });
-
-    it('should have null selectedListId', () => {
       expect(store.selectedListId()).toBeNull();
-    });
-
-    it('should have null error', () => {
       expect(store.error()).toBeNull();
     });
   });

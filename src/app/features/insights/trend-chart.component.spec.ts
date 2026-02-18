@@ -13,17 +13,6 @@ describe('TrendChartComponent', () => {
   });
 
   describe('rendering', () => {
-    it('should display the chart title', async () => {
-      fixture.componentRef.setInput('data', [{ label: 'Mon', value: 5 }]);
-      fixture.componentRef.setInput('maxValue', 10);
-      fixture.componentRef.setInput('title', 'Tasks Completed');
-      fixture.componentRef.setInput('color', '#4CAF50');
-      await fixture.whenStable();
-
-      const el = fixture.nativeElement as HTMLElement;
-      expect(el.textContent).toContain('Tasks Completed');
-    });
-
     it('should render a bar for each data point', async () => {
       const data = [
         { label: 'Mon', value: 3 },

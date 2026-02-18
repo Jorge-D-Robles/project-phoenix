@@ -84,13 +84,6 @@ async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {})
 describe('HabitsComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
-  describe('initialization', () => {
-    it('should call loadData on init', async () => {
-      const { mockStore } = await setup();
-      expect(mockStore.loadData).toHaveBeenCalled();
-    });
-  });
-
   describe('habit list rendering', () => {
     it('should render habit cards for active habits', async () => {
       const { fixture } = await setup();

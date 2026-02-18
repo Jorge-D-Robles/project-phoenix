@@ -41,12 +41,6 @@ describe('HabitStatusWidgetComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   describe('rendering', () => {
-    it('should render the habit status card', async () => {
-      const fixture = await setup();
-      const card = fixture.debugElement.query(By.css('[data-testid="habit-status-card"]'));
-      expect(card).toBeTruthy();
-    });
-
     it('should render an item for each habit', async () => {
       const fixture = await setup();
       const items = fixture.debugElement.queryAll(By.css('[data-testid="habit-item"]'));

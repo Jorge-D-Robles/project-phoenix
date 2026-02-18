@@ -45,11 +45,6 @@ describe('App', () => {
     }).compileComponents();
   });
 
-  it('should create the app', () => {
-    const fixture = TestBed.createComponent(App);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   describe('when not authenticated', () => {
     it('should not render the sidenav shell', async () => {
       const fixture = TestBed.createComponent(App);

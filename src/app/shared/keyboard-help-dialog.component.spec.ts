@@ -23,10 +23,6 @@ describe('KeyboardHelpDialogComponent', () => {
     await fixture.whenStable();
   });
 
-  it('should create the component', () => {
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should render the dialog title "Keyboard Shortcuts"', () => {
     const title = fixture.nativeElement.querySelector('[mat-dialog-title]');
     expect(title?.textContent).toContain('Keyboard Shortcuts');

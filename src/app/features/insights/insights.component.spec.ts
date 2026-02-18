@@ -74,28 +74,12 @@ describe('InsightsComponent', () => {
   });
 
   describe('rendering', () => {
-    it('should render the score card', () => {
-      const scoreCard = fixture.nativeElement.querySelector('app-score-card');
-      expect(scoreCard).toBeTruthy();
-    });
-
-    it('should render trend charts', () => {
-      const charts = fixture.nativeElement.querySelectorAll('app-trend-chart');
-      expect(charts.length).toBeGreaterThan(0);
-    });
-
-    it('should render the habit streaks widget', () => {
-      const streaksWidget = fixture.nativeElement.querySelector('app-habit-streaks-widget');
-      expect(streaksWidget).toBeTruthy();
-    });
-
-    it('should render the weekly summary card', () => {
-      const summaryCard = fixture.nativeElement.querySelector('app-weekly-summary-card');
-      expect(summaryCard).toBeTruthy();
-    });
-
-    it('should display the page title', () => {
+    it('should render all insight widgets and page title', () => {
       const el = fixture.nativeElement as HTMLElement;
+      expect(el.querySelector('app-score-card')).toBeTruthy();
+      expect(el.querySelectorAll('app-trend-chart').length).toBeGreaterThan(0);
+      expect(el.querySelector('app-habit-streaks-widget')).toBeTruthy();
+      expect(el.querySelector('app-weekly-summary-card')).toBeTruthy();
       expect(el.textContent).toContain('Insights');
     });
   });

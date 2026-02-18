@@ -22,35 +22,14 @@ describe('WeeklySummaryCardComponent', () => {
       productivityScore: 72,
     };
 
-    it('should display tasks completed', async () => {
+    it('should display all summary values', async () => {
       fixture.componentRef.setInput('summary', summary);
       await fixture.whenStable();
 
       const el = fixture.nativeElement as HTMLElement;
       expect(el.textContent).toContain('12');
-    });
-
-    it('should display habits logged', async () => {
-      fixture.componentRef.setInput('summary', summary);
-      await fixture.whenStable();
-
-      const el = fixture.nativeElement as HTMLElement;
       expect(el.textContent).toContain('8');
-    });
-
-    it('should display focus minutes', async () => {
-      fixture.componentRef.setInput('summary', summary);
-      await fixture.whenStable();
-
-      const el = fixture.nativeElement as HTMLElement;
       expect(el.textContent).toContain('150');
-    });
-
-    it('should display events attended', async () => {
-      fixture.componentRef.setInput('summary', summary);
-      await fixture.whenStable();
-
-      const el = fixture.nativeElement as HTMLElement;
       expect(el.textContent).toContain('5');
     });
 

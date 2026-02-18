@@ -35,11 +35,6 @@ describe('LoginComponent', () => {
     }).compileComponents();
   });
 
-  it('should create', () => {
-    const fixture = TestBed.createComponent(LoginComponent);
-    expect(fixture.componentInstance).toBeTruthy();
-  });
-
   it('should render app branding', async () => {
     const fixture = TestBed.createComponent(LoginComponent);
     await fixture.whenStable();

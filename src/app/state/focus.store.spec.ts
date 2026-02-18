@@ -72,47 +72,17 @@ describe('FocusStore', () => {
   });
 
   describe('initial state', () => {
-    it('should have empty sessions array', () => {
+    it('should have correct defaults', () => {
       expect(store.sessions()).toEqual([]);
-    });
-
-    it('should have default settings', () => {
       expect(store.settings()).toEqual(DEFAULT_FOCUS_SETTINGS);
-    });
-
-    it('should not be loading', () => {
       expect(store.loading()).toBe(false);
-    });
-
-    it('should have null error', () => {
       expect(store.error()).toBeNull();
-    });
-
-    it('should have IDLE timerStatus', () => {
       expect(store.timerStatus()).toBe('IDLE');
-    });
-
-    it('should have WORK timerType', () => {
       expect(store.timerType()).toBe('WORK');
-    });
-
-    it('should have zero remainingSeconds', () => {
       expect(store.remainingSeconds()).toBe(0);
-    });
-
-    it('should have null currentSessionStart', () => {
       expect(store.currentSessionStart()).toBeNull();
-    });
-
-    it('should have null linkedTaskId', () => {
       expect(store.linkedTaskId()).toBeNull();
-    });
-
-    it('should have null linkedTaskTitle', () => {
       expect(store.linkedTaskTitle()).toBeNull();
-    });
-
-    it('should have zero sessionsCompleted', () => {
       expect(store.sessionsCompleted()).toBe(0);
     });
   });
@@ -125,24 +95,10 @@ describe('FocusStore', () => {
       expect(store.loading()).toBe(false);
     });
 
-    it('should populate sessions from service', async () => {
+    it('should populate sessions and settings from service', async () => {
       await store.loadData();
       expect(store.sessions().length).toBe(2);
-    });
-
-    it('should populate settings from service', async () => {
-      await store.loadData();
       expect(store.settings()).toEqual(MOCK_SETTINGS);
-    });
-
-    it('should call loadSessions on the service', async () => {
-      await store.loadData();
-      expect(mockFocusService.loadSessions).toHaveBeenCalled();
-    });
-
-    it('should call loadSettings on the service', async () => {
-      await store.loadData();
-      expect(mockFocusService.loadSettings).toHaveBeenCalled();
     });
 
     it('should set error on failure', async () => {

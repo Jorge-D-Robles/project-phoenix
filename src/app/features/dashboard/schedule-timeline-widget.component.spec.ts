@@ -37,12 +37,6 @@ describe('ScheduleTimelineWidgetComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   describe('rendering', () => {
-    it('should render the schedule card', async () => {
-      const fixture = await setup();
-      const card = fixture.debugElement.query(By.css('[data-testid="schedule-card"]'));
-      expect(card).toBeTruthy();
-    });
-
     it('should render event items for each event', async () => {
       const fixture = await setup();
       const items = fixture.debugElement.queryAll(By.css('[data-testid="event-item"]'));

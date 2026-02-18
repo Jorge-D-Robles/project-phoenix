@@ -26,22 +26,11 @@ describe('GreetingHeaderComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   describe('rendering', () => {
-    it('should display the greeting text', async () => {
+    it('should display greeting, date, and summary', async () => {
       const fixture = await setup();
-      const el = fixture.debugElement.query(By.css('[data-testid="greeting-text"]'));
-      expect(el.nativeElement.textContent).toContain('Good morning, Test');
-    });
-
-    it('should display the date', async () => {
-      const fixture = await setup();
-      const el = fixture.debugElement.query(By.css('[data-testid="date-text"]'));
-      expect(el.nativeElement.textContent).toContain('Monday, February 16, 2026');
-    });
-
-    it('should display the summary text', async () => {
-      const fixture = await setup();
-      const el = fixture.debugElement.query(By.css('[data-testid="summary-text"]'));
-      expect(el.nativeElement.textContent).toContain('3 of 5 tasks');
+      expect(fixture.debugElement.query(By.css('[data-testid="greeting-text"]')).nativeElement.textContent).toContain('Good morning, Test');
+      expect(fixture.debugElement.query(By.css('[data-testid="date-text"]')).nativeElement.textContent).toContain('Monday, February 16, 2026');
+      expect(fixture.debugElement.query(By.css('[data-testid="summary-text"]')).nativeElement.textContent).toContain('3 of 5 tasks');
     });
 
     it('should render the progress ring', async () => {

@@ -48,23 +48,11 @@ describe('NotesStore', () => {
   });
 
   describe('initial state', () => {
-    it('should have empty notes array', () => {
+    it('should have correct defaults', () => {
       expect(store.notes()).toEqual([]);
-    });
-
-    it('should not be loading', () => {
       expect(store.loading()).toBe(false);
-    });
-
-    it('should have null error', () => {
       expect(store.error()).toBeNull();
-    });
-
-    it('should have null selectedNoteId', () => {
       expect(store.selectedNoteId()).toBeNull();
-    });
-
-    it('should have null filterLabel', () => {
       expect(store.filterLabel()).toBeNull();
     });
   });

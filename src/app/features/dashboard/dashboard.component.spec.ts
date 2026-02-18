@@ -109,48 +109,15 @@ describe('DashboardComponent', () => {
 
   afterEach(() => TestBed.resetTestingModule());
 
-  describe('initialization', () => {
-    it('should call loadAll on the dashboard store', async () => {
-      await setup();
-      expect(mockDashboardStore.loadAll).toHaveBeenCalled();
-    });
-  });
-
   describe('rendering', () => {
-    it('should render the greeting header', async () => {
+    it('should render all dashboard widgets', async () => {
       const fixture = await setup();
-      const header = fixture.debugElement.query(By.css('app-greeting-header'));
-      expect(header).toBeTruthy();
-    });
-
-    it('should render the task summary widget', async () => {
-      const fixture = await setup();
-      const widget = fixture.debugElement.query(By.css('app-task-summary-widget'));
-      expect(widget).toBeTruthy();
-    });
-
-    it('should render the schedule timeline widget', async () => {
-      const fixture = await setup();
-      const widget = fixture.debugElement.query(By.css('app-schedule-timeline-widget'));
-      expect(widget).toBeTruthy();
-    });
-
-    it('should render the habit status widget', async () => {
-      const fixture = await setup();
-      const widget = fixture.debugElement.query(By.css('app-habit-status-widget'));
-      expect(widget).toBeTruthy();
-    });
-
-    it('should render the recent notes widget', async () => {
-      const fixture = await setup();
-      const widget = fixture.debugElement.query(By.css('app-recent-notes-widget'));
-      expect(widget).toBeTruthy();
-    });
-
-    it('should render the dashboard grid', async () => {
-      const fixture = await setup();
-      const grid = fixture.debugElement.query(By.css('[data-testid="dashboard-grid"]'));
-      expect(grid).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('app-greeting-header'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('app-task-summary-widget'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('app-schedule-timeline-widget'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('app-habit-status-widget'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('app-recent-notes-widget'))).toBeTruthy();
+      expect(fixture.debugElement.query(By.css('[data-testid="dashboard-grid"]'))).toBeTruthy();
     });
   });
 

@@ -57,24 +57,12 @@ describe('CalendarStore', () => {
   });
 
   describe('initial state', () => {
-    it('should have empty events array', () => {
-      expect(store.events()).toEqual([]);
-    });
-
-    it('should not be loading', () => {
-      expect(store.loading()).toBe(false);
-    });
-
-    it('should have null error', () => {
-      expect(store.error()).toBeNull();
-    });
-
-    it('should have null syncToken', () => {
-      expect(store.syncToken()).toBeNull();
-    });
-
-    it('should have today as selectedDate', () => {
+    it('should have correct defaults', () => {
       const today = new Date().toISOString().split('T')[0];
+      expect(store.events()).toEqual([]);
+      expect(store.loading()).toBe(false);
+      expect(store.error()).toBeNull();
+      expect(store.syncToken()).toBeNull();
       expect(store.selectedDate()).toBe(today);
     });
   });

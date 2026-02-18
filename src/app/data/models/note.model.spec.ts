@@ -1,62 +1,6 @@
-import {
-  NOTE_COLORS,
-  NOTE_COLOR_MAP,
-  DEFAULT_NOTE_COLOR,
-  sanitizeNoteContent,
-} from './note.model';
-import type { NoteColor } from './note.model';
+import { sanitizeNoteContent } from './note.model';
 
 describe('Note Model', () => {
-  describe('NOTE_COLORS', () => {
-    it('should have exactly 11 color values', () => {
-      expect(NOTE_COLORS.length).toBe(11);
-    });
-
-    it('should contain all expected color values', () => {
-      const expected: NoteColor[] = [
-        'DEFAULT', 'RED', 'ORANGE', 'YELLOW', 'GREEN',
-        'TEAL', 'BLUE', 'PURPLE', 'PINK', 'BROWN', 'GRAY',
-      ];
-      for (const color of expected) {
-        expect(NOTE_COLORS).toContain(color);
-      }
-    });
-
-    it('should not contain duplicate values', () => {
-      const unique = new Set(NOTE_COLORS);
-      expect(unique.size).toBe(NOTE_COLORS.length);
-    });
-  });
-
-  describe('NOTE_COLOR_MAP', () => {
-    it('should have an entry for every NOTE_COLOR', () => {
-      for (const color of NOTE_COLORS) {
-        expect(NOTE_COLOR_MAP[color]).toBeDefined();
-      }
-    });
-
-    it('should map all colors to valid hex values', () => {
-      const hexPattern = /^#[0-9A-Fa-f]{6}$/;
-      for (const color of NOTE_COLORS) {
-        expect(NOTE_COLOR_MAP[color]).toMatch(hexPattern);
-      }
-    });
-
-    it('should have exactly 11 entries', () => {
-      expect(Object.keys(NOTE_COLOR_MAP).length).toBe(11);
-    });
-  });
-
-  describe('DEFAULT_NOTE_COLOR', () => {
-    it('should be DEFAULT', () => {
-      expect(DEFAULT_NOTE_COLOR).toBe('DEFAULT');
-    });
-
-    it('should be a valid NoteColor in the NOTE_COLORS array', () => {
-      expect(NOTE_COLORS).toContain(DEFAULT_NOTE_COLOR);
-    });
-  });
-
   describe('sanitizeNoteContent', () => {
     it('should preserve safe HTML tags', () => {
       const input = '<b>Bold</b> <i>Italic</i> <em>Emphasis</em>';

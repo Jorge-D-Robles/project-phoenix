@@ -37,54 +37,15 @@ describe('FocusSettingsDialogComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   describe('rendering with default settings', () => {
-    it('should show "Focus Settings" title', async () => {
+    it('should render all form fields with default values', async () => {
       const { fixture } = await setup();
-      const title = fixture.debugElement.query(By.css('[mat-dialog-title]'));
-      expect(title.nativeElement.textContent).toContain('Focus Settings');
-    });
-
-    it('should render work duration input with default value', async () => {
-      const { fixture } = await setup();
-      const input = fixture.debugElement.query(By.css('[data-testid="settings-work-duration"]'));
-      expect(input).toBeTruthy();
-      expect(input.nativeElement.value).toBe('25');
-    });
-
-    it('should render short break input with default value', async () => {
-      const { fixture } = await setup();
-      const input = fixture.debugElement.query(By.css('[data-testid="settings-short-break"]'));
-      expect(input).toBeTruthy();
-      expect(input.nativeElement.value).toBe('5');
-    });
-
-    it('should render long break input with default value', async () => {
-      const { fixture } = await setup();
-      const input = fixture.debugElement.query(By.css('[data-testid="settings-long-break"]'));
-      expect(input).toBeTruthy();
-      expect(input.nativeElement.value).toBe('15');
-    });
-
-    it('should render sessions before long break input with default value', async () => {
-      const { fixture } = await setup();
-      const input = fixture.debugElement.query(By.css('[data-testid="settings-sessions-before-long"]'));
-      expect(input).toBeTruthy();
-      expect(input.nativeElement.value).toBe('4');
-    });
-
-    it('should render auto-start breaks checkbox unchecked', async () => {
-      const { fixture } = await setup();
-      const checkbox = fixture.debugElement.query(By.css('[data-testid="settings-auto-start-breaks"]'));
-      expect(checkbox).toBeTruthy();
-      const input = checkbox.query(By.css('input[type="checkbox"]'));
-      expect(input.nativeElement.checked).toBeFalse();
-    });
-
-    it('should render auto-start work checkbox unchecked', async () => {
-      const { fixture } = await setup();
-      const checkbox = fixture.debugElement.query(By.css('[data-testid="settings-auto-start-work"]'));
-      expect(checkbox).toBeTruthy();
-      const input = checkbox.query(By.css('input[type="checkbox"]'));
-      expect(input.nativeElement.checked).toBeFalse();
+      expect(fixture.debugElement.query(By.css('[mat-dialog-title]')).nativeElement.textContent).toContain('Focus Settings');
+      expect(fixture.debugElement.query(By.css('[data-testid="settings-work-duration"]')).nativeElement.value).toBe('25');
+      expect(fixture.debugElement.query(By.css('[data-testid="settings-short-break"]')).nativeElement.value).toBe('5');
+      expect(fixture.debugElement.query(By.css('[data-testid="settings-long-break"]')).nativeElement.value).toBe('15');
+      expect(fixture.debugElement.query(By.css('[data-testid="settings-sessions-before-long"]')).nativeElement.value).toBe('4');
+      expect(fixture.debugElement.query(By.css('[data-testid="settings-auto-start-breaks"]')).query(By.css('input[type="checkbox"]')).nativeElement.checked).toBeFalse();
+      expect(fixture.debugElement.query(By.css('[data-testid="settings-auto-start-work"]')).query(By.css('input[type="checkbox"]')).nativeElement.checked).toBeFalse();
     });
   });
 

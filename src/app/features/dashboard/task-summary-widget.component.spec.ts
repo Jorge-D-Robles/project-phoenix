@@ -33,12 +33,6 @@ describe('TaskSummaryWidgetComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
   describe('rendering', () => {
-    it('should render the card', async () => {
-      const fixture = await setup();
-      const card = fixture.debugElement.query(By.css('[data-testid="task-summary-card"]'));
-      expect(card).toBeTruthy();
-    });
-
     it('should render task items for each task', async () => {
       const fixture = await setup();
       const items = fixture.debugElement.queryAll(By.css('[data-testid="task-item"]'));

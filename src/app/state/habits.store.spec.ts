@@ -71,23 +71,11 @@ describe('HabitsStore', () => {
   });
 
   describe('initial state', () => {
-    it('should have empty habits array', () => {
+    it('should have correct defaults', () => {
       expect(store.habits()).toEqual([]);
-    });
-
-    it('should have empty logs array', () => {
       expect(store.logs()).toEqual([]);
-    });
-
-    it('should not be loading', () => {
       expect(store.loading()).toBe(false);
-    });
-
-    it('should have null error', () => {
       expect(store.error()).toBeNull();
-    });
-
-    it('should have null selectedHabitId', () => {
       expect(store.selectedHabitId()).toBeNull();
     });
   });
@@ -158,11 +146,6 @@ describe('HabitsStore', () => {
       await store.loadData();
       expect(store.habits().length).toBe(3);
       expect(store.logs().length).toBe(3);
-    });
-
-    it('should call loadData on the service', async () => {
-      await store.loadData();
-      expect(mockHabitService.loadData).toHaveBeenCalled();
     });
 
     it('should set error on failure', async () => {

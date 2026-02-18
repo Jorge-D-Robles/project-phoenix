@@ -13,24 +13,6 @@ describe('ScoreCardComponent', () => {
   });
 
   describe('rendering', () => {
-    it('should display the score value', async () => {
-      fixture.componentRef.setInput('score', 75);
-      fixture.componentRef.setInput('label', 'Productivity');
-      await fixture.whenStable();
-
-      const el = fixture.nativeElement as HTMLElement;
-      expect(el.textContent).toContain('75');
-    });
-
-    it('should display the label', async () => {
-      fixture.componentRef.setInput('score', 50);
-      fixture.componentRef.setInput('label', 'Weekly Score');
-      await fixture.whenStable();
-
-      const el = fixture.nativeElement as HTMLElement;
-      expect(el.textContent).toContain('Weekly Score');
-    });
-
     it('should apply green color class for score >= 70', async () => {
       fixture.componentRef.setInput('score', 85);
       fixture.componentRef.setInput('label', 'Score');

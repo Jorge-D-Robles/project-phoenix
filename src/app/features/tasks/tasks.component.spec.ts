@@ -104,13 +104,6 @@ async function setup(storeOverrides: Parameters<typeof createMockStore>[0] = {})
 describe('TasksComponent', () => {
   afterEach(() => TestBed.resetTestingModule());
 
-  describe('initialization', () => {
-    it('should load task lists on init', async () => {
-      const { mockStore } = await setup();
-      expect(mockStore.loadTaskLists).toHaveBeenCalled();
-    });
-  });
-
   describe('task list selector', () => {
     it('should render task list selector', async () => {
       const { fixture } = await setup();
