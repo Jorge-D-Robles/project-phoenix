@@ -4,6 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { Habit, HabitLog } from '../data/models/habit.model';
 import { HabitService } from '../data/habit.service';
+import { toDateKey } from '../shared/date.utils';
 
 interface HabitsState {
   readonly habits: Habit[];
@@ -20,9 +21,6 @@ const initialState: HabitsState = {
   error: null,
   selectedHabitId: null,
 };
-
-/** Generate a UUID v4 */
-const uuid = (): string => crypto.randomUUID();
 
 export const HabitsStore = signalStore(
   { providedIn: 'root' },
@@ -52,7 +50,7 @@ export const HabitsStore = signalStore(
         for (let i = 0; i < 365; i++) {
           const d = new Date(today);
           d.setDate(d.getDate() - i);
-          const key = d.toISOString().split('T')[0];
+          const key = toDateKey(d);
           if (habitLogs.has(key)) {
             streak++;
           } else {
@@ -100,7 +98,7 @@ export const HabitsStore = signalStore(
         const now = new Date().toISOString();
         const newHabit: Habit = {
           ...habit,
-          id: uuid(),
+          id: crypto.randomUUID(),
           created: now,
           lastModified: now,
         };

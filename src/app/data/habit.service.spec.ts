@@ -3,7 +3,8 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { HabitService } from './habit.service';
-import { HabitsData, GoogleDriveFileList } from './models/habit.model';
+import type { HabitsData } from './models/habit.model';
+import type { GoogleDriveFileList } from './models/google-drive.model';
 
 const DRIVE_FILES_URL = 'https://www.googleapis.com/drive/v3/files';
 const DRIVE_UPLOAD_URL = 'https://www.googleapis.com/upload/drive/v3/files';

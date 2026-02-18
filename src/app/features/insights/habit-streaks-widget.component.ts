@@ -63,5 +63,5 @@ import type { HabitStreakInfo } from '../../state/insights.store';
   `,
 })
 export class HabitStreaksWidgetComponent {
-  streaks = input.required<HabitStreakInfo[]>();
+  readonly streaks = input.required<HabitStreakInfo[]>();
 }

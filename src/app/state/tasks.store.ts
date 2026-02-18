@@ -92,12 +92,11 @@ export const TasksStore = signalStore(
       if (!task) return;
 
       // If updating notes or meta, ensure the other is preserved since they share the notes field
-      const finalUpdate: UpdateTaskRequest = { ...update };
-      if (update.notes !== undefined && update.meta === undefined) {
-        finalUpdate.meta = task.meta;
-      } else if (update.meta !== undefined && update.notes === undefined) {
-        finalUpdate.notes = task.notes ?? '';
-      }
+      const finalUpdate: UpdateTaskRequest = {
+        ...update,
+        ...(update.notes !== undefined && update.meta === undefined ? { meta: task.meta } : {}),
+        ...(update.meta !== undefined && update.notes === undefined ? { notes: task.notes ?? '' } : {}),
+      };
 
       // Optimistic update
       const optimistic: Task = {

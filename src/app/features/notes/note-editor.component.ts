@@ -9,10 +9,10 @@ import { NOTE_COLORS, DEFAULT_NOTE_COLOR } from '../../data/models/note.model';
 import type { Note, NoteColor } from '../../data/models/note.model';
 
 export interface NoteFormData {
-  title: string;
-  content: string;
-  color: NoteColor;
-  labels: string[];
+  readonly title: string;
+  readonly content: string;
+  readonly color: NoteColor;
+  readonly labels: string[];
 }
 
 @Component({
@@ -84,10 +84,10 @@ export interface NoteFormData {
   `,
 })
 export class NoteEditorComponent {
-  note = input<Note | null>(null);
+  readonly note = input<Note | null>(null);
 
-  save = output<NoteFormData>();
-  cancel = output<void>();
+  readonly save = output<NoteFormData>();
+  readonly cancel = output<void>();
 
   protected readonly colors = NOTE_COLORS;
 

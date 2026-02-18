@@ -19,7 +19,7 @@ export const NOTE_COLORS: readonly NoteColor[] = [
 ] as const;
 
 /** Mapping of NoteColor to hex color string for display */
-export const NOTE_COLOR_MAP: Record<NoteColor, string> = {
+const NOTE_COLOR_MAP: Record<NoteColor, string> = {
   DEFAULT: '#FFFFFF',
   RED:     '#F28B82',
   ORANGE:  '#FBBC04',
@@ -32,6 +32,11 @@ export const NOTE_COLOR_MAP: Record<NoteColor, string> = {
   BROWN:   '#E6C9A8',
   GRAY:    '#E8EAED',
 };
+
+/** Resolve a NoteColor to its hex string */
+export function getNoteColor(color: NoteColor): string {
+  return NOTE_COLOR_MAP[color] ?? NOTE_COLOR_MAP['DEFAULT'];
+}
 
 /** Default note color when none is specified */
 export const DEFAULT_NOTE_COLOR: NoteColor = 'DEFAULT';
@@ -57,29 +62,5 @@ export interface Note {
   readonly lastModified: string;
 }
 
-/** Google Drive API file resource (minimal shape) */
-export interface GoogleDriveFile {
-  readonly id: string;
-  readonly name: string;
-  readonly mimeType: string;
-}
-
-/** Google Drive API files.list response */
-export interface GoogleDriveFileList {
-  readonly files?: GoogleDriveFile[];
-}
-
-/** Allowed HTML tags for note content sanitization */
-const ALLOWED_TAGS = new Set([
-  'b', 'i', 'u', 'em', 'strong', 'a', 'br', 'p', 'ul', 'ol', 'li', 'span',
-]);
-
-/** Strip disallowed HTML tags while preserving allowed ones and their attributes */
-export function sanitizeNoteContent(html: string): string {
-  return html.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g, (match, tag: string) => {
-    if (ALLOWED_TAGS.has(tag.toLowerCase())) {
-      return match;
-    }
-    return '';
-  });
-}
+// Re-export sanitizeHtml as sanitizeNoteContent for backwards compatibility
+export { sanitizeHtml as sanitizeNoteContent } from '../../shared/sanitize-html.util';

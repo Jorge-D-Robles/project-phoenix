@@ -4,12 +4,12 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import { App } from './app.component';
+import { AppComponent } from './app.component';
 import { AuthService } from './core/auth.service';
 import { UserProfile } from './data/models/user.model';
 import { KeyboardHelpDialogComponent } from './shared/keyboard-help-dialog.component';
 
-describe('App', () => {
+describe('AppComponent', () => {
   let mockAuthService: jasmine.SpyObj<AuthService>;
   let mockDialog: jasmine.SpyObj<MatDialog>;
   let mockRouter: jasmine.SpyObj<Router>;
@@ -35,7 +35,7 @@ describe('App', () => {
     user.set(null);
 
     await TestBed.configureTestingModule({
-      imports: [App],
+      imports: [AppComponent],
       providers: [
         provideRouter([]),
         provideAnimationsAsync(),
@@ -47,7 +47,7 @@ describe('App', () => {
 
   describe('when not authenticated', () => {
     it('should not render the sidenav shell', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const sidenav = fixture.nativeElement.querySelector('mat-sidenav-container');
@@ -55,7 +55,7 @@ describe('App', () => {
     });
 
     it('should render a bare router-outlet', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const outlet = fixture.nativeElement.querySelector('router-outlet');
@@ -70,14 +70,14 @@ describe('App', () => {
     });
 
     it('should render the toolbar with app title', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       expect(fixture.nativeElement.textContent).toContain('Project Phoenix');
     });
 
     it('should render the sidenav with navigation links', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const el = fixture.nativeElement as HTMLElement;
@@ -89,7 +89,7 @@ describe('App', () => {
     });
 
     it('should display user name in toolbar', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const userName = fixture.nativeElement.querySelector('[data-testid="user-name"]');
@@ -97,7 +97,7 @@ describe('App', () => {
     });
 
     it('should have a logout button', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const logoutBtn = fixture.nativeElement.querySelector('[data-testid="logout-button"]');
@@ -105,7 +105,7 @@ describe('App', () => {
     });
 
     it('should call logout on logout button click', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const logoutBtn = fixture.nativeElement.querySelector(
@@ -124,7 +124,7 @@ describe('App', () => {
     });
 
     it('should open the help dialog when "?" is pressed', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       document.dispatchEvent(new KeyboardEvent('keydown', { key: '?', bubbles: true }));
@@ -133,7 +133,7 @@ describe('App', () => {
     });
 
     it('should NOT open help dialog when "?" is pressed and target is an input', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const input = document.createElement('input');
@@ -148,7 +148,7 @@ describe('App', () => {
     });
 
     it('should NOT open help dialog when "?" is pressed and target is a textarea', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const textarea = document.createElement('textarea');
@@ -163,7 +163,7 @@ describe('App', () => {
 
     it('should NOT fire shortcuts when not authenticated', async () => {
       isAuthenticated.set(false);
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       document.dispatchEvent(new KeyboardEvent('keydown', { key: '?', bubbles: true }));
@@ -172,7 +172,7 @@ describe('App', () => {
     });
 
     it('should navigate to /dashboard when "g" then "d" is pressed', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const router = TestBed.inject(Router);
@@ -185,7 +185,7 @@ describe('App', () => {
     });
 
     it('should navigate to /tasks when "g" then "t" is pressed', async () => {
-      const fixture = TestBed.createComponent(App);
+      const fixture = TestBed.createComponent(AppComponent);
       await fixture.whenStable();
 
       const router = TestBed.inject(Router);
@@ -200,7 +200,7 @@ describe('App', () => {
     it('should not navigate after the 1-second chord window expires', async () => {
       jasmine.clock().install();
       try {
-        const fixture = TestBed.createComponent(App);
+        const fixture = TestBed.createComponent(AppComponent);
         await fixture.whenStable();
 
         const router = TestBed.inject(Router);

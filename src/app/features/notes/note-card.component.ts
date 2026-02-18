@@ -4,8 +4,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { NOTE_COLOR_MAP } from '../../data/models/note.model';
+import { getNoteColor } from '../../data/models/note.model';
 import type { Note } from '../../data/models/note.model';
+import { stripHtmlAndTruncate } from '../../shared/sanitize-html.util';
 
 const PREVIEW_MAX_LENGTH = 200;
 
@@ -100,18 +101,13 @@ export class NoteCardComponent {
   pin = output<void>();
   archive = output<void>();
 
-  protected backgroundColor = computed(() =>
-    NOTE_COLOR_MAP[this.note().color] ?? NOTE_COLOR_MAP['DEFAULT'],
+  protected readonly backgroundColor = computed(() =>
+    getNoteColor(this.note().color),
   );
 
-  protected contentPreview = computed(() => {
-    const raw = this.note().content;
-    const text = raw.replace(/<[^>]*>/g, '');
-    if (text.length > PREVIEW_MAX_LENGTH) {
-      return text.substring(0, PREVIEW_MAX_LENGTH) + '...';
-    }
-    return text;
-  });
+  protected readonly contentPreview = computed(() =>
+    stripHtmlAndTruncate(this.note().content, PREVIEW_MAX_LENGTH),
+  );
 
   protected relativeTime = computed(() => {
     const modified = new Date(this.note().lastModified);

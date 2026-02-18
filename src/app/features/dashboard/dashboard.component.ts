@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, inject } from '@angular/core';
-import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DashboardStore } from '../../state/dashboard.store';
 import { TasksStore } from '../../state/tasks.store';
 import { HabitsStore } from '../../state/habits.store';
+import { todayDateKey } from '../../shared/date.utils';
 import { TaskDetailDialogComponent } from '../tasks/task-detail-dialog.component';
 import { GreetingHeaderComponent } from './greeting-header.component';
 import { TaskSummaryWidgetComponent } from './task-summary-widget.component';
@@ -56,8 +56,6 @@ export class DashboardComponent {
   private readonly tasksStore = inject(TasksStore);
   private readonly habitsStore = inject(HabitsStore);
   private readonly dialog = inject(MatDialog);
-  private readonly router = inject(Router);
-
   protected readonly todayFormatted = computed(() => {
     return new Date().toLocaleDateString('en-US', {
       weekday: 'long',
@@ -76,7 +74,7 @@ export class DashboardComponent {
   }
 
   protected onLogHabit(habitId: string): void {
-    const today = new Date().toISOString().split('T')[0];
+    const today = todayDateKey();
     this.habitsStore.logHabit(habitId, today, 1);
   }
 

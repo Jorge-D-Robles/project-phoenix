@@ -2,11 +2,8 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, switchMap, map, of, forkJoin } from 'rxjs';
 
-import type {
-  Note,
-  GoogleDriveFile,
-  GoogleDriveFileList,
-} from './models/note.model';
+import type { Note } from './models/note.model';
+import type { GoogleDriveFile, GoogleDriveFileList } from './models/google-drive.model';
 
 const DRIVE_BASE = 'https://www.googleapis.com/drive/v3';
 const UPLOAD_BASE = 'https://www.googleapis.com/upload/drive/v3';
@@ -92,7 +89,7 @@ export class NoteService {
   }
 
   /** List all JSON files in a given folder */
-  private listFilesInFolder(folderId: string): Observable<GoogleDriveFile[]> {
+  private listFilesInFolder(folderId: string): Observable<readonly GoogleDriveFile[]> {
     const query = `'${folderId}' in parents and mimeType='${JSON_MIME}' and trashed=false`;
     const params = new HttpParams()
       .set('q', query)

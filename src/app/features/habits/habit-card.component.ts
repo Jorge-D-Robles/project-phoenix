@@ -59,11 +59,11 @@ import { Habit } from '../../data/models/habit.model';
   `,
 })
 export class HabitCardComponent {
-  habit = input.required<Habit>();
-  streak = input<number>(0);
+  readonly habit = input.required<Habit>();
+  readonly streak = input<number>(0);
 
-  log = output<string>();
-  select = output<string>();
+  readonly log = output<string>();
+  readonly select = output<string>();
 
   protected onLog(event: Event): void {
     event.stopPropagation();

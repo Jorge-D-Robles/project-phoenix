@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, Component, computed, inject, input } from '@angular/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ThemeService } from '../../core/theme.service';
-
-const DAYS = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+import { SHORT_MONTHS, SHORT_DAYS } from '../../shared/date.utils';
 
 /** Light mode level colors (GitHub-style greens) */
 export const LIGHT_COLORS: Record<number, string> = {
@@ -68,25 +66,25 @@ export const DARK_COLORS: Record<number, string> = {
 export class HeatmapCellComponent {
   private readonly themeService = inject(ThemeService);
 
-  level = input.required<number>();
-  date = input<string>('');
-  monthStart = input<boolean>(false);
-  isToday = input<boolean>(false);
-  isFuture = input<boolean>(false);
+  readonly level = input.required<number>();
+  readonly date = input<string>('');
+  readonly monthStart = input<boolean>(false);
+  readonly isToday = input<boolean>(false);
+  readonly isFuture = input<boolean>(false);
 
-  bgColor = computed(() => {
+  readonly bgColor = computed(() => {
     if (this.isFuture()) return 'transparent';
     const lvl = this.level();
     const palette = this.themeService.isDark() ? DARK_COLORS : LIGHT_COLORS;
     return palette[lvl] ?? palette[0];
   });
 
-  tooltip = computed(() => {
+  readonly tooltip = computed(() => {
     const d = this.date();
     if (!d || this.isFuture()) return '';
     const parsed = new Date(d + 'T00:00:00');
-    const day = DAYS[parsed.getDay()];
-    const month = MONTHS[parsed.getMonth()];
+    const day = SHORT_DAYS[parsed.getDay()];
+    const month = SHORT_MONTHS[parsed.getMonth()];
     const dateNum = parsed.getDate();
     const year = parsed.getFullYear();
     const lvl = this.level();

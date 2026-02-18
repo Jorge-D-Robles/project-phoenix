@@ -7,7 +7,7 @@ import {
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient, withInterceptors } from '@angular/common/http';
-import { OAuthService, provideOAuthClient } from 'angular-oauth2-oidc';
+import { provideOAuthClient } from 'angular-oauth2-oidc';
 
 import { routes } from './app.routes';
 import { AUTH_CONFIG } from './core/auth.config';

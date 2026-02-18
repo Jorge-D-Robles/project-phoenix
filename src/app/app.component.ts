@@ -98,7 +98,7 @@ import { KeyboardHelpDialogComponent } from './shared/keyboard-help-dialog.compo
     }
   `,
 })
-export class App {
+export class AppComponent {
   protected readonly themeService = inject(ThemeService);
   protected readonly authService = inject(AuthService);
   private readonly dialog = inject(MatDialog);

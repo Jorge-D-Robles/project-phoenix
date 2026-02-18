@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { DEFAULT_FOCUS_SETTINGS } from '../data/models/focus-session.model';
 import type { FocusSession, FocusSessionType, FocusSettings, TimerStatus } from '../data/models/focus-session.model';
 import { FocusService } from '../data/focus.service';
+import { todayDateKey } from '../shared/date.utils';
 
 interface FocusState {
   readonly sessions: FocusSession[];
@@ -36,11 +37,8 @@ const initialState: FocusState = {
   sessionsCompleted: 0,
 };
 
-/** Generate a UUID v4 */
-const uuid = (): string => crypto.randomUUID();
-
 /** Get today's date string in YYYY-MM-DD format */
-const todayDateString = (): string => new Date().toISOString().slice(0, 10);
+const todayDateString = (): string => todayDateKey();
 
 export const FocusStore = signalStore(
   { providedIn: 'root' },
@@ -172,7 +170,7 @@ export const FocusStore = signalStore(
         const startTime = sessionStart ?? now;
         const plannedDuration = store.settings().workDuration;
         const session: FocusSession = {
-          id: uuid(),
+          id: crypto.randomUUID(),
           taskId: store.linkedTaskId(),
           taskTitle: store.linkedTaskTitle(),
           startTime,
@@ -303,7 +301,7 @@ export const FocusStore = signalStore(
           const actualMinutes = Math.round(elapsed / 60);
 
           const session: FocusSession = {
-            id: uuid(),
+            id: crypto.randomUUID(),
             taskId: store.linkedTaskId(),
             taskTitle: store.linkedTaskTitle(),
             startTime,

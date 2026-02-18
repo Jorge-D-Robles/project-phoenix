@@ -1,4 +1,4 @@
-export const GOOGLE_API_HOST = 'googleapis.com';
+const GOOGLE_API_HOST = 'googleapis.com';
 
 export function isGoogleApiRequest(url: string): boolean {
   try {

@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { NOTE_COLOR_MAP } from '../../data/models/note.model';
+import { getNoteColor } from '../../data/models/note.model';
 import type { Note, NoteColor } from '../../data/models/note.model';
+import { stripHtmlAndTruncate } from '../../shared/sanitize-html.util';
 
 const PREVIEW_MAX_LENGTH = 120;
 
@@ -52,14 +53,10 @@ export class RecentNotesWidgetComponent {
   readonly notes = input.required<Note[]>();
 
   protected getColor(color: NoteColor): string {
-    return NOTE_COLOR_MAP[color] ?? NOTE_COLOR_MAP['DEFAULT'];
+    return getNoteColor(color);
   }
 
   protected getPreview(content: string): string {
-    const text = content.replace(/<[^>]*>/g, '');
-    if (text.length > PREVIEW_MAX_LENGTH) {
-      return text.substring(0, PREVIEW_MAX_LENGTH) + '...';
-    }
-    return text;
+    return stripHtmlAndTruncate(content, PREVIEW_MAX_LENGTH);
   }
 }

@@ -1,11 +1,12 @@
-import { computed, inject, InjectionToken, signal, Signal } from '@angular/core';
+import { computed, inject } from '@angular/core';
 import { signalStore, withState, withComputed } from '@ngrx/signals';
 
 import { TasksStore } from './tasks.store';
 import { CalendarStore } from './calendar.store';
 import { HabitsStore } from './habits.store';
+import { FocusStore } from './focus.store';
+import { toDateKey } from '../shared/date.utils';
 import type { Habit } from '../data/models/habit.model';
-import type { FocusSession } from '../data/models/focus-session.model';
 
 /** Per-day count entry for timeline data */
 export interface DayCount {
@@ -51,11 +52,6 @@ const initialState: InsightsState = {
   dateRangeDays: 28,
 };
 
-/**
- * Optional injection token for focus sessions signal.
- * FocusStore will provide this when it exists; otherwise defaults to empty array.
- */
-export const FOCUS_SESSIONS = new InjectionToken<Signal<FocusSession[]>>('FOCUS_SESSIONS');
 
 /** Generate an array of YYYY-MM-DD strings for the last N days (inclusive of today) */
 function getDateRange(days: number): string[] {
@@ -64,7 +60,7 @@ function getDateRange(days: number): string[] {
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(now);
     d.setUTCDate(d.getUTCDate() - i);
-    dates.push(d.toISOString().split('T')[0]);
+    dates.push(toDateKey(d));
   }
   return dates;
 }
@@ -82,22 +78,16 @@ function getCurrentWeekRange(): { start: string; end: string } {
   sunday.setUTCDate(sunday.getUTCDate() + 6);
 
   return {
-    start: monday.toISOString().split('T')[0],
-    end: sunday.toISOString().split('T')[0],
+    start: toDateKey(monday),
+    end: toDateKey(sunday),
   };
-}
-
-/** Extract YYYY-MM-DD from an ISO datetime string */
-function toDateKey(isoString: string): string {
-  return isoString.substring(0, 10);
 }
 
 export const InsightsStore = signalStore(
   { providedIn: 'root' },
   withState(initialState),
-  withComputed((state, tasksStore = inject(TasksStore), calendarStore = inject(CalendarStore), habitsStore = inject(HabitsStore)) => {
-    // Optionally inject focus sessions — gracefully degrade to empty array
-    const focusSessions: Signal<FocusSession[]> = inject(FOCUS_SESSIONS, { optional: true }) ?? signal<FocusSession[]>([]);
+  withComputed((state, tasksStore = inject(TasksStore), calendarStore = inject(CalendarStore), habitsStore = inject(HabitsStore), focusStore = inject(FocusStore)) => {
+    const focusSessions = focusStore.sessions;
 
     const dateRange = computed(() => getDateRange(state.dateRangeDays()));
 
@@ -113,7 +103,7 @@ export const InsightsStore = signalStore(
 
       for (const task of tasks) {
         if (task.status === 'completed') {
-          const key = toDateKey(task.updatedDateTime);
+          const key = task.updatedDateTime.substring(0, 10);
           if (dateSet.has(key)) {
             countMap.set(key, (countMap.get(key) ?? 0) + 1);
           }
@@ -143,7 +133,7 @@ export const InsightsStore = signalStore(
         for (let i = 0; i < totalDays; i++) {
           const d = new Date();
           d.setUTCDate(d.getUTCDate() - i);
-          const key = d.toISOString().split('T')[0];
+          const key = toDateKey(d);
           if (habitLogs.has(key)) {
             currentStreak++;
           } else {
@@ -196,7 +186,7 @@ export const InsightsStore = signalStore(
       const dateSet = new Set(dates);
 
       for (const event of events) {
-        const key = toDateKey(event.start);
+        const key = event.start.substring(0, 10);
         if (dateSet.has(key)) {
           countMap.set(key, (countMap.get(key) ?? 0) + 1);
 
@@ -229,7 +219,7 @@ export const InsightsStore = signalStore(
 
       for (const session of sessions) {
         if (session.type === 'WORK' && session.completed) {
-          const key = toDateKey(session.startTime);
+          const key = session.startTime.substring(0, 10);
           if (dateSet.has(key)) {
             minutesMap.set(key, (minutesMap.get(key) ?? 0) + session.actualDuration);
           }
@@ -271,7 +261,7 @@ export const InsightsStore = signalStore(
 
       const tasksCompleted = tasks.filter(t => {
         if (t.status !== 'completed') return false;
-        const key = toDateKey(t.updatedDateTime);
+        const key = t.updatedDateTime.substring(0, 10);
         return key >= start && key <= end;
       }).length;
 
@@ -280,13 +270,13 @@ export const InsightsStore = signalStore(
       const focusMinutes = sessions
         .filter(s => {
           if (s.type !== 'WORK' || !s.completed) return false;
-          const key = toDateKey(s.startTime);
+          const key = s.startTime.substring(0, 10);
           return key >= start && key <= end;
         })
         .reduce((sum, s) => sum + s.actualDuration, 0);
 
       const eventsAttended = events.filter(e => {
-        const key = toDateKey(e.start);
+        const key = e.start.substring(0, 10);
         return key >= start && key <= end;
       }).length;
 

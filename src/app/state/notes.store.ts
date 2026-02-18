@@ -71,87 +71,15 @@ export const NotesStore = signalStore(
       return [...labels].sort();
     }),
   })),
-  withMethods((store, noteService = inject(NoteService)) => ({
-    async loadNotes(): Promise<void> {
-      patchState(store, { loading: true, error: null });
-      try {
-        const notes = await firstValueFrom(noteService.listNotes());
-        patchState(store, { notes, loading: false });
-      } catch {
-        patchState(store, { error: 'Failed to load notes', loading: false });
-      }
-    },
-
-    async addNote(note: Omit<Note, 'id'>): Promise<void> {
-      try {
-        const created = await firstValueFrom(noteService.createNote(note));
-        patchState(store, { notes: [...store.notes(), created], error: null });
-      } catch {
-        patchState(store, { error: 'Failed to create note' });
-      }
-    },
-
-    async updateNote(id: string, updates: Partial<Omit<Note, 'id'>>): Promise<void> {
-      const existing = store.notes().find(n => n.id === id);
-      if (!existing) return;
-
-      const merged: Note = { ...existing, ...updates };
-      const { id: _id, ...mergedData } = merged;
-
-      // Optimistic update
-      patchState(store, {
-        notes: store.notes().map(n => n.id === id ? merged : n),
-        error: null,
-      });
-
-      try {
-        await firstValueFrom(noteService.updateNote(id, mergedData));
-      } catch {
-        // Rollback
-        patchState(store, {
-          notes: store.notes().map(n => n.id === id ? existing : n),
-          error: 'Failed to update note',
-        });
-      }
-    },
-
-    async removeNote(id: string): Promise<void> {
-      const previous = store.notes();
-
-      // Optimistic removal
-      patchState(store, {
-        notes: previous.filter(n => n.id !== id),
-        error: null,
-      });
-
-      try {
-        await firstValueFrom(noteService.deleteNote(id));
-      } catch {
-        // Rollback
-        patchState(store, { notes: previous, error: 'Failed to delete note' });
-      }
-    },
-
-    selectNote(id: string | null): void {
-      patchState(store, { selectedNoteId: id });
-    },
-
-    setFilter(label: string | null): void {
-      patchState(store, { filterLabel: label });
-    },
-
-    setSearchQuery(query: string): void {
-      patchState(store, { searchQuery: query });
-    },
-
-    setActiveTab(tab: NoteTab): void {
-      patchState(store, { activeTab: tab });
-    },
-
-    async togglePin(id: string): Promise<void> {
+  withMethods((store, noteService = inject(NoteService)) => {
+    async function optimisticNoteUpdate(
+      id: string,
+      changes: Partial<Note>,
+      errorMsg: string,
+    ): Promise<void> {
       const note = store.notes().find(n => n.id === id);
       if (!note) return;
-      const updated = { ...note, pinned: !(note.pinned ?? false), lastModified: new Date().toISOString() };
+      const updated = { ...note, ...changes, lastModified: new Date().toISOString() };
       patchState(store, {
         notes: store.notes().map(n => n.id === id ? updated : n),
         error: null,
@@ -162,47 +90,95 @@ export const NotesStore = signalStore(
       } catch {
         patchState(store, {
           notes: store.notes().map(n => n.id === id ? note : n),
-          error: 'Failed to pin note',
+          error: errorMsg,
         });
       }
-    },
+    }
 
-    async archiveNote(id: string): Promise<void> {
-      const note = store.notes().find(n => n.id === id);
-      if (!note) return;
-      const updated = { ...note, archived: true, lastModified: new Date().toISOString() };
-      patchState(store, {
-        notes: store.notes().map(n => n.id === id ? updated : n),
-        error: null,
-      });
-      const { id: _id, ...data } = updated;
-      try {
-        await firstValueFrom(noteService.updateNote(id, data));
-      } catch {
-        patchState(store, {
-          notes: store.notes().map(n => n.id === id ? note : n),
-          error: 'Failed to archive note',
-        });
-      }
-    },
+    return {
+      async loadNotes(): Promise<void> {
+        patchState(store, { loading: true, error: null });
+        try {
+          const notes = await firstValueFrom(noteService.listNotes());
+          patchState(store, { notes, loading: false });
+        } catch {
+          patchState(store, { error: 'Failed to load notes', loading: false });
+        }
+      },
 
-    async unarchiveNote(id: string): Promise<void> {
-      const note = store.notes().find(n => n.id === id);
-      if (!note) return;
-      const updated = { ...note, archived: false, lastModified: new Date().toISOString() };
-      patchState(store, {
-        notes: store.notes().map(n => n.id === id ? updated : n),
-        error: null,
-      });
-      const { id: _id, ...data } = updated;
-      try {
-        await firstValueFrom(noteService.updateNote(id, data));
-      } catch {
+      async addNote(note: Omit<Note, 'id'>): Promise<void> {
+        try {
+          const created = await firstValueFrom(noteService.createNote(note));
+          patchState(store, { notes: [...store.notes(), created], error: null });
+        } catch {
+          patchState(store, { error: 'Failed to create note' });
+        }
+      },
+
+      async updateNote(id: string, updates: Partial<Omit<Note, 'id'>>): Promise<void> {
+        const existing = store.notes().find(n => n.id === id);
+        if (!existing) return;
+
+        const merged: Note = { ...existing, ...updates };
+        const { id: _id, ...mergedData } = merged;
+
         patchState(store, {
-          notes: store.notes().map(n => n.id === id ? note : n),
-          error: 'Failed to unarchive note',
+          notes: store.notes().map(n => n.id === id ? merged : n),
+          error: null,
         });
-      }
-    },
-  })),
+
+        try {
+          await firstValueFrom(noteService.updateNote(id, mergedData));
+        } catch {
+          patchState(store, {
+            notes: store.notes().map(n => n.id === id ? existing : n),
+            error: 'Failed to update note',
+          });
+        }
+      },
+
+      async removeNote(id: string): Promise<void> {
+        const previous = store.notes();
+        patchState(store, {
+          notes: previous.filter(n => n.id !== id),
+          error: null,
+        });
+        try {
+          await firstValueFrom(noteService.deleteNote(id));
+        } catch {
+          patchState(store, { notes: previous, error: 'Failed to delete note' });
+        }
+      },
+
+      selectNote(id: string | null): void {
+        patchState(store, { selectedNoteId: id });
+      },
+
+      setFilter(label: string | null): void {
+        patchState(store, { filterLabel: label });
+      },
+
+      setSearchQuery(query: string): void {
+        patchState(store, { searchQuery: query });
+      },
+
+      setActiveTab(tab: NoteTab): void {
+        patchState(store, { activeTab: tab });
+      },
+
+      async togglePin(id: string): Promise<void> {
+        const note = store.notes().find(n => n.id === id);
+        if (!note) return;
+        await optimisticNoteUpdate(id, { pinned: !(note.pinned ?? false) }, 'Failed to pin note');
+      },
+
+      async archiveNote(id: string): Promise<void> {
+        await optimisticNoteUpdate(id, { archived: true }, 'Failed to archive note');
+      },
+
+      async unarchiveNote(id: string): Promise<void> {
+        await optimisticNoteUpdate(id, { archived: false }, 'Failed to unarchive note');
+      },
+    };
+  }),
 );

@@ -9,20 +9,16 @@ import {
   GoogleCalendarEventsResponse,
   getEventColor,
 } from './models/calendar-event.model';
+import { sanitizeHtml } from '../shared/sanitize-html.util';
 
 const BASE_URL = 'https://www.googleapis.com/calendar/v3';
 const CALENDAR_ID = 'primary';
 const DAYS_BACK = 30;
 const DAYS_FORWARD = 90;
 
-/** Allowed HTML tags for event description sanitization */
-const ALLOWED_TAGS = new Set([
-  'b', 'i', 'u', 'em', 'strong', 'a', 'br', 'p', 'ul', 'ol', 'li', 'span',
-]);
-
 export interface CalendarSyncResult {
-  events: CalendarEvent[];
-  syncToken: string | null;
+  readonly events: CalendarEvent[];
+  readonly syncToken: string | null;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -98,15 +94,6 @@ export class CalendarService {
   }
 }
 
-/** Strip disallowed HTML tags while preserving allowed ones and their attributes */
-export function sanitizeHtml(html: string): string {
-  return html.replace(/<\/?([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>/g, (match, tag: string) => {
-    if (ALLOWED_TAGS.has(tag.toLowerCase())) {
-      return match;
-    }
-    return '';
-  });
-}
 
 function toEventStatus(status: string): EventStatus {
   if (status === 'confirmed' || status === 'tentative' || status === 'cancelled') {

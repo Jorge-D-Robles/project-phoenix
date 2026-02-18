@@ -1,7 +1,7 @@
 /** A mapped Google Calendar event color */
 export interface EventColor {
-  name: string;
-  hex: string;
+  readonly name: string;
+  readonly hex: string;
 }
 
 /** Google Calendar event colorId → Phoenix color mapping */

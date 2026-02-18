@@ -5,13 +5,7 @@ import {
 import { HeatmapCellComponent, LIGHT_COLORS, DARK_COLORS } from './heatmap-cell.component';
 import { HabitLog, getLevel } from '../../data/models/habit.model';
 import { ThemeService } from '../../core/theme.service';
-
-function formatDate(d: Date): string {
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${day}`;
-}
+import { toDateKey, SHORT_MONTHS } from '../../shared/date.utils';
 
 /** Number of weeks to display in the heatmap */
 const WEEKS = 52;
@@ -20,9 +14,7 @@ const DAYS_PER_WEEK = 7;
 /** Total cells in the heatmap grid */
 const TOTAL_CELLS = WEEKS * DAYS_PER_WEEK;
 
-const SHORT_MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-export interface HeatmapCell {
+interface HeatmapCell {
   readonly date: string;
   readonly level: number;
   readonly weekIndex: number;
@@ -31,7 +23,7 @@ export interface HeatmapCell {
   readonly isFuture: boolean;
 }
 
-export interface MonthLabel {
+interface MonthLabel {
   readonly name: string;
   readonly column: number;
 }
@@ -163,7 +155,7 @@ export class HeatmapComponent {
   private readonly themeService = inject(ThemeService);
   private readonly gridArea = viewChild<ElementRef<HTMLElement>>('gridArea');
 
-  logs = input.required<HabitLog[]>();
+  readonly logs = input.required<HabitLog[]>();
 
   readonly dayLabels = ['', 'Mon', '', 'Wed', '', 'Fri', ''];
 
@@ -177,12 +169,12 @@ export class HeatmapComponent {
     });
   }
 
-  legendColors = computed(() => {
+  readonly legendColors = computed(() => {
     const palette = this.themeService.isDark() ? DARK_COLORS : LIGHT_COLORS;
     return [0, 1, 2, 3, 4].map(lvl => palette[lvl]);
   });
 
-  cells = computed<HeatmapCell[]>(() => {
+  readonly cells = computed<HeatmapCell[]>(() => {
     const logEntries = this.logs();
 
     // Build a map of date -> value for quick lookup
@@ -199,7 +191,7 @@ export class HeatmapComponent {
 
     // Align grid to week boundaries: start on a Sunday, end on today
     const today = new Date();
-    const todayStr = formatDate(today);
+    const todayStr = toDateKey(today);
 
     // Go back 51 weeks from the Sunday of the current week
     const currentSunday = new Date(today);
@@ -224,7 +216,7 @@ export class HeatmapComponent {
     for (let i = 0; i < TOTAL_CELLS; i++) {
       const cellDate = new Date(startDate);
       cellDate.setDate(startDate.getDate() + i);
-      const dateStr = formatDate(cellDate);
+      const dateStr = toDateKey(cellDate);
       const isFuture = dateStr > todayStr;
       const value = isFuture ? 0 : (logMap.get(dateStr) ?? 0);
       const weekIndex = Math.floor(i / DAYS_PER_WEEK);
@@ -241,7 +233,7 @@ export class HeatmapComponent {
     return cells;
   });
 
-  monthLabels = computed<MonthLabel[]>(() => {
+  readonly monthLabels = computed<MonthLabel[]>(() => {
     const today = new Date();
     const currentSunday = new Date(today);
     currentSunday.setDate(today.getDate() - today.getDay());

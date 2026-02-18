@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 export interface ChartDataPoint {
-  label: string;
-  value: number;
+  readonly label: string;
+  readonly value: number;
 }
 
 @Component({
@@ -38,10 +38,10 @@ export interface ChartDataPoint {
   `,
 })
 export class TrendChartComponent {
-  data = input.required<ChartDataPoint[]>();
-  maxValue = input.required<number>();
-  title = input.required<string>();
-  color = input.required<string>();
+  readonly data = input.required<ChartDataPoint[]>();
+  readonly maxValue = input.required<number>();
+  readonly title = input.required<string>();
+  readonly color = input.required<string>();
 
   getBarHeight(value: number): number {
     const max = this.maxValue();

@@ -11,6 +11,7 @@ import { HabitsStore } from '../../state/habits.store';
 import { HabitCardComponent } from './habit-card.component';
 import { HeatmapComponent } from './heatmap.component';
 import { HabitFrequency } from '../../data/models/habit.model';
+import { todayDateKey } from '../../shared/date.utils';
 
 @Component({
   selector: 'app-habits',
@@ -140,8 +141,7 @@ export class HabitsComponent implements OnInit {
   }
 
   protected onLogToday(habitId: string): void {
-    const now = new Date();
-    const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const today = todayDateKey();
     this.store.logHabit(habitId, today, 1);
   }
 

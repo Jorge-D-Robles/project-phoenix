@@ -5,6 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CalendarEvent } from '../data/models/calendar-event.model';
 import { CalendarService } from '../data/calendar.service';
+import { todayDateKey } from '../shared/date.utils';
 
 export type CalendarViewMode = 'dayGridMonth' | 'timeGridWeek' | 'timeGrid3Day' | 'timeGridDay';
 
@@ -24,7 +25,7 @@ const initialState: CalendarState = {
   loading: false,
   error: null,
   syncToken: null,
-  selectedDate: new Date().toISOString().split('T')[0],
+  selectedDate: todayDateKey(),
   viewMode: 'timeGridWeek',
   visibleRangeStart: null,
   visibleRangeEnd: null,

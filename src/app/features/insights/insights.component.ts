@@ -7,6 +7,7 @@ import { TrendChartComponent } from './trend-chart.component';
 import type { ChartDataPoint } from './trend-chart.component';
 import { HabitStreaksWidgetComponent } from './habit-streaks-widget.component';
 import { WeeklySummaryCardComponent } from './weekly-summary-card.component';
+import { SHORT_DAYS } from '../../shared/date.utils';
 
 @Component({
   selector: 'app-insights',
@@ -84,7 +85,7 @@ export class InsightsComponent {
     'Weighted score over 28 days: Tasks completed (40%) + Habit consistency (35%) + Focus time (25%)';
 
   /** Convert task completion data to chart format (last 7 days for readability) */
-  taskChartData = computed<ChartDataPoint[]>(() => {
+  readonly taskChartData = computed<ChartDataPoint[]>(() => {
     const data = this.store.taskCompletionByDay();
     return data.slice(-7).map(d => ({
       label: formatDateLabel(d.date),
@@ -92,12 +93,12 @@ export class InsightsComponent {
     }));
   });
 
-  taskChartMax = computed<number>(() => {
+  readonly taskChartMax = computed<number>(() => {
     const data = this.store.taskCompletionByDay().slice(-7);
     return Math.max(1, ...data.map(d => d.count));
   });
 
-  eventChartData = computed<ChartDataPoint[]>(() => {
+  readonly eventChartData = computed<ChartDataPoint[]>(() => {
     const data = this.store.eventsByDay();
     return data.slice(-7).map(d => ({
       label: formatDateLabel(d.date),
@@ -105,12 +106,12 @@ export class InsightsComponent {
     }));
   });
 
-  eventChartMax = computed<number>(() => {
+  readonly eventChartMax = computed<number>(() => {
     const data = this.store.eventsByDay().slice(-7);
     return Math.max(1, ...data.map(d => d.count));
   });
 
-  focusChartData = computed<ChartDataPoint[]>(() => {
+  readonly focusChartData = computed<ChartDataPoint[]>(() => {
     const data = this.store.focusByDay();
     return data.slice(-7).map(d => ({
       label: formatDateLabel(d.date),
@@ -118,7 +119,7 @@ export class InsightsComponent {
     }));
   });
 
-  focusChartMax = computed<number>(() => {
+  readonly focusChartMax = computed<number>(() => {
     const data = this.store.focusByDay().slice(-7);
     return Math.max(1, ...data.map(d => d.minutes));
   });
@@ -126,7 +127,6 @@ export class InsightsComponent {
 
 /** Format YYYY-MM-DD to short day name (Mon, Tue, etc.) */
 function formatDateLabel(dateStr: string): string {
-  const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   const date = new Date(dateStr + 'T12:00:00Z');
-  return days[date.getUTCDay()];
+  return SHORT_DAYS[date.getUTCDay()];
 }

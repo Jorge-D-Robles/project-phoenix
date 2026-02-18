@@ -5,6 +5,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatIconButton } from '@angular/material/button';
 import { Task } from '../../data/models/task.model';
+import { todayDateKey } from '../../shared/date.utils';
 
 @Component({
   selector: 'app-task-card',
@@ -121,7 +122,7 @@ export class TaskCardComponent {
   protected readonly dueStatus = computed((): 'overdue' | 'today' | 'upcoming' | null => {
     const due = this.task().dueDateTime;
     if (!due) return null;
-    const today = new Date().toISOString().split('T')[0];
+    const today = todayDateKey();
     const dueDate = due.substring(0, 10);
     if (dueDate < today) return 'overdue';
     if (dueDate === today) return 'today';

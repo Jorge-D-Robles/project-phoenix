@@ -41,18 +41,18 @@ import { MatTooltipModule } from '@angular/material/tooltip';
   `,
 })
 export class ScoreCardComponent {
-  score = input.required<number>();
-  label = input.required<string>();
-  tooltip = input<string>('');
+  readonly score = input.required<number>();
+  readonly label = input.required<string>();
+  readonly tooltip = input<string>('');
 
-  scoreColorClass = computed(() => {
+  readonly scoreColorClass = computed(() => {
     const s = this.score();
     if (s >= 70) return 'text-green-600 dark:text-green-400';
     if (s >= 40) return 'text-yellow-600 dark:text-yellow-400';
     return 'text-red-600 dark:text-red-400';
   });
 
-  progressColor = computed<'primary' | 'accent' | 'warn'>(() => {
+  readonly progressColor = computed<'primary' | 'accent' | 'warn'>(() => {
     const s = this.score();
     if (s >= 70) return 'primary';
     if (s >= 40) return 'accent';

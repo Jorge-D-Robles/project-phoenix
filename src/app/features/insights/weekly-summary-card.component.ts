@@ -5,10 +5,10 @@ import { MatIconModule } from '@angular/material/icon';
 import type { WeekSummary } from '../../state/insights.store';
 
 interface StatItem {
-  icon: string;
-  label: string;
-  value: number;
-  suffix: string;
+  readonly icon: string;
+  readonly label: string;
+  readonly value: number;
+  readonly suffix: string;
 }
 
 @Component({
@@ -39,9 +39,9 @@ interface StatItem {
   `,
 })
 export class WeeklySummaryCardComponent {
-  summary = input.required<WeekSummary>();
+  readonly summary = input.required<WeekSummary>();
 
-  stats = computed<StatItem[]>(() => {
+  readonly stats = computed<StatItem[]>(() => {
     const s = this.summary();
     return [
       { icon: 'task_alt', label: 'Tasks Done', value: s.tasksCompleted, suffix: '' },

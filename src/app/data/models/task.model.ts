@@ -8,22 +8,22 @@ export interface TaskMeta {
 
 /** Parsed result from TaskParser — separates user notes from Phoenix metadata */
 export interface ParsedTaskNotes {
-  userNotes: string;
-  meta: TaskMeta | null;
+  readonly userNotes: string;
+  readonly meta: TaskMeta | null;
 }
 
 /** Core Task entity — aggregates Google Tasks API fields with Phoenix metadata */
 export interface Task {
-  id: string;
-  localId: string;
-  title: string;
-  status: TaskStatus;
-  dueDateTime: string | null;
-  notes: string | null;
-  meta: TaskMeta | null;
-  parent: string | null;
-  position: string;
-  updatedDateTime: string;
+  readonly id: string;
+  readonly localId: string;
+  readonly title: string;
+  readonly status: TaskStatus;
+  readonly dueDateTime: string | null;
+  readonly notes: string | null;
+  readonly meta: TaskMeta | null;
+  readonly parent: string | null;
+  readonly position: string;
+  readonly updatedDateTime: string;
 }
 
 export type TaskStatus = 'needsAction' | 'completed';
@@ -32,31 +32,31 @@ export type TaskFilter = 'ALL' | 'needsAction' | 'completed';
 
 /** Google Tasks API task list resource */
 export interface TaskList {
-  id: string;
-  title: string;
-  updatedDateTime: string;
+  readonly id: string;
+  readonly title: string;
+  readonly updatedDateTime: string;
 }
 
 /** Shape of a task creation request (fields the user provides) */
 export interface CreateTaskRequest {
-  title: string;
-  localId?: string;
-  notes?: string;
-  dueDateTime?: string;
-  parent?: string;
+  readonly title: string;
+  readonly localId?: string;
+  readonly notes?: string;
+  readonly dueDateTime?: string;
+  readonly parent?: string;
 }
 
 /** Shape of a task update request (partial fields) */
 export interface UpdateTaskRequest {
-  title?: string;
-  notes?: string;
-  status?: TaskStatus;
-  dueDateTime?: string | null;
-  meta?: TaskMeta | null;
+  readonly title?: string;
+  readonly notes?: string;
+  readonly status?: TaskStatus;
+  readonly dueDateTime?: string | null;
+  readonly meta?: TaskMeta | null;
 }
 
 /** Parameters for the move operation */
 export interface MoveTaskRequest {
-  parent?: string;
-  previous?: string;
+  readonly parent?: string;
+  readonly previous?: string;
 }

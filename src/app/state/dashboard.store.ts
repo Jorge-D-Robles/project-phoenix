@@ -6,6 +6,7 @@ import { CalendarStore } from './calendar.store';
 import { HabitsStore } from './habits.store';
 import { NotesStore } from './notes.store';
 import { AuthService } from '../core/auth.service';
+import { todayDateKey } from '../shared/date.utils';
 import type { Task } from '../data/models/task.model';
 import type { CalendarEvent } from '../data/models/calendar-event.model';
 import type { Habit } from '../data/models/habit.model';
@@ -32,7 +33,7 @@ const initialState: DashboardState = {
 };
 
 function getTodayString(): string {
-  return new Date().toISOString().split('T')[0];
+  return todayDateKey();
 }
 
 function getGreetingPrefix(): string {
