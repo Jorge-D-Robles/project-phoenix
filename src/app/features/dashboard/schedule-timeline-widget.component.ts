@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { DatePipe } from '@angular/common';
+import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import type { CalendarEvent } from '../../data/models/calendar-event.model';
@@ -8,7 +9,7 @@ import type { CalendarEvent } from '../../data/models/calendar-event.model';
   selector: 'app-schedule-timeline-widget',
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DatePipe, MatCardModule, MatIconModule],
+  imports: [DatePipe, MatButtonModule, MatCardModule, MatIconModule],
   template: `
     <mat-card data-testid="schedule-card" class="h-full">
       <mat-card-header>
@@ -48,6 +49,16 @@ import type { CalendarEvent } from '../../data/models/calendar-event.model';
                     </span>
                   }
                 </div>
+                @if (event.meetLink) {
+                  <a data-testid="join-btn"
+                     class="shrink-0 text-xs font-medium text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-0.5"
+                     [href]="event.meetLink"
+                     target="_blank"
+                     rel="noopener noreferrer">
+                    <mat-icon class="!text-sm !w-4 !h-4">videocam</mat-icon>
+                    Join
+                  </a>
+                }
               </div>
             }
           </div>

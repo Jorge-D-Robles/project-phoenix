@@ -11,6 +11,7 @@ const MOCK_EVENTS: CalendarEvent[] = [
     allDay: false, colorId: '1', color: { name: 'Lavender', hex: '#7986CB' },
     location: 'Room A', htmlLink: null, status: 'confirmed',
     updatedDateTime: '2026-02-16T00:00:00Z',
+    meetLink: null,
   },
   {
     id: 'e2', summary: 'All day event', description: null,
@@ -18,6 +19,7 @@ const MOCK_EVENTS: CalendarEvent[] = [
     allDay: true, colorId: null, color: { name: 'Default', hex: '#4285F4' },
     location: null, htmlLink: null, status: 'confirmed',
     updatedDateTime: '2026-02-16T00:00:00Z',
+    meetLink: null,
   },
 ];
 
@@ -73,6 +75,35 @@ describe('ScheduleTimelineWidgetComponent', () => {
       const empty = fixture.debugElement.query(By.css('[data-testid="empty-state"]'));
       expect(empty).toBeTruthy();
       expect(empty.nativeElement.textContent).toContain('No events today');
+    });
+
+    it('should show join button when event has meetLink', async () => {
+      const eventsWithMeet: CalendarEvent[] = [{
+        id: '1', summary: 'Standup', description: null,
+        start: '2026-02-18T10:00:00Z', end: '2026-02-18T10:30:00Z',
+        allDay: false, colorId: null, color: { name: 'Default', hex: '#4285F4' },
+        location: null, htmlLink: null, status: 'confirmed',
+        updatedDateTime: '2026-02-18T10:00:00Z',
+        meetLink: 'https://meet.google.com/abc',
+      }];
+      const fixture = await setup(eventsWithMeet);
+      const joinBtn = fixture.debugElement.query(By.css('[data-testid="join-btn"]'));
+      expect(joinBtn).toBeTruthy();
+      expect(joinBtn.nativeElement.getAttribute('href')).toBe('https://meet.google.com/abc');
+    });
+
+    it('should not show join button when event has no meetLink', async () => {
+      const eventsWithoutMeet: CalendarEvent[] = [{
+        id: '1', summary: 'Lunch', description: null,
+        start: '2026-02-18T12:00:00Z', end: '2026-02-18T13:00:00Z',
+        allDay: false, colorId: null, color: { name: 'Default', hex: '#4285F4' },
+        location: null, htmlLink: null, status: 'confirmed',
+        updatedDateTime: '2026-02-18T10:00:00Z',
+        meetLink: null,
+      }];
+      const fixture = await setup(eventsWithoutMeet);
+      const joinBtn = fixture.debugElement.query(By.css('[data-testid="join-btn"]'));
+      expect(joinBtn).toBeFalsy();
     });
   });
 });

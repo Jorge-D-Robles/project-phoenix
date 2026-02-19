@@ -55,6 +55,7 @@ function makeEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
     htmlLink: null,
     status: 'confirmed',
     updatedDateTime: new Date().toISOString(),
+    meetLink: null,
     ...overrides,
   };
 }

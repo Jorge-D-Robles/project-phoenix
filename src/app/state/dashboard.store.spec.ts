@@ -62,21 +62,21 @@ const MOCK_EVENTS: CalendarEvent[] = [
     start: `${TODAY}T09:00:00Z`, end: `${TODAY}T10:00:00Z`,
     allDay: false, colorId: '1', color: { name: 'Lavender', hex: '#7986CB' },
     location: 'Room A', htmlLink: null, status: 'confirmed',
-    updatedDateTime: '2026-02-16T00:00:00Z',
+    updatedDateTime: '2026-02-16T00:00:00Z', meetLink: null,
   },
   {
     id: 'e2', summary: 'Lunch', description: null,
     start: `${TODAY}T12:00:00Z`, end: `${TODAY}T13:00:00Z`,
     allDay: false, colorId: null, color: { name: 'Default', hex: '#4285F4' },
     location: null, htmlLink: null, status: 'confirmed',
-    updatedDateTime: '2026-02-16T00:00:00Z',
+    updatedDateTime: '2026-02-16T00:00:00Z', meetLink: null,
   },
   {
     id: 'e3', summary: 'Yesterday event', description: null,
     start: `${YESTERDAY}T09:00:00Z`, end: `${YESTERDAY}T10:00:00Z`,
     allDay: false, colorId: null, color: { name: 'Default', hex: '#4285F4' },
     location: null, htmlLink: null, status: 'confirmed',
-    updatedDateTime: '2026-02-16T00:00:00Z',
+    updatedDateTime: '2026-02-16T00:00:00Z', meetLink: null,
   },
 ];
 

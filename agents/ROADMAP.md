@@ -306,6 +306,51 @@ Enhance existing web features with richer functionality and better UX.
 
 ---
 
+## Phase 10: New Feature Suite
+
+Expand the web platform with 5 new productivity features.
+
+### Deliverables
+
+- [ ] Gmail Inbox Widget — read-only Gmail integration on dashboard
+- [ ] Daily Journal — quick daily journal backed by Notes system
+- [ ] Weekly Review Flow — guided multi-step review with Material Stepper
+- [ ] Google Meet Links — extract and display Meet links from calendar events
+- [ ] Time Blocking / Planner — create calendar events from tasks with planner UI
+
+### Tickets
+
+- [ ] PHX-051: Add Gmail scope to auth config
+- [ ] PHX-052: Create Gmail domain model
+- [ ] PHX-053: Build GmailService for Gmail API
+- [ ] PHX-054: Implement GmailStore (SignalStore)
+- [ ] PHX-055: Build GmailWidgetComponent for dashboard
+- [ ] PHX-056: Implement JournalStore wrapping NotesStore
+- [ ] PHX-057: Build JournalComponent page and JournalWidgetComponent
+- [ ] PHX-058: Build WeeklyReviewComponent with stepper and 5 step components
+- [ ] PHX-059: Extend CalendarEvent model with meetLink field
+- [ ] PHX-060: Update CalendarService to extract conference/meet data
+- [ ] PHX-061: Add Join button to ScheduleTimelineWidget and EventDetailDialog
+- [ ] PHX-062: Create TimeBlock domain model
+- [ ] PHX-063: Add calendar write methods to CalendarService
+- [ ] PHX-064: Implement PlannerStore (SignalStore)
+- [ ] PHX-065: Build PlannerComponent and TimeBlockColumnComponent
+- [ ] PHX-066: Add new routes (/journal, /review, /planner) and nav links
+- [ ] PHX-067: Integrate Gmail and Journal widgets into Dashboard
+
+### Acceptance Criteria
+
+- [ ] Gmail widget shows top 5 unread messages with snippets
+- [ ] Journal auto-creates today's entry and saves on blur
+- [ ] Weekly review stepper walks through 5 review steps
+- [ ] Meet links shown as "Join" buttons on calendar events
+- [ ] Planner creates Google Calendar events from tasks
+- [ ] All new routes accessible from sidebar navigation
+- [ ] All tests pass
+- [ ] Build succeeds
+
+---
+
 ## Phase 9: Android Transposition — DEFERRED
 
 > **Status**: On hold. Focus is exclusively on the web platform for now. Android development will resume at a later date.
@@ -348,7 +393,8 @@ Phase 1 (Scaffold + Auth) ✅
                         └─→ Phase 7 (Focus Timer) ✅
                             └─→ Phase 8 (Weekly Review) ✅
                                 └─→ Phase 8.5 (Web Feature Polish) ✅
-                                    └─→ Phase 9 (Android) ⏸ DEFERRED
+                                    └─→ Phase 10 (New Feature Suite) 🚧
+                                        └─→ Phase 9 (Android) ⏸ DEFERRED
 ```
 
 Focus is on continued web platform development. Android is deferred indefinitely.
@@ -357,10 +403,10 @@ Focus is on continued web platform development. Android is deferred indefinitely
 
 ## Project Health
 
-- **Completion**: 100% of web platform
-- **Active Phase**: Web-only development. All 8.5 web phases complete. Next work: continued web improvements, bug fixes, and new web features.
+- **Completion**: 100% of core web platform. Phase 10 (New Feature Suite) in progress.
+- **Active Phase**: Phase 10 — Gmail Widget, Daily Journal, Weekly Review, Meet Links, Time Blocking
 - **Active Platform**: Web (Angular 21) — sole focus
 - **Deferred**: Android (Phase 9) — on hold until further notice
-- **Primary Risks**: Initial bundle size (910 kB with FullCalendar, exceeds 600 kB budget), Google API quota limits
-- **Last Audit**: 2026-02-17
-- **Status**: 🟢 GREEN. All web phases complete. 629 tests passing. Web platform is the sole development focus going forward.
+- **Primary Risks**: Initial bundle size (910 kB with FullCalendar, exceeds 600 kB budget), Google API quota limits, Gmail API quota
+- **Last Audit**: 2026-02-18
+- **Status**: 🟡 YELLOW. Phase 10 in active development. 5 new features being implemented in parallel.

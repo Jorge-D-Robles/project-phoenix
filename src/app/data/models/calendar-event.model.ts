@@ -31,6 +31,15 @@ export function getEventColor(colorId: string | null | undefined): EventColor {
   return EVENT_COLOR_MAP[colorId] ?? DEFAULT_EVENT_COLOR;
 }
 
+/** Extract a Google Meet / video conference link from raw event data */
+export function extractMeetLink(raw: GoogleCalendarEvent): string | null {
+  const videoEntry = raw.conferenceData?.entryPoints?.find(
+    ep => ep.entryPointType === 'video',
+  );
+  if (videoEntry?.uri) return videoEntry.uri;
+  return raw.hangoutLink ?? null;
+}
+
 export type EventStatus = 'confirmed' | 'tentative' | 'cancelled';
 
 /** Readonly Phoenix representation of a Google Calendar event */
@@ -47,6 +56,7 @@ export interface CalendarEvent {
   readonly htmlLink: string | null;
   readonly status: EventStatus;
   readonly updatedDateTime: string;
+  readonly meetLink: string | null;
 }
 
 /** Google Calendar API event resource (raw shape) */
@@ -59,6 +69,13 @@ export interface GoogleCalendarEvent {
   readonly colorId?: string;
   readonly location?: string;
   readonly htmlLink?: string;
+  readonly hangoutLink?: string;
+  readonly conferenceData?: {
+    readonly entryPoints?: readonly {
+      readonly entryPointType: string;
+      readonly uri: string;
+    }[];
+  };
   readonly status: string;
   readonly updated: string;
 }

@@ -21,6 +21,7 @@ function makeEvent(overrides: Partial<CalendarEvent> = {}): CalendarEvent {
     htmlLink: null,
     status: 'confirmed',
     updatedDateTime: '2026-02-15T12:00:00Z',
+    meetLink: null,
     ...overrides,
   };
 }

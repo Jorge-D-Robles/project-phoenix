@@ -110,7 +110,10 @@ export class AppComponent {
     { path: '/calendar', label: 'Calendar', icon: 'calendar_month' },
     { path: '/habits', label: 'Habits', icon: 'local_fire_department' },
     { path: '/notes', label: 'Notes', icon: 'note' },
+    { path: '/journal', label: 'Journal', icon: 'auto_stories' },
     { path: '/insights', label: 'Insights', icon: 'insights' },
+    { path: '/review', label: 'Review', icon: 'rate_review' },
+    { path: '/planner', label: 'Planner', icon: 'view_timeline' },
   ];
 
   private pendingGoto = false;
@@ -151,7 +154,10 @@ export class AppComponent {
         c: '/calendar',
         h: '/habits',
         n: '/notes',
+        j: '/journal',
         i: '/insights',
+        r: '/review',
+        p: '/planner',
       };
 
       const route = gotoMap[event.key];

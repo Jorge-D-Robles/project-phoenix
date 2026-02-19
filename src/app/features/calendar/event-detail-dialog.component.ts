@@ -47,6 +47,20 @@ import { CalendarEvent } from '../../data/models/calendar-event.model';
         }
       </div>
 
+      @if (event.meetLink) {
+        <div class="flex justify-start px-4 pb-2">
+          <a mat-flat-button
+             data-testid="join-meeting-btn"
+             [href]="event.meetLink"
+             target="_blank"
+             rel="noopener noreferrer"
+             class="!bg-blue-600 !text-white">
+            <mat-icon>videocam</mat-icon>
+            Join Meeting
+          </a>
+        </div>
+      }
+
       @if (event.htmlLink) {
         <div class="flex justify-end p-4 pt-0">
           <a mat-stroked-button

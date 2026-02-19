@@ -10,6 +10,8 @@ import { TaskSummaryWidgetComponent } from './task-summary-widget.component';
 import { ScheduleTimelineWidgetComponent } from './schedule-timeline-widget.component';
 import { HabitStatusWidgetComponent } from './habit-status-widget.component';
 import { RecentNotesWidgetComponent } from './recent-notes-widget.component';
+import { GmailWidgetComponent } from './gmail-widget.component';
+import { JournalWidgetComponent } from './journal-widget.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +23,8 @@ import { RecentNotesWidgetComponent } from './recent-notes-widget.component';
     ScheduleTimelineWidgetComponent,
     HabitStatusWidgetComponent,
     RecentNotesWidgetComponent,
+    GmailWidgetComponent,
+    JournalWidgetComponent,
   ],
   template: `
     <div class="p-6 max-w-6xl mx-auto flex flex-col gap-6">
@@ -47,6 +51,8 @@ import { RecentNotesWidgetComponent } from './recent-notes-widget.component';
         <app-recent-notes-widget
           [notes]="dashboardStore.recentNotes()"
         />
+        <app-gmail-widget />
+        <app-journal-widget />
       </div>
     </div>
   `,

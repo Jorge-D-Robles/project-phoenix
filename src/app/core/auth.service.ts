@@ -43,7 +43,7 @@ export const AuthService = signalStore(
         issuer: 'https://accounts.google.com',
         clientId: config.googleClientId,
         redirectUri: window.location.origin,
-        scope: [GOOGLE_SCOPES.baseline, GOOGLE_SCOPES.tasks, GOOGLE_SCOPES.calendar, GOOGLE_SCOPES.drive].join(' '),
+        scope: [GOOGLE_SCOPES.baseline, GOOGLE_SCOPES.tasks, GOOGLE_SCOPES.calendar, GOOGLE_SCOPES.drive, GOOGLE_SCOPES.gmail].join(' '),
         responseType: 'code',
         showDebugInformation: true,
         strictDiscoveryDocumentValidation: false,

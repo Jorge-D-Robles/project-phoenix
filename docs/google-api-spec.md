@@ -113,6 +113,71 @@ This is critical for drag-and-drop reordering.
 
 ---
 
+## Gmail API
+
+### Key Endpoints
+
+| Operation | Method | Endpoint | Notes |
+|-----------|--------|----------|-------|
+| List messages | GET | `/gmail/v1/users/me/messages` | `q=is:unread in:inbox`, `maxResults=10` |
+| Get message | GET | `/gmail/v1/users/me/messages/{id}` | `format=metadata`, `metadataHeaders=From,Subject,Date`; includes `snippet` |
+| Get profile | GET | `/gmail/v1/users/me/profile` | Returns `messagesTotal`, `threadsTotal` |
+
+### Scope
+
+- `gmail.readonly` — read-only access to messages, labels, threads
+- Provides message snippets (unlike `gmail.metadata`)
+
+### Usage Notes
+
+- Batch message ID list + individual metadata fetches (no batch API needed for ≤10 messages)
+- Parse `From`, `Subject`, `Date` from `payload.headers[]`
+- `snippet` is a plain-text excerpt returned on the message resource
+- Phoenix uses Gmail in read-only mode — no sending, composing, or modifying
+
+---
+
+## Calendar Write Operations
+
+### Key Endpoints
+
+| Operation | Method | Endpoint | Notes |
+|-----------|--------|----------|-------|
+| Create event | POST | `/calendar/v3/calendars/primary/events` | Returns created event with ID |
+| Update event | PATCH | `/calendar/v3/calendars/primary/events/{eventId}` | Partial update |
+| Delete event | DELETE | `/calendar/v3/calendars/primary/events/{eventId}` | Permanent delete |
+
+### Create Event Body
+
+```json
+{
+  "summary": "Task: Fix login bug",
+  "start": { "dateTime": "2026-02-18T09:00:00Z" },
+  "end": { "dateTime": "2026-02-18T10:00:00Z" },
+  "colorId": "7",
+  "description": "Time block for Phoenix task"
+}
+```
+
+### Conference Data (Meet Links)
+
+Calendar events may include conference/meet data:
+
+```json
+{
+  "hangoutLink": "https://meet.google.com/abc-defg-hij",
+  "conferenceData": {
+    "entryPoints": [
+      { "entryPointType": "video", "uri": "https://meet.google.com/abc-defg-hij" }
+    ]
+  }
+}
+```
+
+Extract logic: prefer `conferenceData.entryPoints[type=video].uri`, fallback to `hangoutLink`.
+
+---
+
 ## Quota & Rate Limiting
 
 ### Retry Strategy

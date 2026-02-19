@@ -13,7 +13,7 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Status | Assignee | Created |
 |:---|:---|:---:|:---|:---:|
-| — | All web phases complete. Focus: web improvements, bug fixes, new web features. Android deferred. | — | — | — |
+| — | Phase 10: New Feature Suite — Gmail Widget, Daily Journal, Weekly Review, Meet Links, Time Blocking | — | — | — |
 
 ## 📋 Backlog
 
@@ -30,6 +30,23 @@ This board uses a ticket-based system to track granular units of work.
 
 | ID | Task | Completed | Assignee |
 |:---|:---|:---:|:---|
+| PHX-067 | Integrate Gmail and Journal widgets into Dashboard | 2026-02-18 | Claude |
+| PHX-066 | Add new routes (/journal, /review, /planner) and nav links | 2026-02-18 | Claude |
+| PHX-065 | Build `PlannerComponent` and `TimeBlockColumnComponent` | 2026-02-18 | Claude |
+| PHX-064 | Implement `PlannerStore` (SignalStore) | 2026-02-18 | Claude |
+| PHX-063 | Add calendar write methods to `CalendarService` | 2026-02-18 | Claude |
+| PHX-062 | Create `TimeBlock` domain model | 2026-02-18 | Claude |
+| PHX-061 | Add Join button to `ScheduleTimelineWidget` and `EventDetailDialog` | 2026-02-18 | Claude |
+| PHX-060 | Update `CalendarService` to extract conference/meet data | 2026-02-18 | Claude |
+| PHX-059 | Extend `CalendarEvent` model with `meetLink` field | 2026-02-18 | Claude |
+| PHX-058 | Build `WeeklyReviewComponent` with stepper and 5 step components | 2026-02-18 | Claude |
+| PHX-057 | Build `JournalComponent` page and `JournalWidgetComponent` | 2026-02-18 | Claude |
+| PHX-056 | Implement `JournalStore` wrapping NotesStore | 2026-02-18 | Claude |
+| PHX-055 | Build `GmailWidgetComponent` for dashboard | 2026-02-18 | Claude |
+| PHX-054 | Implement `GmailStore` (SignalStore) | 2026-02-18 | Claude |
+| PHX-053 | Build `GmailService` for Gmail API | 2026-02-18 | Claude |
+| PHX-052 | Create Gmail domain model (`gmail.model.ts`) | 2026-02-18 | Claude |
+| PHX-051 | Add Gmail scope to auth config | 2026-02-18 | Claude |
 | PHX-050 | Add global search (Cmd+K) and streak badges to habits | 2026-02-17 | Claude |
 | PHX-049 | Enhance Notes with search, pin/archive, timestamps | 2026-02-17 | Claude |
 | PHX-048 | Enhance Tasks with search, due date chips, inline quick-add | 2026-02-17 | Claude |

@@ -3,6 +3,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { CalendarService, CalendarSyncResult } from './calendar.service';
+import { extractMeetLink } from './models/calendar-event.model';
 import type { GoogleCalendarEvent } from './models/calendar-event.model';
 
 const BASE_URL = 'https://www.googleapis.com/calendar/v3';
@@ -225,6 +226,34 @@ describe('CalendarService', () => {
 
       expect(result!.events.length).toBe(1);
       expect(result!.events[0].id).toBe('evt1');
+    });
+  });
+
+  describe('extractMeetLink', () => {
+    it('should extract meet link from conferenceData', () => {
+      const raw = {
+        id: '1', summary: 'Meeting', start: { dateTime: '2026-02-18T10:00:00Z' },
+        end: { dateTime: '2026-02-18T11:00:00Z' }, status: 'confirmed', updated: '2026-02-18T10:00:00Z',
+        conferenceData: { entryPoints: [{ entryPointType: 'video', uri: 'https://meet.google.com/abc' }] },
+      };
+      expect(extractMeetLink(raw as any)).toBe('https://meet.google.com/abc');
+    });
+
+    it('should fallback to hangoutLink when no conferenceData', () => {
+      const raw = {
+        id: '1', summary: 'Meeting', start: { dateTime: '2026-02-18T10:00:00Z' },
+        end: { dateTime: '2026-02-18T11:00:00Z' }, status: 'confirmed', updated: '2026-02-18T10:00:00Z',
+        hangoutLink: 'https://meet.google.com/xyz',
+      };
+      expect(extractMeetLink(raw as any)).toBe('https://meet.google.com/xyz');
+    });
+
+    it('should return null when no meet link available', () => {
+      const raw = {
+        id: '1', summary: 'Meeting', start: { dateTime: '2026-02-18T10:00:00Z' },
+        end: { dateTime: '2026-02-18T11:00:00Z' }, status: 'confirmed', updated: '2026-02-18T10:00:00Z',
+      };
+      expect(extractMeetLink(raw as any)).toBeNull();
     });
   });
 

@@ -26,7 +26,7 @@ const MOCK_EVENTS: CalendarEvent[] = [
     start: '2026-02-16T09:00:00Z', end: '2026-02-16T10:00:00Z',
     allDay: false, colorId: '1', color: { name: 'Lavender', hex: '#7986CB' },
     location: null, htmlLink: null, status: 'confirmed',
-    updatedDateTime: '2026-02-16T00:00:00Z',
+    updatedDateTime: '2026-02-16T00:00:00Z', meetLink: null,
   },
 ];
 

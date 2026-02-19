@@ -5,6 +5,7 @@ import { TasksStore } from './tasks.store';
 import { CalendarStore } from './calendar.store';
 import { HabitsStore } from './habits.store';
 import { NotesStore } from './notes.store';
+import { GmailStore } from './gmail.store';
 import { AuthService } from '../core/auth.service';
 import { todayDateKey } from '../shared/date.utils';
 import type { Task } from '../data/models/task.model';
@@ -119,6 +120,7 @@ export const DashboardStore = signalStore(
     calendarStore = inject(CalendarStore),
     habitsStore = inject(HabitsStore),
     notesStore = inject(NotesStore),
+    gmailStore = inject(GmailStore),
   ) => ({
     async loadAll(): Promise<void> {
       await Promise.all([
@@ -126,6 +128,7 @@ export const DashboardStore = signalStore(
         calendarStore.initialSync(),
         habitsStore.loadData(),
         notesStore.loadNotes(),
+        gmailStore.loadInbox(),
       ]);
 
       const lists = tasksStore.taskLists();

@@ -2,12 +2,14 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, expand, EMPTY, map, reduce } from 'rxjs';
 
+import type { CreateEventBody, GoogleCalendarEventResponse } from './models/time-block.model';
 import type { EventStatus } from './models/calendar-event.model';
 import {
   CalendarEvent,
   GoogleCalendarEvent,
   GoogleCalendarEventsResponse,
   getEventColor,
+  extractMeetLink,
 } from './models/calendar-event.model';
 import { sanitizeHtml } from '../shared/sanitize-html.util';
 
@@ -90,7 +92,31 @@ export class CalendarService {
       htmlLink: raw.htmlLink ?? null,
       status: toEventStatus(raw.status),
       updatedDateTime: raw.updated,
+      meetLink: extractMeetLink(raw),
     };
+  }
+
+  /** Create a new calendar event */
+  createEvent(body: CreateEventBody): Observable<GoogleCalendarEventResponse> {
+    return this.http.post<GoogleCalendarEventResponse>(
+      `${BASE_URL}/calendars/${CALENDAR_ID}/events`,
+      body,
+    );
+  }
+
+  /** Update an existing calendar event (partial update) */
+  updateEvent(eventId: string, body: Partial<CreateEventBody>): Observable<GoogleCalendarEventResponse> {
+    return this.http.patch<GoogleCalendarEventResponse>(
+      `${BASE_URL}/calendars/${CALENDAR_ID}/events/${eventId}`,
+      body,
+    );
+  }
+
+  /** Delete a calendar event */
+  deleteEvent(eventId: string): Observable<void> {
+    return this.http.delete<void>(
+      `${BASE_URL}/calendars/${CALENDAR_ID}/events/${eventId}`,
+    );
   }
 }
 

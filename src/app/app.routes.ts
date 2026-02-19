@@ -54,5 +54,29 @@ export const routes: Routes = [
         (m) => m.InsightsComponent,
       ),
   },
+  {
+    path: 'journal',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/journal/journal.component').then(
+        (m) => m.JournalComponent,
+      ),
+  },
+  {
+    path: 'review',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/review/weekly-review.component').then(
+        (m) => m.WeeklyReviewComponent,
+      ),
+  },
+  {
+    path: 'planner',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./features/planner/planner.component').then(
+        (m) => m.PlannerComponent,
+      ),
+  },
   { path: '**', redirectTo: 'dashboard' },
 ];

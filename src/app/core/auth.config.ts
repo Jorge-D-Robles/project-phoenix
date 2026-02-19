@@ -13,4 +13,5 @@ export const GOOGLE_SCOPES = {
   tasks: 'https://www.googleapis.com/auth/tasks',
   calendar: 'https://www.googleapis.com/auth/calendar.events',
   drive: 'https://www.googleapis.com/auth/drive.file https://www.googleapis.com/auth/drive.appdata',
+  gmail: 'https://www.googleapis.com/auth/gmail.readonly',
 } as const;
